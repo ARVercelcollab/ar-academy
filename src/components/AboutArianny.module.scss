@@ -1,0 +1,175 @@
+@use "../styles/variables" as *;
+
+.section {
+  background: $color-bg-dark;
+  padding: 140px 0 120px;
+
+  // Force light weight on everything in this section
+  * {
+    font-weight: 300;
+  }
+
+  @media (max-width: $breakpoint-tablet) {
+    padding: 60px 0 72px;
+  }
+}
+
+.container {
+  @include container;
+  display: flex;
+  gap: 60px;
+  align-items: flex-start;
+
+  @media (max-width: $breakpoint-tablet) {
+    flex-direction: column-reverse;
+    gap: 48px;
+  }
+}
+
+.left {
+  flex: 1;
+  min-width: 0;
+}
+
+.right {
+  width: 440px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 40px;
+  align-self: flex-start;
+
+  @media (max-width: $breakpoint-tablet) {
+    width: 100%;
+    max-width: 440px;
+    position: static;
+  }
+}
+
+// Title
+.title {
+  font-size: 64px;
+  color: $color-text-light;
+  line-height: 68px;
+  letter-spacing: -3.2px;
+  margin-bottom: 60px;
+
+  strong {
+    font-weight: 500 !important;
+  }
+
+  @media (max-width: $breakpoint-tablet) {
+    font-size: 40px;
+    line-height: 44px;
+    letter-spacing: -2px;
+    margin-bottom: 40px;
+  }
+}
+
+// Intro paragraph
+.intro {
+  font-size: 14px;
+  color: $color-text-light;
+  line-height: 22px;
+  letter-spacing: -0.14px;
+  max-width: 470px;
+  margin-bottom: 32px;
+}
+
+// Statement (32px)
+.statement {
+  font-size: 32px;
+  color: $color-text-light;
+  line-height: 34px;
+  letter-spacing: -0.32px;
+  max-width: 470px;
+  margin-bottom: 8px;
+
+  strong {
+    font-weight: 500 !important;
+  }
+
+  @media (max-width: $breakpoint-tablet) {
+    font-size: 24px;
+    line-height: 28px;
+  }
+}
+
+// Description text
+.description {
+  font-size: 14px;
+  color: $color-text-light;
+  line-height: 22px;
+  letter-spacing: -0.14px;
+  max-width: 470px;
+  margin-top: 32px;
+  margin-bottom: 32px;
+
+  em {
+    font-style: italic;
+    font-weight: 500 !important;
+  }
+
+  strong {
+    font-weight: 500 !important;
+  }
+}
+
+// Pillars box
+.pillarsBox {
+  border: 2px solid $color-text-light;
+  padding: 32px 40px;
+  max-width: 470px;
+  text-align: center;
+
+  @media (max-width: $breakpoint-tablet) {
+    padding: 24px 20px;
+  }
+}
+
+.pillar {
+  margin-bottom: 28px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.pillarTag {
+  display: inline-block;
+  font-size: 16px;
+  color: $color-bg-dark;
+  background: $color-text-light;
+  line-height: 20.48px;
+  letter-spacing: -0.32px;
+  padding: 2px 12px;
+  margin-bottom: 10px;
+}
+
+.pillarText {
+  font-size: 14px;
+  color: $color-text-light;
+  line-height: 22px;
+  letter-spacing: -0.14px;
+}
+
+// Right column — image sticky on scroll
+.imageWrapper {
+  overflow: hidden;
+}
+
+.image {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
+
+.caption {
+  font-size: 12px;
+  color: $color-text-subtle;
+  line-height: 15.36px;
+  letter-spacing: -0.24px;
+  text-align: right;
+  margin-top: 12px;
+  text-transform: none;
+}

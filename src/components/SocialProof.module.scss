@@ -1,0 +1,37 @@
+@use "../styles/variables" as *;
+
+.socialProof {
+  background-color: $color-bg-dark;
+  padding: 20px 0 60px;
+
+  @media (max-width: $breakpoint-tablet) {
+    padding: 20px 0 48px;
+  }
+}
+
+.container {
+  @include container;
+  display: flex;
+  justify-content: center;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 900px;
+
+  @media (max-width: $breakpoint-tablet) {
+    gap: 12px 20px;
+    justify-content: center;
+  }
+}
+
+.tag {
+  font-size: 12px;
+  font-weight: 300;
+  color: $color-text-light;
+  letter-spacing: -0.12px;
+  line-height: 22px;
+}

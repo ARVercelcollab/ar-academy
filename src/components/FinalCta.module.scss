@@ -1,0 +1,171 @@
+@use "../styles/variables" as *;
+
+.section {
+  background: $color-bg-white;
+  padding: 100px 0 80px;
+
+  * {
+    font-weight: 300;
+  }
+
+  @media (max-width: $breakpoint-tablet) {
+    padding: 60px 0 72px;
+  }
+}
+
+.container {
+  @include container;
+  display: flex;
+  gap: 48px;
+  align-items: flex-start;
+
+  @media (max-width: $breakpoint-tablet) {
+    flex-direction: column;
+    gap: 40px;
+  }
+}
+
+.left {
+  flex: 1;
+  min-width: 0;
+}
+
+.right {
+  flex: 1;
+  min-width: 0;
+}
+
+// Title
+.title {
+  font-size: 48px;
+  line-height: 50px;
+  letter-spacing: -2.4px;
+  color: $color-text-dark;
+  margin-bottom: 48px;
+
+  @media (max-width: $breakpoint-tablet) {
+    font-size: 32px;
+    line-height: 34px;
+    letter-spacing: -1.6px;
+    margin-bottom: 40px;
+  }
+}
+
+// Benefits list
+.benefits {
+  font-size: 14px;
+  line-height: 22px;
+  letter-spacing: -0.14px;
+  color: $color-text-dark;
+  margin-bottom: 40px;
+
+  p {
+    margin-bottom: 2px;
+  }
+
+  strong {
+    font-weight: 500 !important;
+  }
+}
+
+// Wine badge
+.badge {
+  display: inline-block;
+  background: $color-accent-wine;
+  padding: 12px 24px 10px;
+
+  font-size: 24px;
+  line-height: 28px;
+  letter-spacing: -1.2px;
+  color: $color-text-light;
+
+  @media (max-width: $breakpoint-tablet) {
+    padding: 12px 20px 10px;
+
+    span {
+      font-size: 18px;
+      line-height: 24px;
+    }
+  }
+}
+
+// Right column — price card (same as Hero)
+.priceCard {
+  text-align: center;
+}
+
+.priceLabel {
+  font-size: 16px;
+  line-height: 22px;
+  letter-spacing: -0.16px;
+  color: $color-text-dark;
+}
+
+.priceRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 10px;
+  margin-top: -4px;
+}
+
+.price {
+  font-size: 48px;
+  line-height: 68px;
+  letter-spacing: -2.4px;
+  color: $color-text-dark;
+
+  strong {
+    font-weight: 500 !important;
+  }
+}
+
+.priceOld {
+  font-size: 20px;
+  letter-spacing: -0.2px;
+  line-height: 22px;
+  color: $color-accent-pink;
+  position: relative;
+
+  &::after {
+    content: "";
+    position: absolute;
+    left: -2px;
+    right: -2px;
+    top: 50%;
+    height: 1.5px;
+    background: $color-accent-pink;
+    transform: rotate(-12deg);
+  }
+}
+
+.priceSubtext {
+  font-size: 12px;
+  letter-spacing: -0.12px;
+  line-height: 14px;
+  color: $color-text-dark;
+  margin-top: 0;
+}
+
+.accessBadge {
+  font-size: 15px;
+  font-weight: 500 !important;
+  color: $color-text-light;
+  background: $color-bg-dark;
+  letter-spacing: -0.15px;
+  line-height: 38px;
+  height: 38px;
+  text-align: center;
+  margin-top: 16px;
+}
+
+.accessInfo {
+  font-size: 12px;
+  color: $color-text-muted-dark;
+  line-height: 15.36px;
+  letter-spacing: -0.24px;
+  text-align: center;
+  margin-top: 16px;
+  margin-bottom: 20px;
+  text-transform: none;
+}

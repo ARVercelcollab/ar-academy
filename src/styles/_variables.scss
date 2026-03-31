@@ -1,0 +1,43 @@
+// Colors from Figma
+$color-bg-white: #ffffff;
+$color-bg-dark: #161616;
+$color-bg-light: #eeeeee;
+$color-accent-wine: #831a36;
+$color-accent-pink: #e3285a;
+$color-accent-gold: #e3b25e;
+$color-text-black: #000000;
+$color-text-dark: #161616;
+$color-text-light: #eeeeee;
+$color-text-muted: #868686;
+$color-text-muted-dark: #686868;
+$color-text-gray: #7b7b7b;
+$color-text-subtle: #adadad;
+$color-stripe-purple: #635bff;
+$color-red: #ff0000;
+
+// Typography
+$font-family: "aktiv-grotesk", sans-serif;
+
+// Layout
+$max-width: 1200px;
+
+// Breakpoints
+$breakpoint-tablet: 768px;
+$breakpoint-mobile: 480px;
+
+@mixin container {
+  max-width: $max-width;
+  margin: 0 auto;
+  padding-left: 40px;
+  padding-right: 40px;
+
+  @media (max-width: $breakpoint-tablet) {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+
+@mixin full-width {
+  max-width: 1440px;
+  margin: 0 auto;
+}

@@ -1,0 +1,279 @@
+@use "../styles/variables" as *;
+
+.hero {
+  background-color: $color-bg-white;
+  padding-top: 60px;
+  padding-bottom: 120px;
+
+  @media (max-width: $breakpoint-tablet) {
+    padding-top: 40px;
+    padding-bottom: 72px;
+  }
+}
+
+.headerArea {
+  @include container;
+  text-align: center;
+  margin-bottom: 80px;
+
+  @media (max-width: $breakpoint-tablet) {
+    margin-bottom: 48px;
+  }
+}
+
+.subtitle {
+  font-size: 14px;
+  font-weight: 300;
+  color: $color-text-black;
+  line-height: 22px;
+  letter-spacing: -0.14px;
+  margin-bottom: 32px;
+
+  @media (max-width: $breakpoint-tablet) {
+    margin-bottom: 20px;
+  }
+}
+
+.title {
+  font-size: 64px;
+  font-weight: 300;
+  line-height: 68px;
+  letter-spacing: -3.2px;
+  color: #000000;
+  max-width: 839px;
+  margin: 0 auto;
+
+  @media (max-width: $breakpoint-tablet) {
+    font-size: 38px;
+    line-height: 42px;
+    letter-spacing: -1.9px;
+  }
+}
+
+.titleAccent {
+  font-weight: 500;
+  color: $color-accent-wine;
+}
+
+.mainContent {
+  @include container;
+  display: flex;
+  gap: 48px;
+  align-items: flex-start;
+
+  @media (max-width: $breakpoint-tablet) {
+    flex-direction: column;
+    gap: 64px;
+  }
+}
+
+.left {
+  flex: 1;
+  min-width: 0;
+  position: sticky;
+  top: 40px;
+  align-self: flex-start;
+
+  @media (max-width: $breakpoint-tablet) {
+    position: static;
+  }
+}
+
+.right {
+  flex: 1;
+  min-width: 0;
+}
+
+// Video
+.videoWrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 471 / 250;
+  background: $color-bg-dark;
+  overflow: hidden;
+  cursor: pointer;
+  margin-bottom: 36px;
+
+  @media (max-width: $breakpoint-tablet) {
+    margin-bottom: 32px;
+  }
+}
+
+.video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.soundBtn {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: $color-accent-wine;
+  border: none;
+  color: $color-text-light;
+  padding: 8px 20px;
+  font-size: 20px;
+  font-weight: 300;
+  letter-spacing: -0.4px;
+  line-height: 25.6px;
+  white-space: nowrap;
+  transition: opacity 0.2s;
+
+  @media (max-width: $breakpoint-tablet) {
+    font-size: 14px;
+    padding: 6px 14px;
+    line-height: 20px;
+  }
+
+  &:hover {
+    opacity: 0.9;
+  }
+}
+
+// Text below video
+.preText {
+  font-size: 14px;
+  font-weight: 300;
+  color: $color-text-black;
+  line-height: 22px;
+  letter-spacing: -0.14px;
+  margin-bottom: 16px;
+
+  @media (max-width: $breakpoint-tablet) {
+    margin-bottom: 16px;
+    font-size: 12px;
+  }
+}
+
+.mentira {
+  font-size: 64px;
+  font-weight: 500;
+  color: $color-accent-wine;
+  line-height: 68px;
+  letter-spacing: -3.2px;
+  margin-bottom: 24px;
+
+  @media (max-width: $breakpoint-tablet) {
+    font-size: 36px;
+    line-height: 40px;
+    letter-spacing: -1.8px;
+    margin-bottom: 24px;
+    text-align: center;
+  }
+}
+
+.paragraph {
+  font-size: 14px;
+  font-weight: 300;
+  color: $color-text-black;
+  line-height: 22px;
+  letter-spacing: -0.14px;
+
+  strong {
+    font-weight: 500;
+  }
+}
+
+// Right column - price card
+.priceCard {
+  text-align: center;
+}
+
+.priceLabel {
+  font-size: 16px;
+  font-weight: 300;
+  color: $color-text-dark;
+  line-height: 22px;
+  letter-spacing: -0.16px;
+}
+
+.priceRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 10px;
+  margin-top: -4px;
+}
+
+.price {
+  font-size: 48px;
+  font-weight: 300;
+  color: $color-text-dark;
+  line-height: 68px;
+  letter-spacing: -2.4px;
+
+  strong {
+    font-weight: 500;
+  }
+
+  @media (max-width: $breakpoint-tablet) {
+    font-size: 64px;
+    line-height: 68px;
+    letter-spacing: -3.2px;
+  }
+}
+
+.priceOld {
+  font-size: 20px;
+  font-weight: 300;
+  color: $color-accent-pink;
+  letter-spacing: -0.2px;
+  line-height: 22px;
+  position: relative;
+
+  &::after {
+    content: "";
+    position: absolute;
+    left: -2px;
+    right: -2px;
+    top: 50%;
+    height: 1.5px;
+    background: $color-accent-pink;
+    transform: rotate(-12deg);
+  }
+}
+
+.priceSubtext {
+  font-size: 12px;
+  font-weight: 300;
+  color: $color-text-dark;
+  letter-spacing: -0.12px;
+  line-height: 14px;
+  margin-top: 0;
+}
+
+.accessBadge {
+  font-size: 15px;
+  font-weight: 500;
+  color: $color-text-light;
+  background: $color-bg-dark;
+  letter-spacing: -0.15px;
+  line-height: 38px;
+  height: 38px;
+  text-align: center;
+  margin-top: 32px;
+
+  @media (max-width: $breakpoint-tablet) {
+    margin-top: 24px;
+    font-size: 13px;
+  }
+}
+
+.accessInfo {
+  font-size: 12px;
+  font-weight: 300;
+  color: $color-text-muted-dark;
+  line-height: 15.36px;
+  letter-spacing: -0.24px;
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 48px;
+  text-transform: none;
+
+  @media (max-width: $breakpoint-tablet) {
+    margin-top: 16px;
+    margin-bottom: 32px;
+  }
+}

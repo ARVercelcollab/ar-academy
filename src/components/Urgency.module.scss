@@ -1,0 +1,106 @@
+@use "../styles/variables" as *;
+
+.section {
+  background: $color-bg-white;
+  padding: 80px 0;
+
+  * {
+    font-weight: 300;
+  }
+
+  @media (max-width: $breakpoint-tablet) {
+    padding: 60px 0;
+  }
+}
+
+.container {
+  @include container;
+  display: flex;
+  justify-content: center;
+}
+
+.card {
+  width: 100%;
+  max-width: 996px;
+  border: 1px solid $color-bg-dark;
+}
+
+.goldBar {
+  background: $color-accent-gold;
+  padding: 8px 24px;
+  text-align: center;
+  font-size: 15px;
+  font-weight: 500 !important;
+  line-height: 22px;
+  letter-spacing: -0.15px;
+  color: $color-bg-dark;
+
+  strong {
+    font-weight: 500 !important;
+  }
+}
+
+.cardContent {
+  padding: 48px 60px 60px;
+  text-align: center;
+
+  @media (max-width: $breakpoint-tablet) {
+    padding: 40px 24px 48px;
+  }
+}
+
+.title {
+  font-size: 64px;
+  line-height: 68px;
+  letter-spacing: -3.2px;
+  color: $color-text-black;
+  max-width: 839px;
+  margin: 0 auto 32px;
+
+  strong {
+    font-weight: 500 !important;
+  }
+
+  @media (max-width: $breakpoint-tablet) {
+    font-size: 32px;
+    line-height: 34px;
+    letter-spacing: -1.6px;
+    margin-bottom: 24px;
+  }
+}
+
+.subtitle {
+  font-size: 24px;
+  line-height: 34px;
+  letter-spacing: -0.24px;
+  color: $color-text-dark;
+  margin-bottom: 32px;
+
+  @media (max-width: $breakpoint-tablet) {
+    font-size: 18px;
+    line-height: 24px;
+  }
+}
+
+.ctaBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 20px;
+  padding: 12px 20px 10px;
+  background: $color-bg-dark;
+  color: $color-text-light;
+  font-size: 16px;
+  letter-spacing: -0.32px;
+  line-height: 20.48px;
+  text-decoration: none;
+  transition: opacity 0.2s;
+
+  &:hover {
+    opacity: 0.85;
+  }
+
+  svg {
+    width: 13px;
+    height: 13px;
+  }
+}

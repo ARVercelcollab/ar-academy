@@ -1,0 +1,142 @@
+@use "../styles/variables" as *;
+
+.section {
+  background: $color-bg-white;
+  padding: 100px 0 0;
+
+  * {
+    font-weight: 300;
+  }
+
+  @media (max-width: $breakpoint-tablet) {
+    padding: 60px 0 0;
+  }
+}
+
+// Top centered block
+.headerBlock {
+  @include container;
+  text-align: center;
+  margin-bottom: 80px;
+
+  @media (max-width: $breakpoint-tablet) {
+    margin-bottom: 56px;
+  }
+}
+
+.title {
+  font-size: 64px;
+  line-height: 68px;
+  letter-spacing: -3.2px;
+  color: $color-text-black;
+  max-width: 839px;
+  margin: 0 auto 40px;
+
+  strong {
+    font-weight: 500 !important;
+  }
+
+  @media (max-width: $breakpoint-tablet) {
+    font-size: 32px;
+    line-height: 34px;
+    letter-spacing: -1.6px;
+    margin-bottom: 24px;
+  }
+}
+
+.intro {
+  font-size: 14px;
+  line-height: 22px;
+  letter-spacing: -0.14px;
+  color: $color-text-black;
+  max-width: 552px;
+  margin: 0 auto 16px;
+}
+
+.bold {
+  font-size: 14px;
+  line-height: 22px;
+  letter-spacing: -0.14px;
+  color: $color-text-black;
+  font-weight: 500 !important;
+  max-width: 552px;
+  margin: 8px auto 0;
+}
+
+// Bottom 2-column block
+.contentBlock {
+  @include container;
+  display: flex;
+  gap: 48px;
+  align-items: flex-start;
+  padding-bottom: 80px;
+
+  @media (max-width: $breakpoint-tablet) {
+    flex-direction: column;
+    gap: 32px;
+    padding-bottom: 48px;
+  }
+}
+
+.left {
+  flex: 1;
+  min-width: 0;
+}
+
+.right {
+  flex: 1;
+  min-width: 0;
+}
+
+.subtitle {
+  font-size: 32px;
+  line-height: 34px;
+  letter-spacing: -0.32px;
+  color: $color-text-dark;
+  margin-bottom: 40px;
+
+  @media (max-width: $breakpoint-tablet) {
+    font-size: 24px;
+    line-height: 28px;
+    margin-bottom: 32px;
+  }
+}
+
+// Bullet list
+.bulletList {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.bulletItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.square {
+  flex-shrink: 0;
+  width: 13px;
+  height: 13px;
+  background: $color-bg-dark;
+  margin-top: 5px;
+}
+
+.bulletText {
+  font-size: 14px;
+  line-height: 22px;
+  letter-spacing: -0.14px;
+  color: $color-text-dark;
+
+  strong {
+    font-weight: 500 !important;
+  }
+}
+
+// Image
+.image {
+  width: 100%;
+  height: auto;
+  display: block;
+}

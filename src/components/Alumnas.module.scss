@@ -1,0 +1,136 @@
+@use "../styles/variables" as *;
+
+.section {
+  background: $color-accent-wine;
+  overflow: hidden;
+}
+
+.header {
+  text-align: center;
+  padding: 60px 40px 40px;
+
+  @media (max-width: $breakpoint-tablet) {
+    padding: 48px 24px 32px;
+  }
+}
+
+.avatars {
+  display: inline-block;
+  width: 160px;
+  height: auto;
+  margin-bottom: 12px;
+}
+
+.title {
+  font-size: 40px;
+  font-weight: 300;
+  color: $color-text-light;
+  line-height: 68px;
+  letter-spacing: -2px;
+  margin-bottom: 8px;
+
+  strong {
+    font-weight: 500;
+  }
+
+  @media (max-width: $breakpoint-tablet) {
+    font-size: 28px;
+    line-height: 34px;
+    letter-spacing: -1.4px;
+  }
+}
+
+.subtitle {
+  font-size: 14px;
+  font-weight: 300;
+  color: $color-text-light;
+  line-height: 22px;
+  letter-spacing: -0.14px;
+  max-width: 470px;
+  margin: 0 auto;
+}
+
+// Carousel (same as SuccessCases)
+.carouselWrapper {
+  overflow: hidden;
+  padding: 40px 0;
+}
+
+.track {
+  display: flex;
+  gap: 24px;
+  width: max-content;
+  animation: scroll 80s linear infinite;
+}
+
+.slide {
+  flex-shrink: 0;
+}
+
+.image {
+  display: block;
+  height: 340px;
+  width: auto;
+  object-fit: cover;
+
+  @media (max-width: $breakpoint-tablet) {
+    height: 400px;
+  }
+}
+
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+// Bottom bar
+.bottomBar {
+  background: $color-bg-dark;
+  padding: 10px 40px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 300;
+  color: $color-text-light;
+  line-height: 22px;
+  letter-spacing: -0.14px;
+
+  strong {
+    font-weight: 500;
+  }
+}
+
+// CTA row — sits on white background of next section
+.ctaRow {
+  background: $color-bg-white;
+  display: flex;
+  justify-content: center;
+  padding: 48px 0;
+}
+
+.ctaBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 20px;
+  padding: 12px 20px 10px;
+  background: $color-bg-dark;
+  color: $color-text-light;
+  font-size: 16px;
+  font-weight: 300;
+  letter-spacing: -0.32px;
+  line-height: 20.48px;
+  text-decoration: none;
+  transition: opacity 0.2s;
+
+  &:hover {
+    opacity: 0.85;
+  }
+
+  svg {
+    width: 13px;
+    height: 13px;
+  }
+}

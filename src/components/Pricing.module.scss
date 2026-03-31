@@ -1,0 +1,185 @@
+@use "../styles/variables" as *;
+
+.section {
+  * {
+    font-weight: 300;
+  }
+}
+
+// Wine block
+.wineBlock {
+  background: $color-accent-wine;
+  padding: 48px 40px;
+  text-align: center;
+
+  @media (max-width: $breakpoint-tablet) {
+    padding: 48px 24px;
+  }
+}
+
+.invitationTitle {
+  font-size: 36px;
+  line-height: 38px;
+  letter-spacing: -1.8px;
+  color: $color-text-light;
+  max-width: 600px;
+  margin: 0 auto 20px;
+
+  strong {
+    font-weight: 500 !important;
+  }
+
+  @media (max-width: $breakpoint-tablet) {
+    font-size: 24px;
+    line-height: 28px;
+    letter-spacing: -1.2px;
+  }
+}
+
+.invitationSub {
+  font-size: 14px;
+  line-height: 22px;
+  letter-spacing: -0.14px;
+  color: $color-text-light;
+  max-width: 436px;
+  margin: 0 auto;
+}
+
+// Dark block
+.darkBlock {
+  background: $color-bg-dark;
+  padding: 48px 40px 40px;
+  text-align: center;
+
+  @media (max-width: $breakpoint-tablet) {
+    padding: 48px 24px 36px;
+  }
+}
+
+.priceArea {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.priceLabel {
+  font-size: 16px;
+  line-height: 22px;
+  letter-spacing: -0.16px;
+  color: $color-text-light;
+}
+
+.priceRow {
+  margin-top: -4px;
+}
+
+.price {
+  font-size: 64px;
+  line-height: 68px;
+  letter-spacing: -3.2px;
+  color: $color-text-light;
+
+  strong {
+    font-weight: 500 !important;
+  }
+
+  @media (max-width: $breakpoint-tablet) {
+    font-size: 48px;
+    line-height: 52px;
+    letter-spacing: -2.4px;
+  }
+}
+
+.priceOld {
+  font-size: 14px;
+  line-height: 22px;
+  letter-spacing: -0.14px;
+  color: $color-text-muted;
+  margin-top: 0;
+}
+
+.guarantee {
+  font-size: 16px;
+  line-height: 22px;
+  letter-spacing: -0.16px;
+  color: $color-text-light;
+  margin-top: 16px;
+}
+
+// Buttons row
+.buttons {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 40px;
+  margin-bottom: 40px;
+
+  @media (max-width: $breakpoint-tablet) {
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+}
+
+.btnOutline {
+  display: inline-flex;
+  align-items: center;
+  gap: 20px;
+  padding: 12px 20px 10px;
+  background: transparent;
+  color: $color-text-light;
+  border: 1px solid $color-text-light;
+  font-size: 16px;
+  letter-spacing: -0.32px;
+  line-height: 20.48px;
+  text-decoration: none;
+  transition: opacity 0.2s;
+
+  &:hover {
+    opacity: 0.85;
+  }
+
+  svg {
+    width: 13px;
+    height: 13px;
+  }
+}
+
+.btnFilled {
+  display: inline-flex;
+  align-items: center;
+  gap: 20px;
+  padding: 12px 20px 10px;
+  background: $color-text-light;
+  color: $color-bg-dark;
+  font-size: 16px;
+  letter-spacing: -0.32px;
+  line-height: 20.48px;
+  text-decoration: none;
+  transition: opacity 0.2s;
+
+  &:hover {
+    opacity: 0.9;
+  }
+
+  svg {
+    width: 13px;
+    height: 13px;
+  }
+}
+
+// Savings bar
+.savingsBar {
+  max-width: 995px;
+  margin: 0 auto;
+  background: $color-text-light;
+  padding: 8px 24px;
+  text-align: center;
+  font-size: 15px;
+  line-height: 22px;
+  letter-spacing: -0.15px;
+  color: $color-bg-dark;
+
+  strong {
+    font-weight: 500 !important;
+  }
+}

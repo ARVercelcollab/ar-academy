@@ -1,0 +1,191 @@
+@use "../styles/variables" as *;
+
+.section {
+  background: $color-bg-dark;
+  padding: 80px 0;
+
+  * {
+    font-weight: 300;
+  }
+
+  @media (max-width: $breakpoint-tablet) {
+    padding: 60px 0;
+  }
+}
+
+.container {
+  @include container;
+}
+
+.title {
+  font-size: 64px;
+  line-height: 68px;
+  letter-spacing: -3.2px;
+  color: $color-text-light;
+  text-align: center;
+  margin-bottom: 48px;
+
+  @media (max-width: $breakpoint-tablet) {
+    font-size: 32px;
+    line-height: 34px;
+    letter-spacing: -1.6px;
+    margin-bottom: 32px;
+  }
+}
+
+// 2-column grid
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  max-width: 995px;
+  margin: 0 auto 48px;
+
+  @media (max-width: $breakpoint-tablet) {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+}
+
+.card {
+  border: 1px solid #444;
+}
+
+.row {
+  display: flex;
+  align-items: stretch;
+
+  &:first-child {
+    border-bottom: 1px solid #444;
+  }
+}
+
+.iconCol {
+  width: 76px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-right: 1px solid #444;
+}
+
+.icon {
+  width: 36px;
+  height: auto;
+}
+
+.textCol {
+  flex: 1;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+}
+
+.questionText {
+  font-size: 14px;
+  line-height: 22px;
+  letter-spacing: -0.14px;
+  color: $color-text-light;
+}
+
+.answerText {
+  font-size: 14px;
+  line-height: 22px;
+  letter-spacing: -0.14px;
+  color: $color-text-light;
+
+  strong {
+    font-weight: 500 !important;
+  }
+}
+
+// Buttons
+.buttons {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 48px;
+
+  @media (max-width: $breakpoint-tablet) {
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+}
+
+.btnOutline {
+  display: inline-flex;
+  align-items: center;
+  gap: 20px;
+  padding: 12px 20px 10px;
+  background: transparent;
+  color: $color-text-light;
+  border: 1px solid $color-text-light;
+  font-size: 16px;
+  letter-spacing: -0.32px;
+  line-height: 20.48px;
+  text-decoration: none;
+  transition: opacity 0.2s;
+
+  &:hover {
+    opacity: 0.85;
+  }
+
+  svg {
+    width: 13px;
+    height: 13px;
+  }
+}
+
+.btnFilled {
+  display: inline-flex;
+  align-items: center;
+  gap: 20px;
+  padding: 12px 20px 10px;
+  background: $color-text-light;
+  color: $color-bg-dark;
+  font-size: 16px;
+  letter-spacing: -0.32px;
+  line-height: 20.48px;
+  text-decoration: none;
+  transition: opacity 0.2s;
+
+  &:hover {
+    opacity: 0.9;
+  }
+
+  svg {
+    width: 13px;
+    height: 13px;
+  }
+}
+
+// Guarantee bar
+.guaranteeBar {
+  max-width: 995px;
+  margin: 0 auto;
+}
+
+.guaranteeText {
+  background: $color-text-light;
+  padding: 8px 24px;
+  text-align: center;
+  font-size: 15px;
+  line-height: 22px;
+  letter-spacing: -0.15px;
+  color: $color-bg-dark;
+
+  strong {
+    font-weight: 500 !important;
+  }
+}
+
+.guaranteeSub {
+  background: #a6a6a6;
+  padding: 4px 24px;
+  text-align: center;
+  font-size: 11px;
+  line-height: 22px;
+  letter-spacing: -0.11px;
+  color: $color-bg-dark;
+}

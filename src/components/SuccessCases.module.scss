@@ -1,0 +1,88 @@
+@use "../styles/variables" as *;
+
+$carousel-height: 340px;
+$overlap: 60px;
+
+.successCases {
+  position: relative;
+  padding-top: $overlap;
+  margin-top: -$overlap;
+}
+
+// The dark background starts below the images overlap
+.bottom {
+  background-color: $color-bg-dark;
+  display: flex;
+  justify-content: center;
+  padding: 40px 0;
+}
+
+.carouselWrapper {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(
+    to bottom,
+    $color-bg-white 0%,
+    $color-bg-white $overlap,
+    $color-bg-dark $overlap,
+    $color-bg-dark 100%
+  );
+}
+
+.track {
+  display: flex;
+  gap: 24px;
+  width: max-content;
+  animation: scroll 80s linear infinite;
+}
+
+.slide {
+  flex-shrink: 0;
+}
+
+.image {
+  display: block;
+  height: $carousel-height;
+  width: auto;
+  object-fit: cover;
+
+  @media (max-width: $breakpoint-tablet) {
+    height: 400px;
+  }
+}
+
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+// CTA button — inverted (light bg on dark)
+.ctaBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 20px;
+  padding: 12px 20px 10px;
+  background: $color-text-light;
+  color: $color-bg-dark;
+  font-size: 16px;
+  font-weight: 300;
+  letter-spacing: -0.32px;
+  line-height: 20.48px;
+  border: 1px solid $color-text-light;
+  cursor: pointer;
+  transition: opacity 0.2s;
+
+  &:hover {
+    opacity: 0.9;
+  }
+
+  svg {
+    width: 13px;
+    height: 13px;
+    color: $color-bg-dark;
+  }
+}

@@ -1,0 +1,54 @@
+@use "../../styles/variables" as *;
+
+.page {
+  min-height: 100vh;
+  background: $color-bg-dark;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  * {
+    font-weight: 300;
+  }
+}
+
+.container {
+  text-align: center;
+  padding: 40px 24px;
+  max-width: 600px;
+}
+
+.title {
+  font-size: 48px;
+  line-height: 52px;
+  letter-spacing: -2.4px;
+  color: $color-text-light;
+  margin-bottom: 24px;
+
+  strong {
+    font-weight: 500;
+  }
+
+  @media (max-width: $breakpoint-tablet) {
+    font-size: 32px;
+    line-height: 36px;
+    letter-spacing: -1.6px;
+  }
+}
+
+.text {
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: -0.16px;
+  color: $color-text-muted;
+  margin-bottom: 40px;
+  text-transform: none;
+}
+
+.redirect {
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: -0.12px;
+  color: $color-text-muted;
+  text-transform: none;
+}
