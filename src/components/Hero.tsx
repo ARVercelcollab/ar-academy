@@ -1,11 +1,34 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import styles from "./Hero.module.scss";
 import RegistrationForm from "./RegistrationForm";
 
 export default function Hero() {
   const [isMuted, setIsMuted] = useState(true);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [fullLoaded, setFullLoaded] = useState(false);
+
+  useEffect(() => {
+    // Preload full video in background
+    const full = document.createElement("video");
+    full.src = "/vid/ari_landing.mp4";
+    full.preload = "auto";
+    full.oncanplaythrough = () => setFullLoaded(true);
+    full.load();
+  }, []);
+
+  useEffect(() => {
+    if (fullLoaded && videoRef.current) {
+      const current = videoRef.current;
+      const currentTime = current.currentTime;
+      const wasMuted = current.muted;
+      current.src = "/vid/ari_landing.mp4";
+      current.currentTime = currentTime;
+      current.muted = wasMuted;
+      current.play().catch(() => {});
+    }
+  }, [fullLoaded]);
 
   return (
     <section className={styles.hero}>
@@ -30,24 +53,27 @@ export default function Hero() {
             onClick={() => setIsMuted(!isMuted)}
           >
             <video
+              ref={videoRef}
               className={styles.video}
               autoPlay
               loop
               muted={isMuted}
               playsInline
-              poster="/video-poster.jpg"
+              preload="auto"
             >
-              {/* <source src="/intro.mp4" type="video/mp4" /> */}
+              <source src="/vid/ari_landing_15seg.mp4" type="video/mp4" />
             </video>
-            <button
-              className={styles.soundBtn}
-              onClick={(e) => {
-                e.stopPropagation();
-                setIsMuted(!isMuted);
-              }}
-            >
-              haz click y activa el sonido
-            </button>
+            {isMuted && (
+              <button
+                className={styles.soundBtn}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsMuted(false);
+                }}
+              >
+                haz click y activa el sonido
+              </button>
+            )}
           </div>
 
           <p className={styles.preText}>

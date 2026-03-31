@@ -46,6 +46,24 @@ export async function POST(req: NextRequest) {
     const updatedSub = await stripe.subscriptions.retrieve(subscription.id);
 
     if (updatedSub.status === "active") {
+      // Notify Make webhook — triggers Skool invite + confirmation email
+      fetch(process.env.MAKE_WEBHOOK_URL!, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          event: "subscription_created",
+          name,
+          email,
+          phone,
+          customerId: customer.id,
+          subscriptionId: updatedSub.id,
+          plan: "AR Academy",
+          amount: 27,
+          currency: "USD",
+          timestamp: new Date().toISOString(),
+        }),
+      }).catch(() => {});
+
       return NextResponse.json({
         success: true,
         subscriptionId: updatedSub.id,

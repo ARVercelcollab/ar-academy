@@ -11,6 +11,9 @@ import {
 import styles from "./RegistrationForm.module.scss";
 import ArrowIcon from "./ArrowIcon";
 import StripeLogo from "./StripeLogo";
+import { trackEvent } from "@/lib/tracking";
+
+export { trackEvent };
 
 type Step = "register" | "payment";
 
@@ -135,6 +138,7 @@ function PaymentStep({
       const data = await res.json();
 
       if (data.success) {
+        trackEvent("Purchase", { content_name: "AR Academy", currency: "USD", value: 27 });
         window.location.href = "/bienvenida";
         return;
       } else if (data.requiresAction && data.clientSecret) {
@@ -305,6 +309,8 @@ export default function RegistrationForm() {
 
   const handleContinue = () => {
     if (validate()) {
+      trackEvent("Lead", { content_name: "AR Academy", currency: "USD", value: 27 });
+      trackEvent("InitiateCheckout", { content_name: "AR Academy", currency: "USD", value: 27 });
       setStep("payment");
       scrollToForm();
     }

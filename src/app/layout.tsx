@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.scss";
 import CookieBanner from "@/components/CookieBanner";
+import MetaPixel from "@/components/MetaPixel";
 
 export const metadata: Metadata = {
   title: "AR Academy – Tu carrera como modelo profesional",
@@ -51,6 +52,7 @@ export default function RootLayout({
       </head>
       <body>
         {children}
+        <MetaPixel />
         <CookieBanner />
       </body>
     </html>

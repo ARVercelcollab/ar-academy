@@ -1,27 +1,28 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import styles from "./page.module.scss";
 
 export default function Bienvenida() {
   const router = useRouter();
   const [countdown, setCountdown] = useState(20);
+  const hasRedirected = useRef(false);
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setCountdown((prev) => {
-        if (prev <= 1) {
-          clearInterval(timer);
-          router.push("/");
-          return 0;
-        }
-        return prev - 1;
-      });
+      setCountdown((prev) => prev - 1);
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [router]);
+  }, []);
+
+  useEffect(() => {
+    if (countdown <= 0 && !hasRedirected.current) {
+      hasRedirected.current = true;
+      router.push("/");
+    }
+  }, [countdown, router]);
 
   return (
     <main className={styles.page}>
@@ -35,7 +36,7 @@ export default function Bienvenida() {
           Revisa tu correo electrónico para acceder a la comunidad.
         </p>
         <p className={styles.redirect}>
-          Volviendo a la página principal en {countdown}s
+          Volviendo a la página principal en {Math.max(countdown, 0)}s
         </p>
       </div>
     </main>
