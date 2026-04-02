@@ -5,7 +5,7 @@ import { useRef, useEffect, useCallback } from "react";
 export function useCarouselScroll() {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
-  const pauseTimeout = useRef<ReturnType<typeof setTimeout>>();
+  const pauseTimeout = useRef<ReturnType<typeof setTimeout>>(null);
 
   const pauseAnimation = useCallback(() => {
     if (trackRef.current) {
