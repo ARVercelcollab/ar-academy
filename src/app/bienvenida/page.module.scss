@@ -41,8 +41,43 @@
   line-height: 24px;
   letter-spacing: -0.16px;
   color: $color-text-muted;
+  margin-bottom: 32px;
+  text-transform: none;
+}
+
+.details {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 20px 28px;
+  margin-bottom: 32px;
+  text-align: left;
+  text-transform: none;
+
+  p {
+    font-size: 14px;
+    line-height: 24px;
+    letter-spacing: -0.14px;
+    color: $color-text-light;
+  }
+}
+
+.label {
+  color: $color-text-muted;
+}
+
+.support {
+  font-size: 13px;
+  line-height: 20px;
+  letter-spacing: -0.13px;
+  color: $color-text-muted;
   margin-bottom: 40px;
   text-transform: none;
+
+  a {
+    color: $color-text-light;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
 }
 
 .redirect {

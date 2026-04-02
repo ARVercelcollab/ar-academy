@@ -48,10 +48,7 @@ export default function Hero() {
 
       <div className={styles.mainContent}>
         <div className={styles.left}>
-          <div
-            className={styles.videoWrapper}
-            onClick={() => setIsMuted(!isMuted)}
-          >
+          <div className={styles.videoWrapper}>
             <video
               ref={videoRef}
               className={styles.video}
@@ -59,6 +56,7 @@ export default function Hero() {
               loop
               muted={isMuted}
               playsInline
+              controls={!isMuted}
               preload="auto"
             >
               <source src="/vid/ari_landing_15seg.mp4" type="video/mp4" />
@@ -66,10 +64,7 @@ export default function Hero() {
             {isMuted && (
               <button
                 className={styles.soundBtn}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setIsMuted(false);
-                }}
+                onClick={() => setIsMuted(false)}
               >
                 haz click y activa el sonido
               </button>

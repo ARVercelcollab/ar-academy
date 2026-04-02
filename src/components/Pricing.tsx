@@ -10,10 +10,6 @@ export default function Pricing() {
           <strong>Invitación gratis</strong> a todos nuestros eventos
           presenciales.
         </h2>
-        <p className={styles.invitationSub}>
-          Solo para las primeras 50 en entrar. Por orden de entrada, sin
-          excepciones.
-        </p>
       </div>
 
       {/* Dark block — pricing */}
@@ -26,11 +22,6 @@ export default function Pricing() {
             </span>
           </div>
           <p className={styles.priceOld}>(antes $97/mes)</p>
-          <p className={styles.guarantee}>
-            Y si no te gusta, no pagas.
-            <br />
-            Sin problema.
-          </p>
 
           <div className={styles.buttons}>
             <a href="#registro" className={styles.btnOutline}>

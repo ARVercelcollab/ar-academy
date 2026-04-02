@@ -19,7 +19,7 @@ export default function Footer() {
             <p className={styles.company}>
               Arianny Rivas — AR Model Agency · NIF: Y4869806F
               <br />
-              Calle Dolores Alcaide 4, puerta 12, 46007 Valencia (España)
+              Calle San Vicente Mártir 338, Valencia (España)
               <br />
               info@ariannyrivasagency.com · +34 661 855 612
             </p>

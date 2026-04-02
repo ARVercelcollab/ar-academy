@@ -59,7 +59,6 @@ const phonePrefixes = [
   { code: "+56", label: "CL" },
   { code: "+57", label: "CO" },
   { code: "+506", label: "CR" },
-  { code: "+53", label: "CU" },
   { code: "+593", label: "EC" },
   { code: "+503", label: "SV" },
   { code: "+502", label: "GT" },
@@ -139,7 +138,11 @@ function PaymentStep({
 
       if (data.success) {
         trackEvent("Purchase", { content_name: "AR Academy", currency: "USD", value: 27 });
-        window.location.href = "/bienvenida";
+        const params = new URLSearchParams({
+          name: userData.name,
+          email: userData.email,
+        });
+        window.location.href = `/bienvenida?${params.toString()}`;
         return;
       } else if (data.requiresAction && data.clientSecret) {
         const { error: confirmError } = await stripe.confirmPayment({
@@ -191,7 +194,7 @@ function PaymentStep({
           onClick={handleSubmit}
           disabled={loading || !stripe}
         >
-          <span>{loading ? "PROCESANDO..." : "CONTRATAR"}</span>
+          <span>{loading ? "PROCESANDO..." : "ACCEDER"}</span>
           {!loading && <ArrowIcon />}
         </button>
       </div>
@@ -413,8 +416,19 @@ export default function RegistrationForm() {
                   name="phone"
                   placeholder="612 345 678"
                   autoComplete="tel-national"
+                  inputMode="numeric"
                   value={formData.phone}
-                  onChange={handleChange}
+                  onChange={(e) => {
+                    const val = e.target.value.replace(/[^0-9\s]/g, "");
+                    setFormData((prev) => ({ ...prev, phone: val }));
+                    if (errors.phone) {
+                      setErrors((prev) => {
+                        const next = { ...prev };
+                        delete next.phone;
+                        return next;
+                      });
+                    }
+                  }}
                 />
               </div>
               {errors.phone && (

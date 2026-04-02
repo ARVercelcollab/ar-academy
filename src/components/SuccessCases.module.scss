@@ -19,7 +19,9 @@ $overlap: 60px;
 
 .carouselWrapper {
   position: relative;
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
   background: linear-gradient(
     to bottom,
     $color-bg-white 0%,
@@ -27,6 +29,11 @@ $overlap: 60px;
     $color-bg-dark $overlap,
     $color-bg-dark 100%
   );
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  scrollbar-width: none;
 }
 
 .track {
@@ -34,6 +41,12 @@ $overlap: 60px;
   gap: 24px;
   width: max-content;
   animation: scroll 80s linear infinite;
+
+  @media (pointer: coarse) {
+    .carouselWrapper:active & {
+      animation-play-state: paused;
+    }
+  }
 }
 
 .slide {

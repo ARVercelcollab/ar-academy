@@ -52,8 +52,15 @@
 
 // Carousel (same as SuccessCases)
 .carouselWrapper {
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
   padding: 40px 0;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  scrollbar-width: none;
 }
 
 .track {
@@ -61,6 +68,12 @@
   gap: 24px;
   width: max-content;
   animation: scroll 80s linear infinite;
+
+  @media (pointer: coarse) {
+    .carouselWrapper:active & {
+      animation-play-state: paused;
+    }
+  }
 }
 
 .slide {

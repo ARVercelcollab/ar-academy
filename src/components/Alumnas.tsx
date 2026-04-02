@@ -1,17 +1,18 @@
+"use client";
+
 import Image from "next/image";
 import styles from "./Alumnas.module.scss";
 import ArrowIcon from "./ArrowIcon";
+import { useCarouselScroll } from "@/hooks/useCarouselScroll";
 
 const carouselImages = [
-  { src: "/img/carrusel-1.jpg", width: 1118, height: 591 },
-  { src: "/img/carrusel-2.jpg", width: 1115, height: 586 },
-  { src: "/img/carrusel-3.jpg", width: 1121, height: 591 },
   { src: "/img/carrusel-4.jpg", width: 1114, height: 616 },
   { src: "/img/carrusel-5.jpg", width: 1099, height: 619 },
 ];
 
 export default function Alumnas() {
   const allImages = [...carouselImages, ...carouselImages];
+  const { wrapperRef, trackRef } = useCarouselScroll();
 
   return (
     <>
@@ -34,8 +35,8 @@ export default function Alumnas() {
           </p>
         </div>
 
-        <div className={styles.carouselWrapper}>
-          <div className={styles.track}>
+        <div className={styles.carouselWrapper} ref={wrapperRef}>
+          <div className={styles.track} ref={trackRef}>
             {allImages.map((img, i) => (
               <div key={i} className={styles.slide}>
                 <Image

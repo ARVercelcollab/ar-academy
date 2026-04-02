@@ -11,8 +11,7 @@ export default function FinalCta() {
           <div className={styles.benefits}>
             <p>Acceso inmediato.</p>
             <p><strong>Cancela cuando quieras.</strong></p>
-            <p>Si no te gusta, no pagas.</p>
-            <p>Funciona para cualquier ciudad de España y Latinoamérica.</p>
+            <p>Funciona en todo el mundo.</p>
           </div>
 
           <p className={styles.badge}>

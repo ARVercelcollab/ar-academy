@@ -47,22 +47,27 @@ export async function POST(req: NextRequest) {
 
     if (updatedSub.status === "active") {
       // Notify Make webhook — triggers Skool invite + confirmation email
-      fetch(process.env.MAKE_WEBHOOK_URL!, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          event: "subscription_created",
-          name,
-          email,
-          phone,
-          customerId: customer.id,
-          subscriptionId: updatedSub.id,
-          plan: "AR Academy",
-          amount: 27,
-          currency: "USD",
-          timestamp: new Date().toISOString(),
-        }),
-      }).catch(() => {});
+      // Must await so Vercel doesn't kill the function before Make receives it
+      try {
+        await fetch(process.env.MAKE_WEBHOOK_URL!, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            event: "subscription_created",
+            name,
+            email,
+            phone,
+            customerId: customer.id,
+            subscriptionId: updatedSub.id,
+            plan: "AR Academy",
+            amount: 27,
+            currency: "USD",
+            timestamp: new Date().toISOString(),
+          }),
+        });
+      } catch (webhookErr) {
+        console.error("Make webhook failed:", webhookErr);
+      }
 
       return NextResponse.json({
         success: true,
