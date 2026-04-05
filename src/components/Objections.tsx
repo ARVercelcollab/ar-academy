@@ -85,7 +85,7 @@ export default function Objections() {
 
         <div className={styles.guaranteeBar}>
           <p className={styles.guaranteeText}>
-            <strong>El riesgo es cero.</strong> La oportunidad es real.
+            <strong>El riesgo es cero.</strong> La oportunidad es ahora.
           </p>
           <div className={styles.guaranteeSub}>
             <p>100% Garantizado SIN Preguntas</p>

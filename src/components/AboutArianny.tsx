@@ -23,7 +23,7 @@ export default function AboutArianny() {
           </p>
 
           <p className={styles.description}>
-            He creado <em>&quot;Campus The Perfect Model&quot;</em>.{" "}
+            He creado <em>AR Academy</em>.{" "}
             <strong>un sistema de 3 pilares</strong> para que dejes de ser
             &quot;la chica de las fotos lindas&quot; y te conviertas en una
             modelo profesional impulsando tu negocio propio a través de mi

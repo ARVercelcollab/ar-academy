@@ -1,16 +1,19 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import styles from "./Hero.module.scss";
 import RegistrationForm from "./RegistrationForm";
 
 export default function Hero() {
   const [isMuted, setIsMuted] = useState(true);
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [progress, setProgress] = useState(0);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const progressRef = useRef<HTMLDivElement>(null);
   const [fullLoaded, setFullLoaded] = useState(false);
+  const [dragging, setDragging] = useState(false);
 
   useEffect(() => {
-    // Preload full video in background
     const full = document.createElement("video");
     full.src = "/vid/ari_landing.mp4";
     full.preload = "auto";
@@ -30,13 +33,58 @@ export default function Hero() {
     }
   }, [fullLoaded]);
 
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    const onTime = () => {
+      if (!dragging && video.duration) {
+        setProgress((video.currentTime / video.duration) * 100);
+      }
+    };
+    const onPlay = () => setIsPlaying(true);
+    const onPause = () => setIsPlaying(false);
+    video.addEventListener("timeupdate", onTime);
+    video.addEventListener("play", onPlay);
+    video.addEventListener("pause", onPause);
+    return () => {
+      video.removeEventListener("timeupdate", onTime);
+      video.removeEventListener("play", onPlay);
+      video.removeEventListener("pause", onPause);
+    };
+  }, [dragging]);
+
+  const togglePlay = useCallback(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    if (video.paused) video.play().catch(() => {});
+    else video.pause();
+  }, []);
+
+  const seekTo = useCallback((clientX: number) => {
+    const bar = progressRef.current;
+    const video = videoRef.current;
+    if (!bar || !video || !video.duration) return;
+    const rect = bar.getBoundingClientRect();
+    const ratio = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+    video.currentTime = ratio * video.duration;
+    setProgress(ratio * 100);
+  }, []);
+
+  const handleActivateSound = useCallback(() => {
+    setIsMuted(false);
+    if (videoRef.current) {
+      videoRef.current.currentTime = 0;
+      videoRef.current.muted = false;
+      videoRef.current.play().catch(() => {});
+    }
+  }, []);
+
   return (
     <section className={styles.hero}>
       <div className={styles.headerArea}>
         <p className={styles.subtitle}>
-          Para chicas que sienten que podrían vivir de su imagen...
-          <br />
-          pero no saben por dónde empezar.
+          La chica que entra a una habitación y todos voltean no llegó ahí
+          sola. AR Academy es el lugar donde eso empieza a construirse.
         </p>
         <h1 className={styles.title}>
           Empieza aquí: la guía y el entorno que necesitas para{" "}
@@ -56,18 +104,59 @@ export default function Hero() {
               loop
               muted={isMuted}
               playsInline
-              controls={!isMuted}
               preload="auto"
+              onClick={!isMuted ? togglePlay : undefined}
             >
               <source src="/vid/ari_landing_15seg.mp4" type="video/mp4" />
             </video>
-            {isMuted && (
+            {isMuted ? (
               <button
                 className={styles.soundBtn}
-                onClick={() => setIsMuted(false)}
+                onClick={handleActivateSound}
               >
                 haz click y activa el sonido
               </button>
+            ) : (
+              <div className={styles.customControls}>
+                <button
+                  className={styles.playPauseBtn}
+                  onClick={togglePlay}
+                  type="button"
+                >
+                  {isPlaying ? (
+                    <svg width="14" height="16" viewBox="0 0 14 16" fill="none">
+                      <rect x="0" y="0" width="4" height="16" fill="#fff" />
+                      <rect x="10" y="0" width="4" height="16" fill="#fff" />
+                    </svg>
+                  ) : (
+                    <svg width="14" height="16" viewBox="0 0 14 16" fill="none">
+                      <path d="M0 0L14 8L0 16V0Z" fill="#fff" />
+                    </svg>
+                  )}
+                </button>
+                <div
+                  className={styles.progressBar}
+                  ref={progressRef}
+                  onClick={(e) => seekTo(e.clientX)}
+                  onMouseDown={(e) => {
+                    setDragging(true);
+                    seekTo(e.clientX);
+                    const onMove = (ev: MouseEvent) => seekTo(ev.clientX);
+                    const onUp = () => {
+                      setDragging(false);
+                      window.removeEventListener("mousemove", onMove);
+                      window.removeEventListener("mouseup", onUp);
+                    };
+                    window.addEventListener("mousemove", onMove);
+                    window.addEventListener("mouseup", onUp);
+                  }}
+                >
+                  <div
+                    className={styles.progressFill}
+                    style={{ width: `${progress}%` }}
+                  />
+                </div>
+              </div>
             )}
           </div>
 
