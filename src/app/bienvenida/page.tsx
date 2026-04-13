@@ -1,44 +1,36 @@
 "use client";
 
-import { useEffect, useState, useRef, Suspense } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import styles from "./page.module.scss";
 
 function BienvenidaContent() {
-  const router = useRouter();
   const searchParams = useSearchParams();
-  const [countdown, setCountdown] = useState(60);
-  const hasRedirected = useRef(false);
 
   const name = searchParams.get("name") || "";
   const email = searchParams.get("email") || "";
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCountdown((prev) => prev - 1);
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, []);
-
-  useEffect(() => {
-    if (countdown <= 0 && !hasRedirected.current) {
-      hasRedirected.current = true;
-      router.push("/");
-    }
-  }, [countdown, router]);
 
   return (
     <main className={styles.page}>
       <div className={styles.container}>
         <h1 className={styles.title}>
-          ¡Bienvenida a <strong>AR Academy!</strong>
+          Ya casi estás dentro de <strong>AR Academy</strong>
         </h1>
         <p className={styles.text}>
-          Tu suscripción se ha activado correctamente.
+          Hemos abierto Skool en una pestaña nueva para que completes tu
+          suscripción y accedas a la comunidad.
           <br />
-          Revisa tu correo electrónico para acceder a la comunidad.
+          Si no se ha abierto automáticamente, pulsa el botón de abajo.
         </p>
+
+        <a
+          href="https://www.skool.com/ariannyrivasacademy/about"
+          target="_blank"
+          rel="noopener noreferrer"
+          className={styles.ctaButton}
+        >
+          IR A SKOOL
+        </a>
 
         {(name || email) && (
           <div className={styles.details}>
@@ -56,16 +48,14 @@ function BienvenidaContent() {
         )}
 
         <p className={styles.support}>
-          Si tienes algún problema o no recibes el email, contacta con nosotros
-          en{" "}
+          Si tienes cualquier problema para completar el pago o acceder a la
+          comunidad, escríbenos a{" "}
           <a href="mailto:ariannyrivasacademy@gmail.com">
             ariannyrivasacademy@gmail.com
-          </a>
+          </a>{" "}
+          y te ayudaremos personalmente.
         </p>
 
-        <p className={styles.redirect}>
-          Volviendo a la página principal en {Math.max(countdown, 0)}s
-        </p>
       </div>
     </main>
   );
