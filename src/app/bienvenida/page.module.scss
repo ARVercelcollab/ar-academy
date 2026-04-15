@@ -80,19 +80,10 @@
   }
 }
 
-.ctaButton {
-  display: inline-block;
-  background: $color-text-light;
-  color: $color-bg-dark;
-  padding: 16px 40px;
-  font-size: 14px;
-  letter-spacing: 0.5px;
-  text-decoration: none;
-  margin-bottom: 32px;
-  transition: opacity 0.2s ease;
-  font-weight: 500;
-
-  &:hover {
-    opacity: 0.85;
-  }
+.redirect {
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: -0.12px;
+  color: $color-text-muted;
+  text-transform: none;
 }
