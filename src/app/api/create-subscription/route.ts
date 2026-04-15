@@ -1,33 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { stripe } from "@/lib/stripe";
-import Stripe from "stripe";
 
 export async function POST(req: NextRequest) {
   try {
-    const { name, email, phone, paymentMethodId, promoCode } = await req.json();
+    const { name, email, phone, paymentMethodId } = await req.json();
 
     if (!name || !email || !phone || !paymentMethodId) {
       return NextResponse.json(
         { error: "Faltan campos obligatorios" },
         { status: 400 }
       );
-    }
-
-    // Resolve promo code → promotion_code id
-    let discounts: Stripe.SubscriptionCreateParams.Discount[] | undefined;
-    if (promoCode && typeof promoCode === "string") {
-      const promos = await stripe.promotionCodes.list({
-        code: promoCode,
-        active: true,
-        limit: 1,
-      });
-      if (promos.data.length === 0) {
-        return NextResponse.json(
-          { error: "El código promocional no es válido o ha expirado" },
-          { status: 400 }
-        );
-      }
-      discounts = [{ promotion_code: promos.data[0].id }];
     }
 
     // Create customer
@@ -47,7 +29,6 @@ export async function POST(req: NextRequest) {
       items: [{ price: process.env.STRIPE_PRICE_ID! }],
       default_payment_method: paymentMethodId,
       collection_method: "charge_automatically",
-      discounts,
       expand: ["latest_invoice"],
     });
 

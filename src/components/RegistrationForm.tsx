@@ -94,7 +94,6 @@ function PaymentStep({
   const elements = useElements();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [promoCode, setPromoCode] = useState("");
 
   const fail = (msg: string) => {
     setError(msg);
@@ -136,7 +135,6 @@ function PaymentStep({
             typeof setupIntent.payment_method === "string"
               ? setupIntent.payment_method
               : setupIntent.payment_method.id,
-          promoCode: promoCode.trim() || undefined,
         }),
       });
 
@@ -181,20 +179,6 @@ function PaymentStep({
           terms: { card: "never" },
         }}
       />
-      <div className={styles.promoCodeField}>
-        <label className={styles.fieldLabel}>
-          CÓDIGO PROMOCIONAL (OPCIONAL)
-        </label>
-        <input
-          className={styles.input}
-          type="text"
-          placeholder="EJ: TEST100"
-          autoComplete="off"
-          value={promoCode}
-          onChange={(e) => setPromoCode(e.target.value.toUpperCase())}
-          disabled={loading}
-        />
-      </div>
       {error && <p className={styles.errorMsg}>{error}</p>}
       <div className={styles.paymentActions}>
         <button
