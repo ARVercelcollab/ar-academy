@@ -94,6 +94,13 @@ function PaymentStep({
   const elements = useElements();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [promoCode, setPromoCode] = useState("");
+
+  const fail = (msg: string) => {
+    setError(msg);
+    onError(msg);
+    setLoading(false);
+  };
 
   const handleSubmit = async () => {
     if (!stripe || !elements) return;
@@ -110,14 +117,12 @@ function PaymentStep({
     });
 
     if (setupError) {
-      setError(setupError.message || "Error al validar la tarjeta");
-      setLoading(false);
+      fail(setupError.message || "No hemos podido validar tu tarjeta. Revisa los datos e inténtalo de nuevo.");
       return;
     }
 
     if (!setupIntent?.payment_method) {
-      setError("No se pudo validar el método de pago");
-      setLoading(false);
+      fail("No se pudo validar el método de pago. Inténtalo de nuevo.");
       return;
     }
 
@@ -131,6 +136,7 @@ function PaymentStep({
             typeof setupIntent.payment_method === "string"
               ? setupIntent.payment_method
               : setupIntent.payment_method.id,
+          promoCode: promoCode.trim() || undefined,
         }),
       });
 
@@ -152,20 +158,16 @@ function PaymentStep({
           },
         });
         if (confirmError) {
-          setError(
-            confirmError.message || "Error en la verificación 3D Secure"
-          );
+          fail(confirmError.message || "Error en la verificación 3D Secure. Inténtalo de nuevo.");
         } else {
           onSuccess();
         }
       } else {
-        setError(data.error || "Error al procesar el pago");
+        fail(data.error || "No hemos podido completar la compra. Inténtalo de nuevo.");
       }
     } catch {
-      setError("Error de conexión. Inténtalo de nuevo.");
+      fail("Error de conexión. Comprueba tu internet e inténtalo de nuevo.");
     }
-
-    setLoading(false);
   };
 
   return (
@@ -179,6 +181,20 @@ function PaymentStep({
           terms: { card: "never" },
         }}
       />
+      <div className={styles.promoCodeField}>
+        <label className={styles.fieldLabel}>
+          CÓDIGO PROMOCIONAL (OPCIONAL)
+        </label>
+        <input
+          className={styles.input}
+          type="text"
+          placeholder="EJ: TEST100"
+          autoComplete="off"
+          value={promoCode}
+          onChange={(e) => setPromoCode(e.target.value.toUpperCase())}
+          disabled={loading}
+        />
+      </div>
       {error && <p className={styles.errorMsg}>{error}</p>}
       <div className={styles.paymentActions}>
         <button
