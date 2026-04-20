@@ -45,30 +45,9 @@ export async function POST(req: NextRequest) {
     // Verify final status
     const updatedSub = await stripe.subscriptions.retrieve(subscription.id);
 
-    if (updatedSub.status === "active") {
-      // Notify Make webhook — triggers Skool invite + confirmation email
-      // Must await so Vercel doesn't kill the function before Make receives it
-      try {
-        await fetch(process.env.MAKE_WEBHOOK_URL!, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            event: "subscription_created",
-            name,
-            email,
-            phone,
-            customerId: customer.id,
-            subscriptionId: updatedSub.id,
-            plan: "AR Academy",
-            amount: 27,
-            currency: "USD",
-            timestamp: new Date().toISOString(),
-          }),
-        });
-      } catch (webhookErr) {
-        console.error("Make webhook failed:", webhookErr);
-      }
-
+    // Make is now triggered from /api/stripe-webhook on invoice.payment_succeeded
+    // so Stripe retries automatically if Make is down.
+    if (updatedSub.status === "active" || updatedSub.status === "trialing") {
       return NextResponse.json({
         success: true,
         subscriptionId: updatedSub.id,
