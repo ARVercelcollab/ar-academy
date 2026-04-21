@@ -141,7 +141,7 @@ function PaymentStep({
       const data = await res.json();
 
       if (data.success) {
-        trackEvent("Purchase", { content_name: "AR Academy", currency: "USD", value: 27 });
+        trackEvent("Purchase", { content_name: "AR Academy", currency: "EUR", value: 27 });
         const params = new URLSearchParams({
           name: userData.name,
           email: userData.email,
@@ -312,8 +312,8 @@ export default function RegistrationForm() {
 
   const handleContinue = () => {
     if (validate()) {
-      trackEvent("Lead", { content_name: "AR Academy", currency: "USD", value: 27 });
-      trackEvent("InitiateCheckout", { content_name: "AR Academy", currency: "USD", value: 27 });
+      trackEvent("Lead", { content_name: "AR Academy", currency: "EUR", value: 27 });
+      trackEvent("InitiateCheckout", { content_name: "AR Academy", currency: "EUR", value: 27 });
       setStep("payment");
       scrollToForm();
     }

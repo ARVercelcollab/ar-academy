@@ -18,10 +18,10 @@ export default function Pricing() {
           <span className={styles.priceLabel}>por solo</span>
           <div className={styles.priceRow}>
             <span className={styles.price}>
-              <strong>$27</strong>/mes
+              <strong>27€</strong>/mes
             </span>
           </div>
-          <p className={styles.priceOld}>(antes $97/mes)</p>
+          <p className={styles.priceOld}>(antes 97€/mes)</p>
 
           <div className={styles.buttons}>
             <a href="#registro" className={styles.btnOutline}>
@@ -37,7 +37,7 @@ export default function Pricing() {
 
         <div className={styles.savingsBar}>
           <p>
-            <strong>Ahorra $70</strong> asegurando tu descuento hoy
+            <strong>Ahorra 70€</strong> asegurando tu descuento hoy
           </p>
         </div>
       </div>

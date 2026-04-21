@@ -45,7 +45,7 @@ export default function Footer() {
             <p>
               Los pagos se procesan de forma segura mediante Stripe, Inc. Los
               datos de tu tarjeta nunca pasan por nuestros servidores. Al
-              contratar aceptas una suscripción mensual de $27/mes que puedes
+              contratar aceptas una suscripción mensual de 27€/mes que puedes
               cancelar en cualquier momento desde tu perfil, sin permanencia ni
               penalización. El contenido de esta página no constituye una
               garantía de resultados. Los resultados pueden variar según la
