@@ -58,6 +58,7 @@ const phonePrefixes = [
   { code: "+55", label: "BR" },
   { code: "+56", label: "CL" },
   { code: "+57", label: "CO" },
+  { code: "+501", label: "BZ" },
   { code: "+506", label: "CR" },
   { code: "+593", label: "EC" },
   { code: "+503", label: "SV" },
@@ -71,6 +72,9 @@ const phonePrefixes = [
   { code: "+1809", label: "DO" },
   { code: "+598", label: "UY" },
   { code: "+58", label: "VE" },
+  { code: "+592", label: "GY" },
+  { code: "+597", label: "SR" },
+  { code: "+240", label: "GQ" },
 ];
 
 interface UserData {
