@@ -315,11 +315,17 @@ export default function RegistrationForm() {
   };
 
   const handleContinue = () => {
+    if (step === "payment") return;
     if (validate()) {
       trackEvent("Lead", { content_name: "AR Academy", currency: "EUR", value: 27 });
       trackEvent("InitiateCheckout", { content_name: "AR Academy", currency: "EUR", value: 27 });
       setStep("payment");
       scrollToForm();
+    } else {
+      showNotification(
+        "error",
+        "Te faltan campos por rellenar. Completa tus datos y acepta los términos para continuar al pago."
+      );
     }
   };
 
@@ -365,6 +371,7 @@ export default function RegistrationForm() {
           </button>
           <button
             className={`${styles.tab} ${step === "payment" ? styles.active : ""}`}
+            onClick={handleContinue}
           >
             2. EL PAGO
           </button>
