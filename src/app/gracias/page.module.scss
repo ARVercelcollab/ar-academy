@@ -32,21 +32,31 @@
   font-weight: 300;
   line-height: 68px;
   letter-spacing: -3.2px;
-  color: #000000;
+  color: $color-accent-wine;
   max-width: 839px;
-  margin: 0 auto 48px;
+  margin: 0 auto 20px;
 
   @media (max-width: $breakpoint-tablet) {
     font-size: 38px;
     line-height: 42px;
     letter-spacing: -1.9px;
-    margin-bottom: 32px;
+    margin-bottom: 16px;
   }
 }
 
-.titleAccent {
-  font-weight: 500;
-  color: $color-accent-wine;
+.text {
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 24px;
+  letter-spacing: -0.16px;
+  color: $color-text-dark;
+  text-transform: none;
+  max-width: 520px;
+  margin: 0 auto 48px;
+
+  @media (max-width: $breakpoint-tablet) {
+    margin-bottom: 32px;
+  }
 }
 
 // Video (mismo patrón que el Hero)

@@ -61,10 +61,13 @@ export default function GraciasPage() {
     <main className={styles.page}>
       <div className={styles.content}>
         <div className={styles.container}>
-          <h1 className={styles.title}>
-            ¡Enhorabuena, eres parte de{" "}
-            <span className={styles.titleAccent}>AR Academy!</span>
-          </h1>
+          <h1 className={styles.title}>¡Enhorabuena!</h1>
+
+          <p className={styles.text}>
+            Tu sesión está confirmada.
+            <br />
+            Antes de reunirnos es importante que veas esto.
+          </p>
 
           <div className={styles.videoWrapper}>
             <video
