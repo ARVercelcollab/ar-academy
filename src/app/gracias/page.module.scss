@@ -34,72 +34,19 @@
   letter-spacing: -3.2px;
   color: #000000;
   max-width: 839px;
-  margin: 0 auto 24px;
+  margin: 0 auto 48px;
 
   @media (max-width: $breakpoint-tablet) {
     font-size: 38px;
     line-height: 42px;
     letter-spacing: -1.9px;
-    margin-bottom: 20px;
+    margin-bottom: 32px;
   }
 }
 
 .titleAccent {
   font-weight: 500;
   color: $color-accent-wine;
-}
-
-// Bloque de mensaje (mismo contenido que /bienvenida, adaptado a fondo blanco)
-.text {
-  font-size: 16px;
-  font-weight: 300;
-  line-height: 24px;
-  letter-spacing: -0.16px;
-  color: $color-text-dark;
-  text-transform: none;
-  margin-bottom: 32px;
-}
-
-.details {
-  display: inline-block;
-  background: rgba(0, 0, 0, 0.03);
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  padding: 20px 28px;
-  margin-bottom: 32px;
-  text-align: left;
-  text-transform: none;
-
-  p {
-    font-size: 14px;
-    font-weight: 300;
-    line-height: 24px;
-    letter-spacing: -0.14px;
-    color: $color-text-dark;
-  }
-}
-
-.label {
-  color: $color-text-muted;
-}
-
-.support {
-  font-size: 13px;
-  font-weight: 300;
-  line-height: 20px;
-  letter-spacing: -0.13px;
-  color: $color-text-muted;
-  text-transform: none;
-  margin-bottom: 48px;
-
-  a {
-    color: $color-text-dark;
-    text-decoration: underline;
-    text-underline-offset: 2px;
-  }
-
-  @media (max-width: $breakpoint-tablet) {
-    margin-bottom: 32px;
-  }
 }
 
 // Video (mismo patrón que el Hero)
