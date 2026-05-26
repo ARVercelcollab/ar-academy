@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
-import Footer from "@/components/Footer";
 import styles from "./page.module.scss";
 
 export default function GraciasPage() {
@@ -129,7 +128,6 @@ export default function GraciasPage() {
           </div>
         </div>
       </div>
-      <Footer />
     </main>
   );
 }
