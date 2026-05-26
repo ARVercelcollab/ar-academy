@@ -150,7 +150,7 @@ function PaymentStep({
           name: userData.name,
           email: userData.email,
         });
-        window.location.href = `/bienvenida?${params.toString()}`;
+        window.location.href = `/gracias?${params.toString()}`;
         return;
       } else if (data.requiresAction && data.clientSecret) {
         const { error: confirmError } = await stripe.confirmPayment({
