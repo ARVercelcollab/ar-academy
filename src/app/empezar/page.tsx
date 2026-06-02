@@ -96,10 +96,11 @@ export default function EmpezarPage() {
               muted={isMuted}
               playsInline
               preload="auto"
+              poster="https://res.cloudinary.com/dpxilazgm/video/upload/so_0,f_auto,q_auto/v1780416974/ArAcademy-VSL-LLAMADA_V03_1_c23pt4.jpg"
               onClick={!isMuted ? togglePlay : undefined}
             >
               <source
-                src="https://res.cloudinary.com/dpxilazgm/video/upload/f_auto,q_auto/v1780416974/ArAcademy-VSL-LLAMADA_V03_1_c23pt4.mp4"
+                src="https://res.cloudinary.com/dpxilazgm/video/upload/f_auto,q_auto,vc_auto/v1780416974/ArAcademy-VSL-LLAMADA_V03_1_c23pt4.mp4"
                 type="video/mp4"
               />
             </video>
