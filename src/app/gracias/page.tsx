@@ -80,7 +80,10 @@ export default function GraciasPage() {
               preload="auto"
               onClick={!isMuted ? togglePlay : undefined}
             >
-              <source src="/vid/agradecimiento-2.mp4" type="video/mp4" />
+              <source
+                src="https://res.cloudinary.com/dpxilazgm/video/upload/f_auto,q_auto/v1780416537/agradecimiento_n5oubb.mp4"
+                type="video/mp4"
+              />
             </video>
             {isMuted ? (
               <button className={styles.soundBtn} onClick={handleActivateSound}>

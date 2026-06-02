@@ -13,9 +13,12 @@ export default function Hero() {
   const [fullLoaded, setFullLoaded] = useState(false);
   const [dragging, setDragging] = useState(false);
 
+  const fullVideoSrc =
+    "https://res.cloudinary.com/dpxilazgm/video/upload/f_auto,q_auto/v1780416534/ari_landing_qfx7nf.mp4";
+
   useEffect(() => {
     const full = document.createElement("video");
-    full.src = "/vid/ari_landing.mp4";
+    full.src = fullVideoSrc;
     full.preload = "auto";
     full.oncanplaythrough = () => setFullLoaded(true);
     full.load();
@@ -26,7 +29,7 @@ export default function Hero() {
       const current = videoRef.current;
       const currentTime = current.currentTime;
       const wasMuted = current.muted;
-      current.src = "/vid/ari_landing.mp4";
+      current.src = fullVideoSrc;
       current.currentTime = currentTime;
       current.muted = wasMuted;
       current.play().catch(() => {});
@@ -107,7 +110,10 @@ export default function Hero() {
               preload="auto"
               onClick={!isMuted ? togglePlay : undefined}
             >
-              <source src="/vid/ari_landing_15seg.mp4" type="video/mp4" />
+              <source
+                src="https://res.cloudinary.com/dpxilazgm/video/upload/f_auto,q_auto/v1780416531/ari_landing_15seg_s3ryik.mp4"
+                type="video/mp4"
+              />
             </video>
             {isMuted ? (
               <button

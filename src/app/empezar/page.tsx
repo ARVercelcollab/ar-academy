@@ -98,7 +98,10 @@ export default function EmpezarPage() {
               preload="auto"
               onClick={!isMuted ? togglePlay : undefined}
             >
-              <source src="/vid/VSL-1.mp4" type="video/mp4" />
+              <source
+                src="https://res.cloudinary.com/dpxilazgm/video/upload/f_auto,q_auto/v1780416974/ArAcademy-VSL-LLAMADA_V03_1_c23pt4.mp4"
+                type="video/mp4"
+              />
             </video>
             {isMuted ? (
               <button className={styles.soundBtn} onClick={handleActivateSound}>
