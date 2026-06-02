@@ -36,6 +36,10 @@ yarn-error.log*
 # vercel
 .vercel
 
+# vídeos pesados (servir desde el hosting, no desde git)
+/public/vid/VSL-1.mp4
+/public/vid/agradecimiento-2.mp4
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

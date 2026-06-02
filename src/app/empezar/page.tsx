@@ -1,14 +1,17 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
+import RegistrationForm from "@/components/RegistrationForm";
 import styles from "./page.module.scss";
 
-export default function GraciasPage() {
+export default function EmpezarPage() {
   const [isMuted, setIsMuted] = useState(true);
   const [isPlaying, setIsPlaying] = useState(true);
   const [progress, setProgress] = useState(0);
+  const [showForm, setShowForm] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const progressRef = useRef<HTMLDivElement>(null);
+  const formRef = useRef<HTMLDivElement>(null);
   const [dragging, setDragging] = useState(false);
 
   useEffect(() => {
@@ -57,16 +60,31 @@ export default function GraciasPage() {
     }
   }, []);
 
+  const handleStart = useCallback(() => {
+    setShowForm(true);
+    setTimeout(() => {
+      formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 100);
+  }, []);
+
   return (
     <main className={styles.page}>
       <div className={styles.content}>
         <div className={styles.container}>
-          <h1 className={styles.title}>¡Enhorabuena!</h1>
+          <h1 className={styles.title}>
+            <span className={styles.titleAccent}>
+              Hay chicas que lo piensan.
+              <br />
+              Y hay chicas que lo hacen.
+            </span>
+            <br />
+            Si llegaste hasta aquí, ya sabes en cuál lado estás.
+          </h1>
 
           <p className={styles.text}>
-            Tu sesión está confirmada.
-            <br />
-            Antes de reunirnos es importante que veas esto.
+            AR Academy: la academia donde construyes tu carrera como modelo
+            profesional y creadora de contenido desde cero, con dirección exacta
+            y comprobada.
           </p>
 
           <div className={styles.videoWrapper}>
@@ -80,7 +98,7 @@ export default function GraciasPage() {
               preload="auto"
               onClick={!isMuted ? togglePlay : undefined}
             >
-              <source src="/vid/agradecimiento-2.mp4" type="video/mp4" />
+              <source src="/vid/VSL-1.mp4" type="video/mp4" />
             </video>
             {isMuted ? (
               <button className={styles.soundBtn} onClick={handleActivateSound}>
@@ -129,6 +147,16 @@ export default function GraciasPage() {
               </div>
             )}
           </div>
+
+          {!showForm ? (
+            <button className={styles.ctaBtn} onClick={handleStart}>
+              Quiero empezar ahora
+            </button>
+          ) : (
+            <div className={styles.formWrapper} ref={formRef}>
+              <RegistrationForm />
+            </div>
+          )}
         </div>
       </div>
     </main>
