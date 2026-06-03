@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import RegistrationForm from "@/components/RegistrationForm";
+import ArrowIcon from "@/components/ArrowIcon";
 import styles from "./page.module.scss";
 
 export default function EmpezarPage() {
@@ -79,7 +80,9 @@ export default function EmpezarPage() {
             </span>
             <br />
             <span className={styles.titleSub}>
-              Si llegaste hasta aquí, ya sabes en cuál lado estás.
+              Si llegaste hasta aquí,
+              <br />
+              ya sabes en cuál lado estás.
             </span>
           </h1>
 
@@ -156,7 +159,8 @@ export default function EmpezarPage() {
 
           {!showForm ? (
             <button className={styles.ctaBtn} onClick={handleStart}>
-              Quiero empezar ahora
+              <span>QUIERO EMPEZAR AHORA</span>
+              <ArrowIcon />
             </button>
           ) : (
             <div className={styles.formWrapper} ref={formRef}>
