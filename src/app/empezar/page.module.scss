@@ -48,6 +48,21 @@
   color: $color-accent-wine;
 }
 
+.titleSub {
+  display: inline-block;
+  font-size: 28px;
+  line-height: 34px;
+  letter-spacing: -1.4px;
+  margin-top: 12px;
+
+  @media (max-width: $breakpoint-tablet) {
+    font-size: 20px;
+    line-height: 26px;
+    letter-spacing: -1px;
+    margin-top: 8px;
+  }
+}
+
 .text {
   font-size: 16px;
   font-weight: 300;

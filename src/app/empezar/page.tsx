@@ -78,7 +78,9 @@ export default function EmpezarPage() {
               Y hay chicas que lo hacen.
             </span>
             <br />
-            Si llegaste hasta aquí, ya sabes en cuál lado estás.
+            <span className={styles.titleSub}>
+              Si llegaste hasta aquí, ya sabes en cuál lado estás.
+            </span>
           </h1>
 
           <p className={styles.text}>
