@@ -78,11 +78,11 @@ export default function GraciasPage() {
               muted={isMuted}
               playsInline
               preload="auto"
-              poster="https://res.cloudinary.com/dpxilazgm/video/upload/so_0,f_auto,q_auto/v1780416537/agradecimiento_n5oubb.jpg"
+              poster="https://res.cloudinary.com/dpxilazgm/video/upload/so_0,f_auto,q_auto/v1780503051/LLAMADA_1_ztdfd7.jpg"
               onClick={!isMuted ? togglePlay : undefined}
             >
               <source
-                src="https://res.cloudinary.com/dpxilazgm/video/upload/f_auto,q_auto,vc_auto/v1780416537/agradecimiento_n5oubb.mp4"
+                src="https://res.cloudinary.com/dpxilazgm/video/upload/f_auto,q_auto,vc_auto/v1780503051/LLAMADA_1_ztdfd7.mp4"
                 type="video/mp4"
               />
             </video>
