@@ -9,15 +9,20 @@
 import { useState, useEffect, useRef } from "react";
 import styles from "./UrgencyToast.module.scss";
 
-type Activity = { initial: string; text: string };
+type Activity = { initial: string; city: string };
 
+// Aviso de actividad reciente: "Una chica acaba de acceder a la comunidad desde
+// [ciudad]". Ciudades variadas (ES + LATAM + US) para reflejar el alcance real
+// del público. Datos ilustrativos.
 const ACTIVITIES: Activity[] = [
-  { initial: "V", text: "Una chica de Valencia acaba de empezar su formación" },
-  { initial: "M", text: "Nueva alumna desde Málaga se unió esta mañana" },
-  { initial: "S", text: "Alguien de Sevilla está completando su inscripción" },
-  { initial: "B", text: "Una futura modelo de Bilbao acaba de entrar" },
-  { initial: "Z", text: "Nueva alumna desde Zaragoza se unió hoy" },
-  { initial: "C", text: "Alguien de A Coruña está viendo esta página ahora" },
+  { initial: "M", city: "Miami" },
+  { initial: "V", city: "Valencia" },
+  { initial: "B", city: "Bogotá" },
+  { initial: "C", city: "Ciudad de México" },
+  { initial: "M", city: "Madrid" },
+  { initial: "B", city: "Buenos Aires" },
+  { initial: "S", city: "Santiago" },
+  { initial: "L", city: "Lima" },
 ];
 
 export default function UrgencyToast() {
@@ -61,7 +66,10 @@ export default function UrgencyToast() {
       <span className={styles.avatar} aria-hidden="true">
         {current.initial}
       </span>
-      <p className={styles.text}>{current.text}</p>
+      <p className={styles.text}>
+        Una chica acaba de acceder a la comunidad desde{" "}
+        <strong>{current.city}</strong>
+      </p>
     </div>
   );
 }

@@ -24,6 +24,27 @@ export default function HeroReordered() {
   const formRef = useRef<HTMLDivElement>(null);
   const [fullLoaded, setFullLoaded] = useState(false);
   const [dragging, setDragging] = useState(false);
+  const [currentMonth, setCurrentMonth] = useState("");
+
+  // El mes se calcula en cliente para evitar mismatch de hidratación y para que
+  // el badge "Plazas limitadas en [mes]" se mantenga solo con el paso del tiempo.
+  useEffect(() => {
+    const meses = [
+      "enero",
+      "febrero",
+      "marzo",
+      "abril",
+      "mayo",
+      "junio",
+      "julio",
+      "agosto",
+      "septiembre",
+      "octubre",
+      "noviembre",
+      "diciembre",
+    ];
+    setCurrentMonth(meses[new Date().getMonth()]);
+  }, []);
 
   const fullVideoSrc =
     "https://res.cloudinary.com/dpxilazgm/video/upload/f_auto,q_auto/v1780416534/ari_landing_qfx7nf.mp4";
@@ -136,6 +157,9 @@ export default function HeroReordered() {
           La chica que entra a una habitación y todos voltean.
         </h1>
         <p className={styles.heroSub}>Se construye. No se nace.</p>
+        <span className={styles.scarcityBadge}>
+          Plazas limitadas en {currentMonth}
+        </span>
 
         {/* 2 · PRE-VIDEO */}
         <div className={styles.preVideo}>
