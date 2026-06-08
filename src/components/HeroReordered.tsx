@@ -161,20 +161,7 @@ export default function HeroReordered() {
           Plazas limitadas en {currentMonth}
         </span>
 
-        {/* 2 · PRE-VIDEO */}
-        <div className={styles.preVideo}>
-          <p className={styles.preText}>
-            Te han dicho que necesitas medir 1.80, talla cero y una genética
-            perfecta.
-          </p>
-          <h2 className={styles.mentira}>Mentira.</h2>
-          <p className={styles.preText}>
-            Arianny te cuenta la verdad que las agencias no quieren que sepas.
-          </p>
-          <span className={styles.arrowDown}>↓</span>
-        </div>
-
-        {/* 3 · VIDEO */}
+        {/* VIDEO (el bloque pre-vídeo se eliminó: era redundante con el vídeo) */}
         <div className={styles.videoWrapper}>
           <video
             ref={videoRef}
@@ -245,7 +232,7 @@ export default function HeroReordered() {
           tú.
         </p>
         <blockquote className={styles.quote}>
-          Sin medir 1.80.
+          Sin medir 1,75.
           <br />
           Sin agencia detrás.
           <br />

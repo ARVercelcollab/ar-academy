@@ -57,6 +57,7 @@
   display: inline-flex;
   align-items: center;
   gap: 7px;
+  margin-bottom: 36px;
   padding: 6px 16px;
   border: 1px solid $color-accent-gold;
   color: $color-text-dark;
@@ -77,6 +78,7 @@
   @media (max-width: $breakpoint-tablet) {
     font-size: 10px;
     padding: 4px 12px;
+    margin-bottom: 24px;
   }
 }
 
@@ -99,62 +101,7 @@
   }
 }
 
-// 2 · PRE-VIDEO
-.preVideo {
-  margin-top: 32px;
-  margin-bottom: 28px;
-
-  @media (max-width: $breakpoint-tablet) {
-    margin-top: 20px;
-    margin-bottom: 18px;
-  }
-}
-
-// preText: mismo 14px/-0.14px que Hero real
-.preText {
-  font-size: 14px;
-  font-weight: 300;
-  color: $color-text-black;
-  line-height: 22px;
-  letter-spacing: -0.14px;
-  max-width: 600px;
-  margin: 0 auto;
-
-  @media (max-width: $breakpoint-tablet) {
-    font-size: 12px;
-  }
-}
-
-// mentira: más pequeño y condensado que el Hero real (era 64px, demasiado aire)
-.mentira {
-  font-size: 44px;
-  font-weight: 500;
-  color: $color-accent-wine;
-  line-height: 48px;
-  letter-spacing: -2.2px;
-  margin: 8px 0;
-
-  @media (max-width: $breakpoint-tablet) {
-    font-size: 30px;
-    line-height: 34px;
-    letter-spacing: -1.5px;
-    margin: 8px 0;
-  }
-}
-
-.arrowDown {
-  display: block;
-  margin-top: 12px;
-  font-size: 20px;
-  color: $color-text-muted;
-
-  @media (max-width: $breakpoint-tablet) {
-    margin-top: 10px;
-    font-size: 18px;
-  }
-}
-
-// 3 · VIDEO  (más grande en desktop: ocupa más ancho y gana altura)
+// VIDEO  (más grande en desktop: ocupa más ancho y gana altura)
 .videoWrapper {
   position: relative;
   width: 100%;

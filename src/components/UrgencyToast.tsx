@@ -47,8 +47,8 @@ export default function UrgencyToast() {
       );
     };
 
-    // primer aviso tras 7s, sin prisa
-    const start = setTimeout(cycle, 7000);
+    // primer aviso tras 20s, sin prisa (que dé tiempo a ver el hero/vídeo)
+    const start = setTimeout(cycle, 20000);
     timers.current.push(start);
 
     const snapshot = timers.current;
