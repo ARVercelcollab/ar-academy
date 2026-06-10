@@ -3,6 +3,7 @@
 // (vídeo arriba) y añade el toast de urgencia. Cuando el cliente valide, se porta
 // a /comunidad. No toca producción.
 
+import styles from "./page.module.scss";
 import HeroReordered from "@/components/HeroReordered";
 import UrgencyToast from "@/components/UrgencyToast";
 import SuccessCases from "@/components/SuccessCases";
@@ -22,7 +23,9 @@ export default function ComunidadPreviewPage() {
     <main>
       <UrgencyToast />
       <HeroReordered />
-      <SuccessCases />
+      <div className={styles.noOverlap}>
+        <SuccessCases />
+      </div>
       <SocialProof />
       <PainPoints />
       <AboutArianny />

@@ -12,7 +12,6 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import styles from "./HeroReordered.module.scss";
 import RegistrationForm from "./RegistrationForm";
-import ArrowIcon from "./ArrowIcon";
 
 export default function HeroReordered() {
   const [isMuted, setIsMuted] = useState(true);
@@ -150,15 +149,24 @@ export default function HeroReordered() {
 
   return (
     <section className={styles.hero} id="registro">
+      {/* Barra de escasez FIJA en el top (sigue al hacer scroll) */}
+      <div className={styles.scarcityBar}>
+        <span className={styles.scarcityDot} aria-hidden="true" />
+        <span className={styles.scarcityText}>
+          {currentMonth ? `${currentMonth} · ` : ""}plazas limitadas
+        </span>
+      </div>
+      {/* Espaciador en el flujo: la barra fija no ocupa espacio propio */}
+      <div className={styles.scarcitySpacer} aria-hidden="true" />
+
       <div className={styles.container}>
         {/* 1 · HERO */}
-        <span className={styles.proofBadge}>+300 alumnas lo demuestran</span>
         <h1 className={styles.title}>
           La chica que entra a una habitación y todos voltean.
         </h1>
         <p className={styles.heroSub}>Se construye. No se nace.</p>
-        <span className={styles.scarcityBadge}>
-          Plazas limitadas en {currentMonth}
+        <span className={styles.proofBadge}>
+          +300 alumnas iniciaron exactamente donde estás tú
         </span>
 
         {/* VIDEO (el bloque pre-vídeo se eliminó: era redundante con el vídeo) */}
@@ -226,41 +234,48 @@ export default function HeroReordered() {
           )}
         </div>
 
-        {/* 4 · POST-VIDEO */}
-        <p className={styles.paragraph}>
-          <strong>Más de 300 mujeres</strong> empezaron exactamente donde estás
-          tú.
-        </p>
-        <blockquote className={styles.quote}>
-          Sin medir 1,75.
-          <br />
-          Sin agencia detrás.
-          <br />
-          Sin la genética que &quot;se supone&quot; necesitas.
-        </blockquote>
-        <p className={styles.paragraph}>
-          Hoy trabajan con marcas y viven de lo que antes solo veían en
-          Instagram.
-        </p>
-        <p className={styles.decideLine}>
-          <em>
-            Esto no es para las que sueñan.
-            <br />
-            Es para las que deciden.
-          </em>
-        </p>
-
-        {/* 5 · CTA → formulario (mismo patrón que /empezar) */}
+        {/* CTA con precio (sube justo tras el vídeo, como el boceto) */}
         {!showForm ? (
-          <button className={styles.ctaBtn} onClick={handleStart}>
-            <span>QUIERO EMPEZAR AHORA</span>
-            <ArrowIcon />
-          </button>
+          <>
+            <button className={styles.priceCta} onClick={handleStart}>
+              <span className={styles.priceCtaMain}>
+                Reserva tu plaza · <strong>27€</strong>/mes
+              </span>
+              <span className={styles.priceCtaSub}>
+                Antes 97€/mes · precio por tiempo limitado
+              </span>
+            </button>
+            <p className={styles.afterCta}>
+              <strong>Menos de lo que te cuesta una cena.</strong>
+              <br />
+              <em>
+                Saldrás siendo otra mujer: más segura, más auténtica, más
+                {" "}profesional.
+              </em>
+            </p>
+          </>
         ) : (
           <div className={styles.formWrapper} ref={formRef}>
             <RegistrationForm />
           </div>
         )}
+      </div>
+
+      {/* Banda de beneficios full-width: carrusel en bucle (marquee) */}
+      <div className={styles.benefitsBar}>
+        <div className={styles.benefitsTrack}>
+          {/* Dos copias seguidas para que el bucle sea continuo y sin saltos */}
+          {[0, 1].map((copy) => (
+            <div className={styles.benefitsGroup} key={copy} aria-hidden={copy === 1}>
+              <span>Sin medir 1,75</span>
+              <span>Sin agencias detrás</span>
+              <span>Sin experiencia previa</span>
+              <span>Vive de tu imagen</span>
+              <span>Monetiza tu contenido</span>
+              <span>+600 campañas</span>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );

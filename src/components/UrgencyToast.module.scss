@@ -2,9 +2,10 @@
 
 .toast {
   position: fixed;
-  top: 24px;
+  // por debajo de la barra de escasez fija (que está pegada al top)
+  top: 56px;
   left: 24px;
-  z-index: 50;
+  z-index: 90;
 
   display: flex;
   align-items: center;
@@ -24,7 +25,7 @@
   @media (max-width: $breakpoint-tablet) {
     left: 12px;
     right: 12px;
-    top: 12px;
+    top: 46px;
     max-width: none;
   }
 }

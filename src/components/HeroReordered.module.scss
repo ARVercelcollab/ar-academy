@@ -5,19 +5,81 @@
 
 .hero {
   background-color: $color-bg-white;
-  padding-top: 60px;
-  padding-bottom: 120px;
-
-  @media (max-width: $breakpoint-tablet) {
-    padding-top: 24px;
-    padding-bottom: 56px;
-  }
+  // SIN padding-bottom: el banner rojo debe ser el último elemento, pegado a la
+  // sección siguiente. El espacio inferior lo da el margin del .container.
 }
 
 .container {
   @include container;
   max-width: 960px;
   text-align: center;
+  margin-bottom: 96px;
+
+  @media (max-width: $breakpoint-tablet) {
+    margin-bottom: 48px;
+  }
+}
+
+// Barra de escasez full-width, FIJA en el top (sigue al hacer scroll)
+.scarcityBar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 11px 16px;
+  background: $color-accent-wine;
+
+  @media (max-width: $breakpoint-tablet) {
+    padding: 9px 16px;
+  }
+}
+
+// Compensa el alto de la barra fija para que no tape el inicio del hero
+.scarcitySpacer {
+  height: 40px;
+  margin-bottom: 48px;
+
+  @media (max-width: $breakpoint-tablet) {
+    height: 34px;
+    margin-bottom: 28px;
+  }
+}
+
+.scarcityDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ffffff;
+  animation: scarcityPulse 2s ease-in-out infinite;
+}
+
+@keyframes scarcityPulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+.scarcityText {
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  line-height: 18px;
+  text-transform: uppercase;
+
+  @media (max-width: $breakpoint-tablet) {
+    font-size: 12px;
+    letter-spacing: 0.2px;
+  }
 }
 
 // 1 · HERO  (title: mismo 64px/peso 300/-3.2px que Hero real)
@@ -53,38 +115,9 @@
   }
 }
 
-.scarcityBadge {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  margin-bottom: 36px;
-  padding: 6px 16px;
-  border: 1px solid $color-accent-gold;
-  color: $color-text-dark;
-  font-size: 12px;
-  font-weight: 500;
-  letter-spacing: -0.12px;
-  line-height: 16px;
-  text-transform: uppercase;
-
-  &::before {
-    content: "";
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: $color-accent-gold;
-  }
-
-  @media (max-width: $breakpoint-tablet) {
-    font-size: 10px;
-    padding: 4px 12px;
-    margin-bottom: 24px;
-  }
-}
-
 .proofBadge {
   display: inline-block;
-  margin-bottom: 20px;
+  margin: 8px 0 36px;
   padding: 6px 18px;
   background: $color-accent-wine;
   color: #ffffff;
@@ -97,7 +130,7 @@
   @media (max-width: $breakpoint-tablet) {
     font-size: 10px;
     padding: 4px 12px;
-    margin-bottom: 12px;
+    margin: 6px 0 24px;
   }
 }
 
@@ -213,59 +246,158 @@
   }
 }
 
-.quote {
-  text-align: left;
-  max-width: 600px;
-  margin: 20px auto;
-  padding: 14px 18px;
-  background: $color-bg-light;
-  border-left: 3px solid $color-accent-wine;
+// CTA con precio (gold) — sustituye al botón "QUIERO EMPEZAR AHORA"
+.priceCta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+  max-width: 480px;
+  margin: 36px auto 0;
+  padding: 16px 28px;
+  background: $color-accent-gold;
+  border: none;
+  cursor: pointer;
+  transition: filter 0.2s;
+
+  &:hover {
+    filter: brightness(0.96);
+  }
+
+  @media (max-width: $breakpoint-tablet) {
+    margin-top: 28px;
+    padding: 14px 20px;
+  }
+}
+
+.priceCtaMain {
+  color: $color-accent-wine;
+  font-size: 24px;
+  font-weight: 500;
+  letter-spacing: -0.48px;
+  line-height: 28px;
+  text-transform: uppercase;
+
+  strong {
+    font-weight: 700;
+  }
+
+  @media (max-width: $breakpoint-tablet) {
+    font-size: 19px;
+    line-height: 23px;
+  }
+}
+
+.priceCtaSub {
+  color: $color-accent-wine;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+  line-height: 16px;
+  text-transform: uppercase;
+  opacity: 0.85;
+
+  @media (max-width: $breakpoint-tablet) {
+    font-size: 10px;
+  }
+}
+
+.afterCta {
   font-size: 14px;
   font-weight: 300;
   line-height: 22px;
   letter-spacing: -0.14px;
-  color: $color-text-dark;
-}
+  color: $color-text-muted-dark;
+  max-width: 520px;
+  margin: 16px auto 0;
+  text-wrap: balance;
 
-.decideLine {
-  font-size: 16px;
-  font-weight: 500;
-  font-style: italic;
-  line-height: 22px;
-  letter-spacing: -0.16px;
-  color: $color-text-dark;
-  margin: 24px auto 0;
-}
+  strong {
+    font-weight: 600;
+    color: $color-text-dark;
+  }
 
-// 5 · CTA  (mismo estándar que el botón de /empezar)
-.ctaBtn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 20px;
-  margin: 40px auto 0;
-  padding: 12px 20px 10px;
-  background: $color-bg-dark;
-  color: $color-text-light;
-  font-size: 16px;
-  font-weight: 300;
-  letter-spacing: -0.32px;
-  line-height: 20.48px;
-  border: none;
-  cursor: pointer;
-  transition: opacity 0.2s;
+  em {
+    color: $color-text-dark;
+  }
 
   @media (max-width: $breakpoint-tablet) {
-    margin-top: 28px;
+    font-size: 13px;
+    line-height: 20px;
   }
+}
 
+// Banda de beneficios full-width: carrusel en bucle continuo (marquee).
+// Sin margen inferior para que quede PEGADO al carrusel de imágenes (SuccessCases).
+.benefitsBar {
+  background: $color-accent-wine;
+  margin: 48px 0 0;
+  padding: 13px 0;
+  overflow: hidden;
+  position: relative;
+  z-index: 1; // queda por encima del solapamiento negativo de SuccessCases
+
+  @media (max-width: $breakpoint-tablet) {
+    margin-top: 32px;
+    padding: 11px 0;
+  }
+}
+
+.benefitsTrack {
+  display: flex;
+  width: max-content;
+  animation: benefitsScroll 28s linear infinite;
+
+  // Pausa al pasar el ratón (cortesía en desktop)
   &:hover {
-    opacity: 0.85;
+    animation-play-state: paused;
   }
 
-  svg {
-    width: 13px;
-    height: 13px;
+  @media (max-width: $breakpoint-tablet) {
+    animation-duration: 20s;
+  }
+}
+
+.benefitsGroup {
+  display: flex;
+  flex-shrink: 0;
+
+  span {
+    white-space: nowrap;
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.2px;
+    line-height: 16px;
+    text-transform: uppercase;
+    padding: 0 22px;
+    position: relative;
+
+    &::after {
+      content: "·";
+      position: absolute;
+      right: -2px;
+      color: rgba(255, 255, 255, 0.5);
+    }
+  }
+
+  @media (max-width: $breakpoint-tablet) {
+    span {
+      font-size: 11px;
+      padding: 0 16px;
+      letter-spacing: 0.1px;
+    }
+  }
+}
+
+// Recorre la mitad del track (una de las dos copias) y vuelve, en bucle perfecto
+@keyframes benefitsScroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
   }
 }
 
