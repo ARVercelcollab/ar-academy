@@ -1,0 +1,10 @@
+// Solo para la preview: el banner rojo del Hero debe quedar PEGADO al carrusel
+// de imágenes (SuccessCases). Ese componente tiene un solapamiento de diseño
+// (margin-top: -60px / padding-top: 60px) pensado para /comunidad; aquí lo
+// neutralizamos sin tocar el componente compartido.
+.noOverlap {
+  :global(section) {
+    margin-top: 0;
+    padding-top: 0;
+  }
+}

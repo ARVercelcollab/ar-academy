@@ -3,6 +3,7 @@
 // (vídeo arriba) y añade el toast de urgencia. Cuando el cliente valide, se porta
 // a /comunidad. No toca producción.
 
+import type { Metadata } from "next";
 import styles from "./page.module.scss";
 import HeroReordered from "@/components/HeroReordered";
 import UrgencyToast from "@/components/UrgencyToast";
@@ -17,6 +18,12 @@ import Urgency from "@/components/Urgency";
 import Objections from "@/components/Objections";
 import FinalCta from "@/components/FinalCta";
 import Footer from "@/components/Footer";
+
+// Ya migrado a /comunidad: esta ruta de staging se mantiene viva pero fuera de
+// los buscadores para no competir como contenido duplicado.
+export const metadata: Metadata = {
+  robots: { index: false, follow: false },
+};
 
 export default function ComunidadPreviewPage() {
   return (

@@ -1,4 +1,6 @@
-import Hero from "@/components/Hero";
+import styles from "./page.module.scss";
+import HeroReordered from "@/components/HeroReordered";
+import UrgencyToast from "@/components/UrgencyToast";
 import SuccessCases from "@/components/SuccessCases";
 import SocialProof from "@/components/SocialProof";
 import PainPoints from "@/components/PainPoints";
@@ -14,8 +16,11 @@ import Footer from "@/components/Footer";
 export default function ComunidadPage() {
   return (
     <main>
-      <Hero />
-      <SuccessCases />
+      <UrgencyToast />
+      <HeroReordered />
+      <div className={styles.noOverlap}>
+        <SuccessCases />
+      </div>
       <SocialProof />
       <PainPoints />
       <AboutArianny />
