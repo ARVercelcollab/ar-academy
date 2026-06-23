@@ -237,6 +237,9 @@ export default function HeroReordered() {
         {/* CTA con precio (sube justo tras el vídeo, como el boceto) */}
         {!showForm ? (
           <>
+            <p className={styles.ctaHint}>
+              Da clic en el botón amarillo para acceder
+            </p>
             <button className={styles.priceCta} onClick={handleStart}>
               <span className={styles.priceCtaMain}>
                 Reserva tu plaza · <strong>27€</strong>/mes
