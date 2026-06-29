@@ -3,6 +3,8 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import styles from "./Hero.module.scss";
 import RegistrationForm from "./RegistrationForm";
+import { useHls } from "@/hooks/useHls";
+import { hlsUrl } from "@/lib/bunny";
 
 export default function Hero() {
   const [isMuted, setIsMuted] = useState(true);
@@ -10,31 +12,12 @@ export default function Hero() {
   const [progress, setProgress] = useState(0);
   const videoRef = useRef<HTMLVideoElement>(null);
   const progressRef = useRef<HTMLDivElement>(null);
-  const [fullLoaded, setFullLoaded] = useState(false);
   const [dragging, setDragging] = useState(false);
 
-  const fullVideoSrc =
-    "https://res.cloudinary.com/dpxilazgm/video/upload/f_auto,q_auto/v1780416534/ari_landing_qfx7nf.mp4";
-
-  useEffect(() => {
-    const full = document.createElement("video");
-    full.src = fullVideoSrc;
-    full.preload = "auto";
-    full.oncanplaythrough = () => setFullLoaded(true);
-    full.load();
-  }, []);
-
-  useEffect(() => {
-    if (fullLoaded && videoRef.current) {
-      const current = videoRef.current;
-      const currentTime = current.currentTime;
-      const wasMuted = current.muted;
-      current.src = fullVideoSrc;
-      current.currentTime = currentTime;
-      current.muted = wasMuted;
-      current.play().catch(() => {});
-    }
-  }, [fullLoaded]);
+  // HLS adaptativo: ya no precargamos un corto y swapeamos al largo (eso era
+  // para que arrancara rápido con los .mp4 de Cloudinary). Bunny sirve el largo
+  // por HLS y el adaptive bitrate da el arranque rápido por sí solo.
+  useHls(videoRef, hlsUrl("heroLargo"));
 
   useEffect(() => {
     const video = videoRef.current;
@@ -109,12 +92,7 @@ export default function Hero() {
               playsInline
               preload="auto"
               onClick={!isMuted ? togglePlay : undefined}
-            >
-              <source
-                src="https://res.cloudinary.com/dpxilazgm/video/upload/f_auto,q_auto/v1780416531/ari_landing_15seg_s3ryik.mp4"
-                type="video/mp4"
-              />
-            </video>
+            />
             {isMuted ? (
               <button
                 className={styles.soundBtn}

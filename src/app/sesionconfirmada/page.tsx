@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
+import { useHls } from "@/hooks/useHls";
+import { hlsUrl, posterUrl } from "@/lib/bunny";
 import styles from "./page.module.scss";
 
 export default function GraciasPage() {
@@ -10,6 +12,8 @@ export default function GraciasPage() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const progressRef = useRef<HTMLDivElement>(null);
   const [dragging, setDragging] = useState(false);
+
+  useHls(videoRef, hlsUrl("llamada"));
 
   useEffect(() => {
     const video = videoRef.current;
@@ -78,14 +82,9 @@ export default function GraciasPage() {
               muted={isMuted}
               playsInline
               preload="auto"
-              poster="https://res.cloudinary.com/dpxilazgm/video/upload/so_0,f_auto,q_auto/v1780503051/LLAMADA_1_ztdfd7.jpg"
+              poster={posterUrl("llamada")}
               onClick={!isMuted ? togglePlay : undefined}
-            >
-              <source
-                src="https://res.cloudinary.com/dpxilazgm/video/upload/f_auto,q_auto,vc_auto/v1780503051/LLAMADA_1_ztdfd7.mp4"
-                type="video/mp4"
-              />
-            </video>
+            />
             {isMuted ? (
               <button className={styles.soundBtn} onClick={handleActivateSound}>
                 haz click y activa el sonido

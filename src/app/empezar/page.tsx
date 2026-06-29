@@ -3,6 +3,8 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import RegistrationForm from "@/components/RegistrationForm";
 import ArrowIcon from "@/components/ArrowIcon";
+import { useHls } from "@/hooks/useHls";
+import { hlsUrl, posterUrl } from "@/lib/bunny";
 import styles from "./page.module.scss";
 
 export default function EmpezarPage() {
@@ -14,6 +16,8 @@ export default function EmpezarPage() {
   const progressRef = useRef<HTMLDivElement>(null);
   const formRef = useRef<HTMLDivElement>(null);
   const [dragging, setDragging] = useState(false);
+
+  useHls(videoRef, hlsUrl("comunidad"));
 
   useEffect(() => {
     const video = videoRef.current;
@@ -101,14 +105,9 @@ export default function EmpezarPage() {
               muted={isMuted}
               playsInline
               preload="auto"
-              poster="https://res.cloudinary.com/dpxilazgm/video/upload/so_0,f_auto,q_auto/v1780503035/COMUNIDAD_1_yqlcki.jpg"
+              poster={posterUrl("comunidad")}
               onClick={!isMuted ? togglePlay : undefined}
-            >
-              <source
-                src="https://res.cloudinary.com/dpxilazgm/video/upload/f_auto,q_auto,vc_auto/v1780503035/COMUNIDAD_1_yqlcki.mp4"
-                type="video/mp4"
-              />
-            </video>
+            />
             {isMuted ? (
               <button className={styles.soundBtn} onClick={handleActivateSound}>
                 haz click y activa el sonido

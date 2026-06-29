@@ -12,6 +12,8 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import styles from "./HeroReordered.module.scss";
 import RegistrationForm from "./RegistrationForm";
+import { useHls } from "@/hooks/useHls";
+import { hlsUrl } from "@/lib/bunny";
 
 export default function HeroReordered() {
   const [isMuted, setIsMuted] = useState(true);
@@ -21,9 +23,12 @@ export default function HeroReordered() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const progressRef = useRef<HTMLDivElement>(null);
   const formRef = useRef<HTMLDivElement>(null);
-  const [fullLoaded, setFullLoaded] = useState(false);
   const [dragging, setDragging] = useState(false);
   const [currentMonth, setCurrentMonth] = useState("");
+
+  // HLS adaptativo desde Bunny (ver nota en Hero.tsx: ya no hace falta el truco
+  // de precargar el corto y swapear al largo).
+  useHls(videoRef, hlsUrl("heroLargo"));
 
   // El mes se calcula en cliente para evitar mismatch de hidratación y para que
   // el badge "Plazas limitadas en [mes]" se mantenga solo con el paso del tiempo.
@@ -44,29 +49,6 @@ export default function HeroReordered() {
     ];
     setCurrentMonth(meses[new Date().getMonth()]);
   }, []);
-
-  const fullVideoSrc =
-    "https://res.cloudinary.com/dpxilazgm/video/upload/f_auto,q_auto/v1780416534/ari_landing_qfx7nf.mp4";
-
-  useEffect(() => {
-    const full = document.createElement("video");
-    full.src = fullVideoSrc;
-    full.preload = "auto";
-    full.oncanplaythrough = () => setFullLoaded(true);
-    full.load();
-  }, []);
-
-  useEffect(() => {
-    if (fullLoaded && videoRef.current) {
-      const current = videoRef.current;
-      const currentTime = current.currentTime;
-      const wasMuted = current.muted;
-      current.src = fullVideoSrc;
-      current.currentTime = currentTime;
-      current.muted = wasMuted;
-      current.play().catch(() => {});
-    }
-  }, [fullLoaded]);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -180,12 +162,7 @@ export default function HeroReordered() {
             playsInline
             preload="auto"
             onClick={!isMuted ? togglePlay : undefined}
-          >
-            <source
-              src="https://res.cloudinary.com/dpxilazgm/video/upload/f_auto,q_auto/v1780416531/ari_landing_15seg_s3ryik.mp4"
-              type="video/mp4"
-            />
-          </video>
+          />
           {isMuted ? (
             <button className={styles.soundBtn} onClick={handleActivateSound}>
               haz click y activa el sonido
