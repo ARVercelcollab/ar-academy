@@ -4,8 +4,10 @@ export const CLASE = {
   fechaLarga: "SÁBADO 5 DE SEPTIEMBRE",
   hora: "19:00",
   edicion: "masterclass-sep-2026",
-  // Enlace de invitación a la comunidad de WhatsApp. Se rellena y se despliega.
-  grupoWhatsApp: "",
+  // Enlace de invitación al grupo de WhatsApp. Solo escriben las administradoras.
+  // No se pone en la bio: ahí va la landing. Un enlace de grupo público atrae cuentas
+  // que entran únicamente a recolectar números.
+  grupoWhatsApp: "https://chat.whatsapp.com/DuC3pa0pOVNE0Wpq3KFxsi?mode=gi_t",
 };
 
 export const HORAS_LOCALES = [
