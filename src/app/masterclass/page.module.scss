@@ -1,0 +1,314 @@
+@use "../../styles/variables" as *;
+
+.main {
+  overflow-x: clip;
+}
+
+.container {
+  @include container;
+}
+
+/* ---------- barra superior ---------- */
+.topBar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 6px 14px;
+  padding: 11px 18px;
+  background: $color-accent-wine;
+  color: $color-text-light;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: -0.14px;
+  line-height: 18px;
+  text-align: center;
+
+  @media (max-width: $breakpoint-mobile) {
+    font-size: 12px;
+    letter-spacing: -0.12px;
+    gap: 4px 10px;
+    padding: 9px 14px;
+  }
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: $color-accent-gold;
+  flex-shrink: 0;
+}
+
+.cd {
+  color: $color-accent-gold;
+}
+
+/* ---------- hero ---------- */
+.hero {
+  padding: 56px 0 64px;
+  background: $color-bg-white;
+  text-align: center;
+
+  @media (max-width: $breakpoint-tablet) {
+    padding: 36px 0 48px;
+  }
+}
+
+.eyebrow {
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: -0.14px;
+  line-height: 18px;
+  color: $color-accent-wine;
+  margin-bottom: 18px;
+}
+
+.h1 {
+  max-width: 14ch;
+  margin: 0 auto;
+  font-size: 64px;
+  font-weight: 300;
+  letter-spacing: -3.2px;
+  line-height: 1.02;
+
+  strong {
+    font-weight: 500;
+  }
+
+  @media (max-width: $breakpoint-tablet) {
+    max-width: 100%;
+    font-size: 48px;
+    letter-spacing: -2.4px;
+  }
+
+  @media (max-width: $breakpoint-mobile) {
+    font-size: 36px;
+    letter-spacing: -1.8px;
+  }
+}
+
+.sub {
+  margin: 18px auto 34px;
+  font-size: 20px;
+  font-weight: 300;
+  font-style: italic;
+  letter-spacing: -0.4px;
+  line-height: 26px;
+  color: $color-text-muted;
+
+  @media (max-width: $breakpoint-mobile) {
+    font-size: 16px;
+    letter-spacing: -0.32px;
+    margin-bottom: 26px;
+  }
+}
+
+.sinTodo {
+  max-width: 620px;
+  margin: 34px auto 0;
+  font-size: 16px;
+  font-weight: 300;
+  letter-spacing: -0.32px;
+  line-height: 26px;
+  color: $color-text-dark;
+
+  @media (max-width: $breakpoint-mobile) {
+    font-size: 14px;
+    letter-spacing: -0.14px;
+    line-height: 24px;
+  }
+}
+
+/* ---------- regalos ---------- */
+.regalos {
+  padding: 72px 0;
+  background: $color-bg-dark;
+  color: $color-text-light;
+
+  @media (max-width: $breakpoint-tablet) {
+    padding: 52px 0;
+  }
+}
+
+.eyebrowDark {
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: -0.14px;
+  line-height: 18px;
+  color: $color-accent-gold;
+  margin-bottom: 12px;
+}
+
+.h2 {
+  font-size: 48px;
+  font-weight: 300;
+  letter-spacing: -2.4px;
+  line-height: 1.05;
+
+  @media (max-width: $breakpoint-tablet) {
+    font-size: 36px;
+    letter-spacing: -1.8px;
+  }
+
+  @media (max-width: $breakpoint-mobile) {
+    font-size: 32px;
+    letter-spacing: -0.32px;
+  }
+}
+
+.listaRegalos {
+  list-style: none;
+  margin: 40px 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  border-top: 1px solid rgba(238, 238, 238, 0.25);
+
+  @media (max-width: $breakpoint-tablet) {
+    grid-template-columns: 1fr;
+    margin-top: 30px;
+  }
+}
+
+.regalo {
+  padding: 28px 24px 28px 0;
+  border-right: 1px solid rgba(238, 238, 238, 0.25);
+
+  &:last-child {
+    border-right: none;
+    padding-right: 0;
+  }
+
+  &:not(:first-child) {
+    padding-left: 24px;
+  }
+
+  @media (max-width: $breakpoint-tablet) {
+    padding: 24px 0;
+    border-right: none;
+    border-bottom: 1px solid rgba(238, 238, 238, 0.25);
+
+    &:not(:first-child) {
+      padding-left: 0;
+    }
+
+    &:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+  }
+}
+
+.cuando {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: -0.12px;
+  line-height: 16px;
+  padding: 4px 10px;
+  border: 1px solid rgba(238, 238, 238, 0.35);
+  color: $color-text-subtle;
+  margin-bottom: 12px;
+}
+
+.cuandoYa {
+  border-color: $color-accent-gold;
+  color: $color-accent-gold;
+}
+
+.regaloTitulo {
+  font-size: 20px;
+  font-weight: 500;
+  letter-spacing: -0.4px;
+  line-height: 24px;
+  margin-bottom: 8px;
+}
+
+.regaloTexto {
+  font-size: 15px;
+  font-weight: 300;
+  letter-spacing: -0.15px;
+  line-height: 22px;
+  color: $color-text-subtle;
+}
+
+.pieRegalos {
+  margin-top: 34px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(238, 238, 238, 0.25);
+  font-size: 16px;
+  font-weight: 300;
+  letter-spacing: -0.32px;
+  line-height: 24px;
+  color: $color-accent-gold;
+
+  @media (max-width: $breakpoint-mobile) {
+    font-size: 14px;
+    letter-spacing: -0.14px;
+  }
+}
+
+/* ---------- horas ---------- */
+.horas {
+  padding: 72px 0;
+  background: $color-bg-light;
+
+  @media (max-width: $breakpoint-tablet) {
+    padding: 52px 0;
+  }
+}
+
+.h2Claro {
+  font-size: 36px;
+  font-weight: 300;
+  letter-spacing: -1.8px;
+  line-height: 1.08;
+  margin-bottom: 28px;
+
+  @media (max-width: $breakpoint-mobile) {
+    font-size: 28px;
+    letter-spacing: -0.28px;
+  }
+}
+
+.listaHoras {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-width: 640px;
+  border-top: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+.hora {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+  font-size: 15px;
+  font-weight: 300;
+  letter-spacing: -0.15px;
+  line-height: 20px;
+  color: $color-text-muted-dark;
+}
+
+.horaValor {
+  font-weight: 500;
+  color: $color-text-black;
+  font-variant-numeric: tabular-nums;
+}
+
+.horaDestacada {
+  color: $color-text-black;
+  font-weight: 500;
+
+  .horaValor {
+    color: $color-accent-wine;
+  }
+}
