@@ -6,76 +6,105 @@ import Footer from "@/components/Footer";
 import { CLASE, HORAS_LOCALES } from "@/lib/masterclass";
 
 export const metadata: Metadata = {
-  title: "Clase gratis en vivo · AR Academy",
+  title: "Masterclass gratuita · AR Academy",
   description:
-    "Los 10 pasos para trabajar como modelo profesional, en el orden en el que hay que darlos. Clase gratis en directo el sábado 5 de septiembre a las 19:00.",
+    "Todo lo que necesitas en 2026 para que una marca te contrate. Consigue que te paguen sin agencias y sin contactos. Masterclass gratuita en directo, sábado 5 de septiembre a las 19:00.",
 };
 
 const REGALOS = [
   {
     cuando: "TE LLEGA AHORA MISMO",
     ya: true,
-    titulo: "LAS TARIFAS REALES DE 4 CASTINGS",
-    texto: "Lo que se paga por una jornada y lo que se cobra aparte por los derechos. Capturas sin retocar.",
+    titulo: "5 plantillas para escribirle a una marca",
+    texto:
+      "El primer mensaje, la respuesta a un brief, la negociación de la tarifa y el «no» educado.",
+    icono: "mensaje" as const,
   },
   {
-    cuando: "EN LA CLASE",
-    titulo: "LA CHECKLIST DEL BOOK, EN 12 PUNTOS",
+    cuando: "EN LA MASTERCLASS",
+    titulo: "Las tarifas reales de 4 castings",
+    texto:
+      "Lo que se paga por una jornada y lo que se cobra aparte por los derechos de imagen.",
+    icono: "documento" as const,
+  },
+  {
+    cuando: "EN LA MASTERCLASS",
+    titulo: "La checklist del book, en 12 puntos",
     texto: "Qué tiene que llevar y en qué orden. Y los errores que arruinan un book caro.",
-  },
-  {
-    cuando: "EN LA CLASE",
-    titulo: "5 PLANTILLAS PARA ESCRIBIRLE A UNA MARCA",
-    texto: "El primer mensaje, la respuesta a un brief, la negociación y el «no» educado.",
+    icono: "lista" as const,
   },
 ];
+
+const ICONOS = {
+  mensaje: (
+    <path d="M20 14.5A2.5 2.5 0 0 1 17.5 17H9l-4 3.5V17h-.5A2.5 2.5 0 0 1 2 14.5v-8A2.5 2.5 0 0 1 4.5 4h13A2.5 2.5 0 0 1 20 6.5zM7 9h8M7 12.5h5" />
+  ),
+  documento: (
+    <path d="M6 3h9l4 4v14H6zM15 3v4h4M9.5 12h5M9.5 15.5h5" />
+  ),
+  lista: (
+    <path d="M4 6.5l2 2 3.5-3.5M4 13l2 2 3.5-3.5M4 19.5l2 2 3.5-3.5M13.5 7H20M13.5 13.5H20M13.5 20H20" />
+  ),
+};
 
 export default function MasterclassPage() {
   return (
     <main className={styles.main}>
       <div className={styles.topBar}>
-        <span className={styles.dot} aria-hidden="true" />
-        <span>{CLASE.fechaLarga} · {CLASE.hora}</span>
-        <span className={styles.cd}><CuentaAtras /></span>
+        <span className={styles.barraTexto}>
+          LLEGAS A TIEMPO PARA LA MASTERCLASS
+        </span>
+        <span className={styles.barraCorto}>EMPIEZA EN</span>
+        <CuentaAtras />
       </div>
 
       <section className={styles.hero}>
         <div className={styles.container}>
-          <p className={styles.eyebrow}>CLASE GRATIS EN DIRECTO</p>
+          <p className={styles.eyebrow}>MASTERCLASS GRATUITA · {CLASE.fechaLarga}</p>
           <h1 className={styles.h1}>
-            CASI TODAS EMPIEZAN POR EL <strong>PASO 8</strong>. POR ESO NADIE LAS LLAMA.
+            TE DOY <em className={styles.destacado}>GRATIS</em> TODO LO QUE NECESITAS EN 2026 PARA{" "}
+            <em className={styles.destacado}>QUE UNA MARCA TE CONTRATE</em>
           </h1>
-          <p className={styles.sub}>LOS 10 PASOS, EN ORDEN. EN DIRECTO Y GRATIS.</p>
+          <p className={styles.sub}>
+            CONSIGUE QUE TE PAGUEN SIN AGENCIAS Y SIN CONTACTOS.
+          </p>
 
           <MasterclassForm />
 
           <p className={styles.sinTodo}>
-            SIN EXPERIENCIA. SIN AGENCIA. SIN IMPORTAR TU CIUDAD. SIN CUERPO PERFECTO.
+            SIN EXPERIENCIA. SIN IMPORTAR TU CIUDAD. SIN CUERPO PERFECTO.
           </p>
         </div>
       </section>
 
       <section className={styles.regalos}>
         <div className={styles.container}>
-          <p className={styles.eyebrowDark}>AL RESERVAR TU PLAZA, ADEMÁS</p>
-          <h2 className={styles.h2}>TE LLEVAS TRES COSAS MÁS</h2>
+          <div className={styles.tarjetaRegalos}>
+            <p className={styles.eyebrowRegalos}>AL INSCRIBIRTE, TAMBIÉN RECIBES</p>
+            <h2 className={styles.h2}>TE LLEVAS TRES COSAS MÁS</h2>
 
-          <ul className={styles.listaRegalos}>
-            {REGALOS.map((r) => (
-              <li key={r.titulo} className={styles.regalo}>
-                <span className={`${styles.cuando} ${r.ya ? styles.cuandoYa : ""}`}>
-                  {r.cuando}
-                </span>
-                <h3 className={styles.regaloTitulo}>{r.titulo}</h3>
-                <p className={styles.regaloTexto}>{r.texto}</p>
-              </li>
-            ))}
-          </ul>
+            <ul className={styles.listaRegalos}>
+              {REGALOS.map((r) => (
+                <li key={r.titulo} className={styles.regalo}>
+                  <span className={styles.icono} aria-hidden="true">
+                    <svg viewBox="0 0 24 24">{ICONOS[r.icono]}</svg>
+                  </span>
+                  <div>
+                    <span className={`${styles.cuando} ${r.ya ? styles.cuandoYa : ""}`}>
+                      {r.cuando}
+                    </span>
+                    <h3 className={styles.regaloTitulo}>{r.titulo}</h3>
+                    <p className={styles.regaloTexto}>{r.texto}</p>
+                  </div>
+                </li>
+              ))}
+            </ul>
 
-          <p className={styles.pieRegalos}>
-            EL PRIMERO TE LLEGA AL CORREO EN CUANTO RESERVES. LOS OTROS DOS TE LOS DOY EN LA
-            CLASE.
-          </p>
+            <p className={styles.pieRegalos}>
+              Las plantillas te llegan al correo en cuanto reserves. Lo demás te lo doy en la
+              masterclass.
+            </p>
+          </div>
         </div>
       </section>
 

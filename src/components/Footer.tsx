@@ -29,11 +29,23 @@ export default function Footer({
         <div className={styles.content}>
           <div className={styles.legal}>
             <p className={styles.company}>
-              Arianny Rivas — AR Model Agency · NIF: Y4869806F
-              <br />
-              Calle San Vicente Mártir 338, Valencia (España)
-              <br />
-              info@ariannyrivasagency.com · +34 661 855 612
+              {esEvento ? (
+                <>
+                  AR Academy — Arianny Rivas · NIF: Y4869806F
+                  <br />
+                  Calle San Vicente Mártir 338, Valencia (España)
+                  <br />
+                  administracion@ariannyrivasacademy.com
+                </>
+              ) : (
+                <>
+                  Arianny Rivas — AR Model Agency · NIF: Y4869806F
+                  <br />
+                  Calle San Vicente Mártir 338, Valencia (España)
+                  <br />
+                  info@ariannyrivasagency.com · +34 661 855 612
+                </>
+              )}
             </p>
 
             <p>
@@ -63,9 +75,11 @@ export default function Footer({
               No se realizan
               transferencias internacionales fuera del EEE sin garantías
               adecuadas. Puedes ejercer tus derechos de acceso, rectificación,
-              supresión, oposición, limitación y portabilidad escribiendo a
-              info@ariannyrivasagency.com con el asunto &quot;Derechos
-              RGPD&quot;. Si consideras que tus derechos no han sido atendidos,
+              supresión, oposición, limitación y portabilidad escribiendo a{" "}
+              {esEvento
+                ? "administracion@ariannyrivasacademy.com"
+                : "info@ariannyrivasagency.com"}{" "}
+              con el asunto &quot;Derechos RGPD&quot;. Si consideras que tus derechos no han sido atendidos,
               puedes presentar una reclamación ante la Agencia Española de
               Protección de Datos (www.aepd.es).
             </p>
@@ -99,8 +113,8 @@ export default function Footer({
           </div>
 
           <p className={styles.copy}>
-            © {new Date().getFullYear()} AR Model Agency. Todos los derechos
-            reservados.
+            © {new Date().getFullYear()} {esEvento ? "AR Academy" : "AR Model Agency"}.
+            Todos los derechos reservados.
           </p>
         </div>
       </div>

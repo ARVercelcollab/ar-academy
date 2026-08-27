@@ -17,8 +17,8 @@
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  gap: 6px 14px;
-  padding: 11px 18px;
+  gap: 6px 16px;
+  padding: 8px 18px;
   background: $color-accent-wine;
   color: $color-text-light;
   font-size: 14px;
@@ -26,25 +26,22 @@
   letter-spacing: -0.14px;
   line-height: 18px;
   text-align: center;
+}
 
-  @media (max-width: $breakpoint-mobile) {
-    font-size: 12px;
-    letter-spacing: -0.12px;
-    gap: 4px 10px;
-    padding: 9px 14px;
+.barraTexto {
+  @media (max-width: $breakpoint-tablet) {
+    display: none;
   }
 }
 
-.dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: $color-accent-gold;
-  flex-shrink: 0;
-}
+.barraCorto {
+  display: none;
+  font-size: 12px;
+  letter-spacing: -0.12px;
 
-.cd {
-  color: $color-accent-gold;
+  @media (max-width: $breakpoint-tablet) {
+    display: inline;
+  }
 }
 
 /* ---------- hero ---------- */
@@ -68,41 +65,45 @@
 }
 
 .h1 {
-  max-width: 14ch;
+  max-width: 24ch;
   margin: 0 auto;
-  font-size: 64px;
-  font-weight: 300;
-  letter-spacing: -3.2px;
-  line-height: 1.02;
-
-  strong {
-    font-weight: 500;
-  }
+  font-size: 44px;
+  font-weight: 500;
+  letter-spacing: -2.2px;
+  line-height: 1.06;
 
   @media (max-width: $breakpoint-tablet) {
-    max-width: 100%;
-    font-size: 48px;
-    letter-spacing: -2.4px;
-  }
-
-  @media (max-width: $breakpoint-mobile) {
+    max-width: 20ch;
     font-size: 36px;
     letter-spacing: -1.8px;
   }
+
+  @media (max-width: $breakpoint-mobile) {
+    max-width: 100%;
+    font-size: 30px;
+    letter-spacing: -1.2px;
+  }
+}
+
+.destacado {
+  font-style: normal;
+  font-weight: 500;
+  color: $color-accent-wine;
 }
 
 .sub {
-  margin: 18px auto 34px;
-  font-size: 20px;
+  margin: 16px auto 32px;
+  max-width: 44ch;
+  font-size: 16px;
   font-weight: 300;
-  font-style: italic;
-  letter-spacing: -0.4px;
-  line-height: 26px;
+  letter-spacing: -0.32px;
+  line-height: 24px;
   color: $color-text-muted;
 
   @media (max-width: $breakpoint-mobile) {
-    font-size: 16px;
-    letter-spacing: -0.32px;
+    font-size: 14px;
+    letter-spacing: -0.14px;
+    line-height: 22px;
     margin-bottom: 26px;
   }
 }
@@ -125,132 +126,150 @@
 
 /* ---------- regalos ---------- */
 .regalos {
-  padding: 72px 0;
-  background: $color-bg-dark;
-  color: $color-text-light;
+  padding: 64px 0;
+  background: $color-bg-light;
 
   @media (max-width: $breakpoint-tablet) {
-    padding: 52px 0;
+    padding: 44px 0;
   }
 }
 
-.eyebrowDark {
-  font-size: 14px;
+.tarjetaRegalos {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 40px 40px 34px;
+  background: $color-bg-white;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 12px 32px -18px rgba(0, 0, 0, 0.18);
+
+  @media (max-width: $breakpoint-tablet) {
+    padding: 28px 22px 24px;
+  }
+}
+
+.eyebrowRegalos {
+  font-size: 13px;
   font-weight: 500;
-  letter-spacing: -0.14px;
+  letter-spacing: 1.2px;
   line-height: 18px;
-  color: $color-accent-gold;
-  margin-bottom: 12px;
+  color: $color-accent-wine;
+  margin-bottom: 10px;
 }
 
 .h2 {
-  font-size: 48px;
-  font-weight: 300;
-  letter-spacing: -2.4px;
+  font-size: 40px;
+  font-weight: 500;
+  letter-spacing: -2px;
   line-height: 1.05;
 
   @media (max-width: $breakpoint-tablet) {
-    font-size: 36px;
-    letter-spacing: -1.8px;
-  }
-
-  @media (max-width: $breakpoint-mobile) {
-    font-size: 32px;
-    letter-spacing: -0.32px;
+    font-size: 30px;
+    letter-spacing: -1.2px;
   }
 }
 
 .listaRegalos {
   list-style: none;
-  margin: 40px 0 0;
+  margin: 30px 0 0;
   padding: 0;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 0;
-  border-top: 1px solid rgba(238, 238, 238, 0.25);
-
-  @media (max-width: $breakpoint-tablet) {
-    grid-template-columns: 1fr;
-    margin-top: 30px;
-  }
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
 }
 
 .regalo {
-  padding: 28px 24px 28px 0;
-  border-right: 1px solid rgba(238, 238, 238, 0.25);
+  display: grid;
+  grid-template-columns: 52px 1fr;
+  gap: 18px;
+  align-items: start;
 
-  &:last-child {
-    border-right: none;
-    padding-right: 0;
+  @media (max-width: $breakpoint-mobile) {
+    grid-template-columns: 44px 1fr;
+    gap: 14px;
+  }
+}
+
+.icono {
+  width: 52px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(131, 26, 54, 0.09);
+  color: $color-accent-wine;
+
+  svg {
+    width: 24px;
+    height: 24px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.7;
+    stroke-linecap: round;
+    stroke-linejoin: round;
   }
 
-  &:not(:first-child) {
-    padding-left: 24px;
-  }
+  @media (max-width: $breakpoint-mobile) {
+    width: 44px;
+    height: 44px;
 
-  @media (max-width: $breakpoint-tablet) {
-    padding: 24px 0;
-    border-right: none;
-    border-bottom: 1px solid rgba(238, 238, 238, 0.25);
-
-    &:not(:first-child) {
-      padding-left: 0;
-    }
-
-    &:last-child {
-      border-bottom: none;
-      padding-bottom: 0;
+    svg {
+      width: 21px;
+      height: 21px;
     }
   }
 }
 
 .cuando {
   display: inline-block;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 500;
-  letter-spacing: -0.12px;
-  line-height: 16px;
-  padding: 4px 10px;
-  border: 1px solid rgba(238, 238, 238, 0.35);
-  color: $color-text-subtle;
-  margin-bottom: 12px;
-}
-
-.cuandoYa {
-  border-color: $color-accent-gold;
-  color: $color-accent-gold;
-}
-
-.regaloTitulo {
-  font-size: 20px;
-  font-weight: 500;
-  letter-spacing: -0.4px;
-  line-height: 24px;
+  letter-spacing: 0.8px;
+  line-height: 14px;
+  padding: 3px 8px;
+  border: 1px solid rgba(0, 0, 0, 0.18);
+  color: $color-text-muted;
   margin-bottom: 8px;
 }
 
+.cuandoYa {
+  border-color: $color-accent-wine;
+  color: $color-accent-wine;
+}
+
+.regaloTitulo {
+  font-size: 21px;
+  font-weight: 500;
+  letter-spacing: -0.42px;
+  line-height: 26px;
+  margin-bottom: 5px;
+
+  @media (max-width: $breakpoint-mobile) {
+    font-size: 18px;
+    letter-spacing: -0.36px;
+    line-height: 23px;
+  }
+}
+
+/* En minúscula: tres líneas de mayúsculas seguidas no se leen. */
 .regaloTexto {
   font-size: 15px;
   font-weight: 300;
   letter-spacing: -0.15px;
-  line-height: 22px;
-  color: $color-text-subtle;
+  line-height: 23px;
+  color: $color-text-muted-dark;
+  text-transform: none;
 }
 
 .pieRegalos {
-  margin-top: 34px;
-  padding-top: 24px;
-  border-top: 1px solid rgba(238, 238, 238, 0.25);
-  font-size: 16px;
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  font-size: 14px;
   font-weight: 300;
-  letter-spacing: -0.32px;
-  line-height: 24px;
-  color: $color-accent-gold;
-
-  @media (max-width: $breakpoint-mobile) {
-    font-size: 14px;
-    letter-spacing: -0.14px;
-  }
+  letter-spacing: -0.14px;
+  line-height: 22px;
+  color: $color-text-muted;
+  text-transform: none;
 }
 
 /* ---------- horas ---------- */

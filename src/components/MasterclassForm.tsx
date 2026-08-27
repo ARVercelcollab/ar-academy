@@ -62,7 +62,7 @@ export default function MasterclassForm() {
 
   return (
     <div className={styles.card}>
-      <p className={styles.cardTitle}>RESERVA TU PLAZA</p>
+      <p className={styles.cardTitle}>¿A DÓNDE TE ENVIAMOS EL ACCESO?</p>
 
       <label className={styles.fieldLabel} htmlFor="mc-name">NOMBRE</label>
       <input
@@ -146,8 +146,7 @@ export default function MasterclassForm() {
       </button>
 
       <p className={styles.micro}>
-        GRATIS · EN DIRECTO<br />
-        SI NO PUEDES EN VIVO, TE MANDO LA GRABACIÓN
+        100% GRATIS · SIN TARJETA DE CRÉDITO · ACCESO INSTANTÁNEO
       </p>
     </div>
   );
