@@ -8,7 +8,7 @@ import { CLASE, HORAS_LOCALES } from "@/lib/masterclass";
 export const metadata: Metadata = {
   title: "Masterclass gratuita · AR Academy",
   description:
-    "Todo lo que necesitas en 2026 para que una marca te contrate. Consigue que te paguen sin agencias y sin contactos. Masterclass gratuita en directo, sábado 5 de septiembre a las 19:00.",
+    "Todo lo que necesitas en 2026/27 para que una marca te contrate. Consigue que te paguen sin agencias y sin contactos. Masterclass gratuita en directo, sábado 5 de septiembre a las 19:00.",
 };
 
 const REGALOS = [
@@ -62,7 +62,7 @@ export default function MasterclassPage() {
         <div className={styles.container}>
           <p className={styles.eyebrow}>MASTERCLASS GRATUITA · {CLASE.fechaLarga}</p>
           <h1 className={styles.h1}>
-            TE DOY <em className={styles.destacado}>GRATIS</em> TODO LO QUE NECESITAS EN 2026 PARA{" "}
+            TE DOY <em className={styles.destacado}>GRATIS</em> TODO LO QUE NECESITAS EN 2026/27 PARA{" "}
             <em className={styles.destacado}>QUE UNA MARCA TE CONTRATE</em>
           </h1>
           <p className={styles.sub}>
@@ -72,7 +72,7 @@ export default function MasterclassPage() {
           <MasterclassForm />
 
           <p className={styles.sinTodo}>
-            SIN EXPERIENCIA. SIN IMPORTAR TU CIUDAD. SIN CUERPO PERFECTO.
+            SIN EXPERIENCIA. SIN IMPORTAR TU CIUDAD. SIN ENCAJAR EN ESTEREOTIPOS.
           </p>
         </div>
       </section>
@@ -80,7 +80,7 @@ export default function MasterclassPage() {
       <section className={styles.regalos}>
         <div className={styles.container}>
           <div className={styles.tarjetaRegalos}>
-            <p className={styles.eyebrowRegalos}>AL INSCRIBIRTE, TAMBIÉN RECIBES</p>
+            <p className={styles.eyebrowRegalos}>AL INSCRIBIRTE</p>
             <h2 className={styles.h2}>TE LLEVAS TRES COSAS MÁS</h2>
 
             <ul className={styles.listaRegalos}>
