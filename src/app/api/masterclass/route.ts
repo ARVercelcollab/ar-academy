@@ -12,8 +12,11 @@ import { NextResponse } from "next/server";
  * handle, fusiona si existe y solo crea si no existe.
  *
  * Variables de entorno:
- *   MASTERCLASS_WEBHOOK_URL  → endpoint del backend (o del workflow de GHL)
- *   MASTERCLASS_WEBHOOK_TOKEN → opcional, va como Bearer
+ *   MASTERCLASS_WEBHOOK_URL    → https://<backend>/masterclass
+ *   MASTERCLASS_WEBHOOK_SECRET → el WEBHOOK_SECRET del backend. Viaja en la cabecera
+ *                                `X-Setter-Secret`, que es la que el backend valida
+ *                                (setter/app.py, do_POST). Un `Authorization: Bearer`
+ *                                aquí devuelve 401.
  */
 export async function POST(req: Request) {
   let datos: Record<string, unknown>;
@@ -46,8 +49,8 @@ export async function POST(req: Request) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        ...(process.env.MASTERCLASS_WEBHOOK_TOKEN
-          ? { Authorization: `Bearer ${process.env.MASTERCLASS_WEBHOOK_TOKEN}` }
+        ...(process.env.MASTERCLASS_WEBHOOK_SECRET
+          ? { "X-Setter-Secret": process.env.MASTERCLASS_WEBHOOK_SECRET }
           : {}),
       },
       body: JSON.stringify({ name, email, phone, instagram, edicion }),
