@@ -1,0 +1,333 @@
+@use "../../styles/variables" as *;
+
+.main {
+  overflow-x: clip;
+}
+
+.container {
+  @include container;
+}
+
+/* ---------- barra superior ---------- */
+.topBar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 6px 16px;
+  padding: 8px 18px;
+  background: $color-accent-wine;
+  color: $color-text-light;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: -0.14px;
+  line-height: 18px;
+  text-align: center;
+}
+
+.barraTexto {
+  @media (max-width: $breakpoint-tablet) {
+    display: none;
+  }
+}
+
+.barraCorto {
+  display: none;
+  font-size: 12px;
+  letter-spacing: -0.12px;
+
+  @media (max-width: $breakpoint-tablet) {
+    display: inline;
+  }
+}
+
+/* ---------- hero ---------- */
+.hero {
+  padding: 56px 0 64px;
+  background: $color-bg-white;
+  text-align: center;
+
+  @media (max-width: $breakpoint-tablet) {
+    padding: 36px 0 48px;
+  }
+}
+
+.eyebrow {
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: -0.14px;
+  line-height: 18px;
+  color: $color-accent-wine;
+  margin-bottom: 18px;
+}
+
+.h1 {
+  max-width: 24ch;
+  margin: 0 auto;
+  font-size: 44px;
+  font-weight: 500;
+  letter-spacing: -2.2px;
+  line-height: 1.06;
+
+  @media (max-width: $breakpoint-tablet) {
+    max-width: 20ch;
+    font-size: 36px;
+    letter-spacing: -1.8px;
+  }
+
+  @media (max-width: $breakpoint-mobile) {
+    max-width: 100%;
+    font-size: 30px;
+    letter-spacing: -1.2px;
+  }
+}
+
+.destacado {
+  font-style: normal;
+  font-weight: 500;
+  color: $color-accent-wine;
+}
+
+.sub {
+  margin: 16px auto 32px;
+  max-width: 44ch;
+  font-size: 16px;
+  font-weight: 300;
+  letter-spacing: -0.32px;
+  line-height: 24px;
+  color: $color-text-muted;
+
+  @media (max-width: $breakpoint-mobile) {
+    font-size: 14px;
+    letter-spacing: -0.14px;
+    line-height: 22px;
+    margin-bottom: 26px;
+  }
+}
+
+.sinTodo {
+  max-width: 620px;
+  margin: 34px auto 0;
+  font-size: 16px;
+  font-weight: 300;
+  letter-spacing: -0.32px;
+  line-height: 26px;
+  color: $color-text-dark;
+
+  @media (max-width: $breakpoint-mobile) {
+    font-size: 14px;
+    letter-spacing: -0.14px;
+    line-height: 24px;
+  }
+}
+
+/* ---------- regalos ---------- */
+.regalos {
+  padding: 64px 0;
+  background: $color-bg-dark;
+
+  @media (max-width: $breakpoint-tablet) {
+    padding: 44px 0;
+  }
+}
+
+.tarjetaRegalos {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 40px 40px 34px;
+  background: $color-bg-white;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 12px 32px -18px rgba(0, 0, 0, 0.18);
+
+  @media (max-width: $breakpoint-tablet) {
+    padding: 28px 22px 24px;
+  }
+}
+
+.eyebrowRegalos {
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 1.2px;
+  line-height: 18px;
+  color: $color-accent-wine;
+  margin-bottom: 10px;
+}
+
+.h2 {
+  font-size: 40px;
+  font-weight: 500;
+  letter-spacing: -2px;
+  line-height: 1.05;
+
+  @media (max-width: $breakpoint-tablet) {
+    font-size: 30px;
+    letter-spacing: -1.2px;
+  }
+}
+
+.listaRegalos {
+  list-style: none;
+  margin: 30px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+}
+
+.regalo {
+  display: grid;
+  grid-template-columns: 52px 1fr;
+  gap: 18px;
+  align-items: start;
+
+  @media (max-width: $breakpoint-mobile) {
+    grid-template-columns: 44px 1fr;
+    gap: 14px;
+  }
+}
+
+.icono {
+  width: 52px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(131, 26, 54, 0.09);
+  color: $color-accent-wine;
+
+  svg {
+    width: 24px;
+    height: 24px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.7;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  @media (max-width: $breakpoint-mobile) {
+    width: 44px;
+    height: 44px;
+
+    svg {
+      width: 21px;
+      height: 21px;
+    }
+  }
+}
+
+.cuando {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.8px;
+  line-height: 14px;
+  padding: 3px 8px;
+  border: 1px solid rgba(0, 0, 0, 0.18);
+  color: $color-text-muted;
+  margin-bottom: 8px;
+}
+
+.cuandoYa {
+  border-color: $color-accent-wine;
+  color: $color-accent-wine;
+}
+
+.regaloTitulo {
+  font-size: 21px;
+  font-weight: 500;
+  letter-spacing: -0.42px;
+  line-height: 26px;
+  margin-bottom: 5px;
+
+  @media (max-width: $breakpoint-mobile) {
+    font-size: 18px;
+    letter-spacing: -0.36px;
+    line-height: 23px;
+  }
+}
+
+/* En minúscula: tres líneas de mayúsculas seguidas no se leen. */
+.regaloTexto {
+  font-size: 15px;
+  font-weight: 300;
+  letter-spacing: -0.15px;
+  line-height: 23px;
+  color: $color-text-muted-dark;
+  text-transform: none;
+}
+
+.pieRegalos {
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  font-size: 14px;
+  font-weight: 300;
+  letter-spacing: -0.14px;
+  line-height: 22px;
+  color: $color-text-muted;
+  text-transform: none;
+}
+
+/* ---------- horas ---------- */
+.horas {
+  padding: 72px 0;
+  background: $color-bg-light;
+
+  @media (max-width: $breakpoint-tablet) {
+    padding: 52px 0;
+  }
+}
+
+.h2Claro {
+  font-size: 36px;
+  font-weight: 300;
+  letter-spacing: -1.8px;
+  line-height: 1.08;
+  margin-bottom: 28px;
+
+  @media (max-width: $breakpoint-mobile) {
+    font-size: 28px;
+    letter-spacing: -0.28px;
+  }
+}
+
+.listaHoras {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-width: 640px;
+  border-top: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+.hora {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+  font-size: 15px;
+  font-weight: 300;
+  letter-spacing: -0.15px;
+  line-height: 20px;
+  color: $color-text-muted-dark;
+}
+
+.horaValor {
+  font-weight: 500;
+  color: $color-text-black;
+  font-variant-numeric: tabular-nums;
+}
+
+.horaDestacada {
+  color: $color-text-black;
+  font-weight: 500;
+
+  .horaValor {
+    color: $color-accent-wine;
+  }
+}

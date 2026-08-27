@@ -1,0 +1,176 @@
+@use "../styles/variables" as *;
+
+.card {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 28px 24px;
+  border: 1px solid $color-text-black;
+  background: $color-bg-white;
+  text-align: left;
+
+  @media (max-width: $breakpoint-mobile) {
+    padding: 22px 18px;
+  }
+}
+
+.cardTitle {
+  font-size: 20px;
+  font-weight: 500;
+  letter-spacing: -0.4px;
+  line-height: 24px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.fieldLabel {
+  font-size: 14px;
+  font-weight: 300;
+  letter-spacing: -0.14px;
+  line-height: 18px;
+  margin-top: 18px;
+  margin-bottom: 8px;
+  color: $color-text-dark;
+
+  &:first-of-type {
+    margin-top: 0;
+  }
+}
+
+.input {
+  width: 100%;
+  padding: 12px 14px;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: -0.28px;
+  line-height: 16px;
+  border: 1px solid #ccc;
+  background: $color-bg-white;
+  color: $color-text-dark;
+  outline: none;
+  text-transform: none;
+  transition: border-color 0.2s;
+
+  &::placeholder {
+    color: #969696;
+    font-weight: 500;
+  }
+
+  &:focus {
+    border-color: #666;
+  }
+}
+
+.inputError {
+  border-color: $color-accent-wine !important;
+}
+
+.phoneRow {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 8px;
+}
+
+.phonePrefix {
+  padding: 12px 10px;
+  font-family: $font-family;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: -0.28px;
+  border: 1px solid #ccc;
+  background: $color-bg-white;
+  color: $color-text-dark;
+  outline: none;
+  cursor: pointer;
+
+  &:focus {
+    border-color: #666;
+  }
+}
+
+.hint {
+  display: block;
+  font-size: 12px;
+  font-weight: 300;
+  letter-spacing: -0.12px;
+  line-height: 16px;
+  color: $color-text-muted;
+  margin-top: 6px;
+  text-transform: none;
+}
+
+.errorMsg {
+  display: block;
+  font-size: 12px;
+  font-weight: 300;
+  letter-spacing: -0.12px;
+  color: $color-accent-wine;
+  margin-top: 4px;
+}
+
+.checkboxLabel {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 10px;
+  align-items: start;
+  margin: 22px 0 20px;
+  font-size: 12px;
+  font-weight: 300;
+  letter-spacing: -0.12px;
+  line-height: 16px;
+  color: $color-text-muted-dark;
+  text-transform: none;
+  cursor: pointer;
+
+  input {
+    width: 16px;
+    height: 16px;
+    margin-top: 1px;
+    accent-color: $color-accent-wine;
+  }
+
+  a {
+    text-decoration: underline;
+  }
+}
+
+.submitBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  width: 100%;
+  padding: 16px 20px;
+  background: $color-accent-gold;
+  color: $color-accent-wine;
+  font-family: $font-family;
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: -0.32px;
+  line-height: 20.48px;
+  text-transform: uppercase;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.2s;
+
+  &:hover:not(:disabled) {
+    opacity: 0.88;
+  }
+
+  &:disabled {
+    cursor: default;
+    opacity: 0.7;
+  }
+}
+
+.micro {
+  font-size: 12px;
+  font-weight: 300;
+  letter-spacing: -0.12px;
+  line-height: 18px;
+  color: $color-text-muted;
+  text-align: center;
+  margin-top: 14px;
+}

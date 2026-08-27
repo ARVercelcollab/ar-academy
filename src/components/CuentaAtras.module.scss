@@ -1,0 +1,60 @@
+@use "../styles/variables" as *;
+
+.caja {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 2px;
+  padding: 5px 10px 4px;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 4px;
+}
+
+.unidad {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 34px;
+
+  & + & {
+    border-left: 1px solid rgba(238, 238, 238, 0.22);
+    padding-left: 8px;
+    margin-left: 6px;
+  }
+
+  @media (max-width: $breakpoint-mobile) {
+    min-width: 30px;
+  }
+}
+
+.numero {
+  font-size: 17px;
+  font-weight: 500;
+  line-height: 20px;
+  letter-spacing: -0.34px;
+  font-variant-numeric: tabular-nums;
+  color: $color-accent-gold;
+
+  @media (max-width: $breakpoint-mobile) {
+    font-size: 15px;
+    line-height: 18px;
+  }
+}
+
+.etiqueta {
+  font-size: 9px;
+  font-weight: 300;
+  line-height: 12px;
+  letter-spacing: 0.4px;
+  color: rgba(238, 238, 238, 0.7);
+}
+
+.enDirecto {
+  font-weight: 500;
+  color: $color-accent-gold;
+}
+
+/* Reserva el alto en el primer render para que la barra no dé un salto. */
+.hueco {
+  display: inline-block;
+  height: 37px;
+}
