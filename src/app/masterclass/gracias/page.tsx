@@ -37,18 +37,6 @@ export default function GraciasPage() {
             PASE LA HORA.
           </p>
 
-          {/*
-            Aviso obligado, y va aquí porque este es el momento en que ella decide entrar:
-            en un grupo de WhatsApp corriente todas las participantes ven el número de todas.
-            El consentimiento del formulario cubre que le escribamos nosotras, no que su
-            teléfono quede visible para el resto. Decirlo cuesta algunas altas y evita un
-            problema que después no se deshace.
-          */}
-          <p className={styles.avisoGrupo}>
-            Como en cualquier grupo de WhatsApp, las demás participantes pueden ver tu número.
-            Dentro escribimos solo nosotras.
-          </p>
-
           <div className={styles.recordatorio}>
             <p>
               APÚNTATELO: <strong>{CLASE.fechaLarga}, {CLASE.hora}</strong> (HORA DE ESPAÑA).
