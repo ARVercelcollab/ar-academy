@@ -32,11 +32,6 @@ export default function GraciasPage() {
             <ArrowIcon />
           </a>
 
-          <p className={styles.nota}>
-            EL ENLACE PARA ENTRAR A LA CLASE VA POR AHÍ. SI NO ENTRAS AL GRUPO, ES FÁCIL QUE SE TE
-            PASE LA HORA.
-          </p>
-
           <div className={styles.recordatorio}>
             <p>
               APÚNTATELO: <strong>{CLASE.fechaLarga}, {CLASE.hora}</strong> (HORA DE ESPAÑA).

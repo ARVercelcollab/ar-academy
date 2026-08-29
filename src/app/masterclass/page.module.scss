@@ -6,6 +6,17 @@
 
 .container {
   @include container;
+
+  /* Igual que en la de gracias: 24 px dejaban el texto pegado al borde en móvil. */
+  @media (max-width: $breakpoint-tablet) {
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+
+  @media (max-width: $breakpoint-mobile) {
+    padding-left: 28px;
+    padding-right: 28px;
+  }
 }
 
 /* ---------- barra superior ---------- */
@@ -80,8 +91,10 @@
 
   @media (max-width: $breakpoint-mobile) {
     max-width: 100%;
-    font-size: 30px;
-    letter-spacing: -1.2px;
+    font-size: 29px;
+    letter-spacing: -1.1px;
+    /* Cinco líneas de mayúsculas a 1.06 se leen como un bloque. Aquí respiran. */
+    line-height: 1.16;
   }
 }
 
