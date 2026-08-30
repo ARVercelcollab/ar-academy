@@ -27,7 +27,16 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Petición mal formada" }, { status: 400 });
   }
 
-  const { name, email, phone, instagram, edicion } = datos as Record<string, string>;
+  const { name, email, phone, instagram, edicion, event_id, fbp, fbc } =
+    datos as Record<string, string>;
+
+  // Para la Conversions API: Meta empareja mucho mejor con la IP y el user-agent de quien
+  // rellenó el formulario, y esos solo se ven aquí.
+  const ip =
+    req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+    req.headers.get("x-real-ip") ||
+    undefined;
+  const userAgent = req.headers.get("user-agent") || undefined;
 
   if (!name?.trim() || !email?.trim() || !phone?.trim() || !instagram?.trim()) {
     return NextResponse.json({ error: "Faltan datos" }, { status: 400 });
@@ -53,7 +62,10 @@ export async function POST(req: Request) {
           ? { "X-Setter-Secret": process.env.MASTERCLASS_WEBHOOK_SECRET }
           : {}),
       },
-      body: JSON.stringify({ name, email, phone, instagram, edicion }),
+      body: JSON.stringify({
+        name, email, phone, instagram, edicion,
+        event_id, fbp, fbc, client_ip_address: ip, client_user_agent: userAgent,
+      }),
     });
 
     if (!res.ok) {
