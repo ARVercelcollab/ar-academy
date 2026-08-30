@@ -32,6 +32,17 @@ export default function GraciasPage() {
             <ArrowIcon />
           </a>
 
+          {/*
+            Se le pide que nos mueva a Principal AQUÍ y no solo dentro del correo: acaba de
+            registrarse, está motivada y tiene el móvil en la mano. Hecho en este momento,
+            arregla la entrega de los once correos de la semana — no solo la del primero. Y el
+            primer envío de un dominio recién estrenado cae en Promociones casi siempre.
+          */}
+          <p className={styles.nota}>
+            REVISA TU CORREO: TE ACABO DE MANDAR LAS 5 PLANTILLAS. SI HA CAÍDO EN PROMOCIONES,
+            ARRÁSTRALO A PRINCIPAL — ESTA SEMANA TE ESCRIBO VARIAS VECES.
+          </p>
+
           <div className={styles.recordatorio}>
             <p>
               APÚNTATELO: <strong>{CLASE.fechaLarga}, {CLASE.hora}</strong> (HORA DE ESPAÑA).

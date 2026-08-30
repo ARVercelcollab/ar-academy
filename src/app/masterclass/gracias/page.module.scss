@@ -94,6 +94,16 @@
   }
 }
 
+.nota {
+  max-width: 40ch;
+  margin: 22px auto 0;
+  font-size: 14px;
+  font-weight: 300;
+  letter-spacing: -0.14px;
+  line-height: 22px;
+  color: $color-text-muted;
+}
+
 .recordatorio {
   max-width: 42ch;
   margin: 38px auto 0;
