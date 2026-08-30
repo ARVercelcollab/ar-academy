@@ -174,3 +174,23 @@
   text-align: center;
   margin-top: 14px;
 }
+
+// ZOOM AUTOMÁTICO EN IPHONE (Carlos, 2026-08-30: "entran con zoom hecho").
+//
+// iOS Safari amplía la página al enfocar un campo de MENOS de 16px — y ese zoom **se queda
+// puesto al navegar dentro del sitio**. Por eso se veía en las dos páginas y no solo en el
+// formulario: tocas "Tu nombre", Safari amplía, envías, y /masterclass/gracias hereda el zoom.
+// A partir de ahí Safari lo recuerda para el dominio.
+//
+// No es solo estético: rellenar un formulario ampliado en el móvil, con el teclado abierto y
+// sin ver el campo entero, cuesta registros en la única página que paga los anuncios.
+//
+// Se sube solo donde existe el problema (`pointer: coarse` = táctil): en escritorio los campos
+// siguen a 14px y el diseño no cambia.
+@media (pointer: coarse) {
+  .input,
+  .phonePrefix {
+    font-size: 16px;
+    line-height: 20px;
+  }
+}
