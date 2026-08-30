@@ -39,8 +39,8 @@ export default function GraciasPage() {
             primer envío de un dominio recién estrenado cae en Promociones casi siempre.
           */}
           <p className={styles.nota}>
-            REVISA TU CORREO: TE ACABO DE MANDAR LAS 5 PLANTILLAS. SI HA CAÍDO EN PROMOCIONES,
-            ARRÁSTRALO A PRINCIPAL — ESTA SEMANA TE ESCRIBO VARIAS VECES.
+            REVISA TU CORREO: TE ACABO DE MANDAR LAS 5 PLANTILLAS PARA ESCRIBIRLE A UNA MARCA.
+            SI HA CAÍDO EN PROMOCIONES, ARRÁSTRALO A PRINCIPAL.
           </p>
 
           <div className={styles.recordatorio}>
