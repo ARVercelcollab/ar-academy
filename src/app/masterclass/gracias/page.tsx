@@ -32,9 +32,15 @@ export default function GraciasPage() {
             <ArrowIcon />
           </a>
 
+          {/*
+            Se le pide que nos mueva a Principal AQUÍ y no solo dentro del correo: acaba de
+            registrarse, está motivada y tiene el móvil en la mano. Hecho en este momento,
+            arregla la entrega de los once correos de la semana — no solo la del primero. Y el
+            primer envío de un dominio recién estrenado cae en Promociones casi siempre.
+          */}
           <p className={styles.nota}>
-            EL ENLACE PARA ENTRAR A LA CLASE VA POR AHÍ. SI NO ENTRAS AL GRUPO, ES FÁCIL QUE SE TE
-            PASE LA HORA.
+            REVISA TU CORREO: TE ACABO DE MANDAR LAS 5 PLANTILLAS PARA ESCRIBIRLE A UNA MARCA.
+            SI HA CAÍDO EN PROMOCIONES, ARRÁSTRALO A PRINCIPAL.
           </p>
 
           <div className={styles.recordatorio}>
