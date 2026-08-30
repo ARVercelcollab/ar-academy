@@ -6,7 +6,7 @@ import styles from "./MasterclassForm.module.scss";
 import ArrowIcon from "./ArrowIcon";
 import { phonePrefixes } from "@/lib/phonePrefixes";
 import { CLASE } from "@/lib/masterclass";
-import { trackEvent } from "@/lib/tracking";
+import { leerCookie, trackEvent } from "@/lib/tracking";
 
 type Errores = Partial<Record<"name" | "email" | "phone" | "instagram" | "terms" | "general", string>>;
 
@@ -37,6 +37,13 @@ export default function MasterclassForm() {
     setLoading(true);
     setErrors({});
 
+    // Un id por registro, compartido por el evento del navegador y el del servidor. Meta los
+    // une en una sola conversión (ver `trackEvent`).
+    const eventId =
+      typeof crypto !== "undefined" && crypto.randomUUID
+        ? crypto.randomUUID()
+        : `mc-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+
     try {
       const res = await fetch("/api/masterclass", {
         method: "POST",
@@ -47,12 +54,21 @@ export default function MasterclassForm() {
           phone: `${prefix}${phone.replace(/\D/g, "")}`,
           instagram: instagram.trim(),
           edicion: CLASE.edicion,
+          event_id: eventId,
+          fbp: leerCookie("_fbp"),
+          fbc: leerCookie("_fbc"),
         }),
       });
 
       if (!res.ok) throw new Error("registro");
 
-      trackEvent("Lead", { content_name: "Masterclass", edicion: CLASE.edicion });
+      // Evento PROPIO, no `Lead`: ese lo usa también la Comunidad (RegistrationForm.tsx) y
+      // encima en el paso 1, antes de pagar. Compartirlo mezclaba las dos señales.
+      trackEvent(
+        "CompleteRegistration",
+        { content_name: "Masterclass", edicion: CLASE.edicion },
+        eventId,
+      );
       router.push("/masterclass/gracias");
     } catch {
       setErrors({ general: "No hemos podido guardar tu plaza. Inténtalo otra vez." });
