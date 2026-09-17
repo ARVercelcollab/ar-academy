@@ -31,6 +31,21 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  // /plan sirve la landing del plan personalizado, que vive en su propio
+  // proyecto de Vercel (plan-ar-academy → plan.ariannyrivasacademy.com). Es una
+  // reescritura, no una redirección: la URL se queda en /plan y Vercel trae el
+  // contenido del subdominio por debajo. La segunda regla cubre /plan/api/lead,
+  // la función que escribe en GHL; sin ella el formulario apuntaría a este
+  // proyecto, que no la tiene. Ref: 00-contexto/decisiones.md (2026-09-17).
+  async rewrites() {
+    return [
+      { source: "/plan", destination: "https://plan.ariannyrivasacademy.com/" },
+      {
+        source: "/plan/:path*",
+        destination: "https://plan.ariannyrivasacademy.com/:path*",
+      },
+    ];
+  },
 };
 
 export default nextConfig;
