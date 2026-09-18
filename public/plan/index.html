@@ -659,7 +659,9 @@ h1 .it{color:#831A36}
   letter-spacing:-.01em;padding:0 22px;position:relative}
 .marqtrack span+span::before{content:"\00b7";position:absolute;left:-3px;top:0;opacity:.75}
 @keyframes marq{to{transform:translateX(-50%)}}
-.tira{position:relative;z-index:1;overflow:hidden;padding-top:24px}
+.tira{position:relative;z-index:1;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;
+  scrollbar-width:none;padding-top:24px}
+.tira::-webkit-scrollbar{display:none}
 .tiratrack{display:flex;gap:24px;width:max-content;animation:tira 80s linear infinite}
 .tiratrack img{height:340px;width:auto;display:block}
 @keyframes tira{to{transform:translateX(-50%)}}
@@ -671,10 +673,14 @@ h1 .it{color:#831A36}
 .sinlist{list-style:none;display:flex;justify-content:space-around;flex-wrap:wrap;
   gap:14px 24px;margin:60px auto 0;padding:0;max-width:1400px}
 .sinlist li{color:#EEEEEE;font-size:12px;font-weight:300;text-transform:uppercase;letter-spacing:.02em}
+/* Móvil, medido en la comunidad a 390px: marquesina de 38px, imagen de 400px
+   de alto (757 de ancho, casi dos pantallas: se ve grande y se arrastra), sin
+   hueco entre marquesina e imagen. */
 @media(max-width:520px){
-  .marq{height:36px}.marqtrack span{font-size:13px;padding:0 14px}
-  .tiratrack{gap:14px}.tiratrack img{height:220px}
-  .casososcuro{margin-top:-110px;padding:140px 16px 44px}
+  .marq{height:38px}.marqtrack span{font-size:16px;padding:0 18px}
+  .tira{padding-top:0}
+  .tiratrack{gap:24px}.tiratrack img{height:400px}
+  .casososcuro{margin-top:-300px;padding:330px 16px 44px}
   .casoscta{font-size:16px;padding:13px 22px}
   .sinlist{margin-top:40px;gap:10px 18px}.sinlist li{font-size:11px}
 }
