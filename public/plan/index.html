@@ -647,6 +647,39 @@ h1 .it{color:#831A36}
    recibir clics, esté el botón fijo o no. */
 .cookie:not(.up){transform:translateY(300%);pointer-events:none}
 .cookie.off{visibility:hidden;transition:transform .7s var(--sp),visibility 0s .7s}
+
+/* ══ Los casos de las alumnas, como en la comunidad (2026-09-18) ══════════
+   Marquesina vino de 42px a 28s · tira de composiciones de 340px con 24px de
+   hueco a 80s, las cinco duplicadas para que el bucle no corte · bloque
+   #161616 con el CTA claro y las cuatro líneas a 12px. Medido en su página. */
+.casos{width:100vw;margin-left:calc(50% - 50vw);overflow:hidden;margin-top:28px}
+.marq{background:#831A36;height:42px;overflow:hidden;display:flex;align-items:center}
+.marqtrack{display:flex;width:max-content;white-space:nowrap;animation:marq 28s linear infinite}
+.marqtrack span{color:#fff;font-size:16px;font-weight:300;text-transform:uppercase;
+  letter-spacing:-.01em;padding:0 22px;position:relative}
+.marqtrack span+span::before{content:"\00b7";position:absolute;left:-3px;top:0;opacity:.75}
+@keyframes marq{to{transform:translateX(-50%)}}
+.tira{position:relative;z-index:1;overflow:hidden;padding-top:24px}
+.tiratrack{display:flex;gap:24px;width:max-content;animation:tira 80s linear infinite}
+.tiratrack img{height:340px;width:auto;display:block}
+@keyframes tira{to{transform:translateX(-50%)}}
+.casososcuro{background:#161616;margin-top:-170px;padding:210px 20px 60px;text-align:center}
+.casoscta{display:inline-block;background:#EEEEEE;color:#161616;text-decoration:none;
+  font-family:var(--sans);font-size:20px;font-weight:300;text-transform:uppercase;
+  letter-spacing:-.01em;padding:16px 32px}
+.casoscta:hover{background:#fff}
+.sinlist{list-style:none;display:flex;justify-content:space-around;flex-wrap:wrap;
+  gap:14px 24px;margin:60px auto 0;padding:0;max-width:1400px}
+.sinlist li{color:#EEEEEE;font-size:12px;font-weight:300;text-transform:uppercase;letter-spacing:.02em}
+@media(max-width:520px){
+  .marq{height:36px}.marqtrack span{font-size:13px;padding:0 14px}
+  .tiratrack{gap:14px}.tiratrack img{height:220px}
+  .casososcuro{margin-top:-110px;padding:140px 16px 44px}
+  .casoscta{font-size:16px;padding:13px 22px}
+  .sinlist{margin-top:40px;gap:10px 18px}.sinlist li{font-size:11px}
+}
+.casos .tiratrack:hover,.casos .marqtrack:hover{animation-play-state:paused}
+@media(prefers-reduced-motion:reduce){.marqtrack,.tiratrack{animation:none}}
 </style>
 
 <div class="grain"></div>
@@ -744,9 +777,14 @@ h1 .it{color:#831A36}
     <h2>Chicas que empezaron <span class="it">justo donde estás tú.</span></h2>
     <p>Sin contactos, sin book, sin saber por dónde se empezaba. Te dejo que te lo cuenten ellas.</p>
   </div>
-  <div class="stage" id="stage"><div class="ring" id="ring"></div></div>
-  <div class="stagehint">Arrastra para girar · toca para reproducir</div>
-  <div class="wrap"><div class="midcta"><a class="pillbtn solid big" href="#quiz">Obtén acceso gratuito</a><small>No se requiere tarjeta · Solo tarda 30 segundos</small></div></div>
+  <div class="casos">
+    <div class="marq" aria-hidden="true"><div class="marqtrack"><span>Sin medir 1,75</span><span>Sin agencias detrás</span><span>Sin experiencia previa</span><span>Vive de tu imagen</span><span>Monetiza tu contenido</span><span>+600 campañas</span><span>Sin medir 1,75</span><span>Sin agencias detrás</span><span>Sin experiencia previa</span><span>Vive de tu imagen</span><span>Monetiza tu contenido</span><span>+600 campañas</span></div></div>
+    <div class="tira" aria-label="Casos de alumnas"><div class="tiratrack"><img src="/img/carrusel-1.jpg" alt="Alumna de AR Academy y sus mensajes" loading="lazy" width="1118" height="591"><img src="/img/carrusel-2.jpg" alt="Alumna de AR Academy y sus mensajes" loading="lazy" width="1118" height="591"><img src="/img/carrusel-3.jpg" alt="Alumna de AR Academy y sus mensajes" loading="lazy" width="1118" height="591"><img src="/img/carrusel-4.jpg" alt="Alumna de AR Academy y sus mensajes" loading="lazy" width="1118" height="591"><img src="/img/carrusel-5.jpg" alt="Alumna de AR Academy y sus mensajes" loading="lazy" width="1118" height="591"><img src="/img/carrusel-1.jpg" alt="Alumna de AR Academy y sus mensajes" loading="lazy" width="1118" height="591"><img src="/img/carrusel-2.jpg" alt="Alumna de AR Academy y sus mensajes" loading="lazy" width="1118" height="591"><img src="/img/carrusel-3.jpg" alt="Alumna de AR Academy y sus mensajes" loading="lazy" width="1118" height="591"><img src="/img/carrusel-4.jpg" alt="Alumna de AR Academy y sus mensajes" loading="lazy" width="1118" height="591"><img src="/img/carrusel-5.jpg" alt="Alumna de AR Academy y sus mensajes" loading="lazy" width="1118" height="591"></div></div>
+    <div class="casososcuro">
+      <a class="casoscta" href="#quiz">Obtén acceso gratuito <span aria-hidden="true">&darr;</span></a>
+      <ul class="sinlist"><li>Sin experiencia.</li><li>Sin agencia.</li><li>Sin importar tu ciudad.</li><li>Sin cuerpo perfecto.</li></ul>
+    </div>
+  </div>
 </section>
 
 <section class="top-line">
@@ -840,74 +878,12 @@ tick.innerHTML='<span><i class="dot" aria-hidden="true"></i>'+MESES[new Date().g
 
 /* PRODUCCIÓN: pon el ID del Short de YouTube en yt y la tarjeta se vuelve reproductor.
    Ej: {n:'Alba', l:'...', yt:'AbCdEfGhIjK'}  */
-/* Las alumnas, con su vídeo en Bunny Stream (biblioteca 693492, la de la
-   comunidad). Cinco por ahora, solo con el nombre (Carlos, 2026-09-18). */
-var CDN='https://vz-171fc963-c2a.b-cdn.net/';
-var ALU=[
- {n:'Mónica', l:'', v:'2d8df203-e555-45d7-9609-c13cd0fa817a'},
- {n:'Tatiana',l:'', v:'cfbc1c90-8f04-4212-8a06-befab9bd6769'},
- {n:'Cecilia',l:'', v:'a9dec296-f5eb-48a1-8153-6aaf19b2a625'},
- {n:'Daniela',l:'', v:'8b8894e4-8220-4df7-8276-cbc44dcd4cd5'},
- {n:'Andrea', l:'', v:'5c3a5609-c1b4-422c-aa97-960ca9cdce5c'}
-];
-var ring=document.getElementById('ring'),stage=document.getElementById('stage'),N=ALU.length,BA=360/N;
-ALU.forEach(function(a){
-  var d=document.createElement('div');d.className='cd';
-  if(a.v) d.style.backgroundImage='url('+CDN+a.v+'/thumbnail.jpg)';
-  d.innerHTML='<span class="sh">Short</span><span class="cdplay"></span><b>'+a.n+'</b>'+(a.l?'<i>'+a.l+'</i>':'');
-  if(a.v){d.addEventListener('click',function(ev){
-    var marcaOriginal=d.innerHTML;
-    if(d.dataset.on)return; ev.stopPropagation(); d.dataset.on='1';
-    reproduciendo=true;
-    var cerrarFuera=function(e2){
-      if(d.contains(e2.target))return;
-      d.dataset.on=''; d.innerHTML=marcaOriginal;
-      document.removeEventListener('click',cerrarFuera,true);
-      if(!ring.querySelector('.cd[data-on="1"]')) reproduciendo=false;
-    };
-    setTimeout(function(){document.addEventListener('click',cerrarFuera,true)},60);
-    // Sin YouTube: nada de cookies de Google ni «más vídeos» de otros canales
-    // encima de la cara de una alumna. Solo MP4: Chrome dice que «quizá» sabe
-    // HLS, lo elige, y se queda cargando sin dar error ni saltar al siguiente
-    // <source>. Comprobado el 2026-09-18 en Chrome 152.
-    d.innerHTML='<video autoplay playsinline controls preload="metadata" poster="'+CDN+a.v+'/thumbnail.jpg" '
-      +'style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#000" title="'+a.n+'">'
-      +'<source src="'+CDN+a.v+'/play_720p.mp4" type="video/mp4"></video>';
-    var vv=d.querySelector('video'); var pp=vv&&vv.play(); if(pp&&pp.catch)pp.catch(function(){});
-  })}
-  ring.appendChild(d);
-});
-var cards=ring.querySelectorAll('.cd');
-function radius(){var w=cards[0].getBoundingClientRect().width||180;var g=parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--cd-hueco'))||15;return (w/2+g)/Math.tan(Math.PI/N)}
-var R=radius();addEventListener('resize',function(){R=radius();paint()});
-var reproduciendo=false;
-var rot=0,vel=0,drag=false,sx=0,sr=0,lx=0,lt=0,prev=0,dv=0,df=0,dir=1;
-function paint(){
-  ring.style.transform='rotateY('+rot+'deg)';
-  for(var i2=0;i2<cards.length;i2++){
-    var c=cards[i2],diff=((i2*BA+rot)%360+540)%360-180,out=Math.abs(diff)>92;
-    c.style.opacity=out?0:1;c.style.pointerEvents=out?'none':'auto';
-    var rz=Math.max(-16,Math.min(16,dv*.9)),sk=Math.max(-9,Math.min(9,dv*.36)),sc=1-Math.abs(dv)*.002;
-    c.style.transform='rotateY('+(i2*BA)+'deg) translateZ('+(-R)+'px) rotateZ('+rz+'deg) skewX('+sk+'deg) scale('+sc+')';
-  }
-}
-function anim(){
-  // Con un vídeo abierto el anillo frena y se queda quieto: si no, la tarjeta
-  // que la chica acaba de abrir se le va deslizando mientras lo ve.
-  if(drag){vel=rot-prev}
-  else if(reproduciendo){vel*=.88;rot+=vel}
-  else{var a=.10*dir;vel=a+(vel-a)*.975;rot+=vel}
-  var inst=rot-prev;prev=rot;
-  var f=-.16*(dv-inst)-.52*df;df+=f;dv+=df;
-  if(Math.abs(dv)>22)dv=Math.sign(dv)*22;if(Math.abs(df)>7)df=Math.sign(df)*7;
-  paint();requestAnimationFrame(anim);
-}
-RM?paint():requestAnimationFrame(anim);
-stage.addEventListener('pointerdown',function(e){drag=true;sx=e.clientX;sr=rot;lx=e.clientX;lt=Date.now();vel=0;stage.setPointerCapture(e.pointerId)});
-stage.addEventListener('pointermove',function(e){if(!drag)return;var dx=e.clientX-sx;rot=sr+dx*.19;if(dx>0)dir=1;else if(dx<0)dir=-1;
-  var n=Date.now(),dt=n-lt;if(dt>0)vel=((e.clientX-lx)*.19)/(dt/16.7);lx=e.clientX;lt=n});
-function up(e){if(!drag)return;drag=false;try{stage.releasePointerCapture(e.pointerId)}catch(x){}if(Math.abs(vel)>11)vel=Math.sign(vel)*11}
-stage.addEventListener('pointerup',up);stage.addEventListener('pointercancel',up);
+/* El carrusel de vídeos de las alumnas se retiró el 2026-09-18: en Chrome el
+   clic no llegaba a la tarjeta (setPointerCapture del escenario se lo comía) y
+   Carlos prefirió avanzar. En su lugar va la tira de casos de la comunidad.
+   `vel` y `dir` se quedan porque el cuestionario las toca al responder
+   (antes hacían girar el carrusel; ahora no hacen nada). */
+var vel=0,dir=1;
 
 if(!RM){
   var sheets=document.querySelectorAll('[data-par]');
