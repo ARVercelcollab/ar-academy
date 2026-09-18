@@ -662,7 +662,7 @@ h1 .it{color:#831A36}
     <p class="lede">El mismo plan que trabajamos con las alumnas de nuestra formación de más de 2.000 €. Descubre qué es lo que te falta para conseguir que las marcas te paguen por tus habilidades como modelo.</p>
     <div class="vsl">
       <div class="vabove">Mira esto primero, dura 3 minutos</div>
-      <div class="frame" id="vslframe"><video id="vsl" autoplay muted loop playsinline preload="metadata" poster="https://vz-171fc963-c2a.b-cdn.net/87fc14af-4a7d-41b3-9a82-96bf02717451/thumbnail.jpg" aria-label="Mira esto primero"><source src="https://vz-171fc963-c2a.b-cdn.net/87fc14af-4a7d-41b3-9a82-96bf02717451/playlist.m3u8" type="application/vnd.apple.mpegurl"><source src="https://vz-171fc963-c2a.b-cdn.net/87fc14af-4a7d-41b3-9a82-96bf02717451/play_720p.mp4" type="video/mp4"></video><button class="vslbtn" id="vslbtn" type="button">Haz click y activa el sonido</button></div>
+      <div class="frame" id="vslframe"><video id="vsl" autoplay muted loop playsinline preload="metadata" poster="https://vz-171fc963-c2a.b-cdn.net/87fc14af-4a7d-41b3-9a82-96bf02717451/thumbnail.jpg" aria-label="Mira esto primero"><source src="https://vz-171fc963-c2a.b-cdn.net/87fc14af-4a7d-41b3-9a82-96bf02717451/play_720p.mp4" type="video/mp4"></video><button class="vslbtn" id="vslbtn" type="button">Haz click y activa el sonido</button></div>
       <div class="vslcta">
         <a class="pillbtn solid big" href="#quiz">Obtén acceso gratuito</a>
         <small class="ctanote">No se requiere tarjeta · Solo tarda 30 segundos</small>
@@ -836,13 +836,12 @@ tick.innerHTML='<span><i class="dot" aria-hidden="true"></i>'+MESES[new Date().g
 /* PRODUCCIÓN: pon el ID del Short de YouTube en yt y la tarjeta se vuelve reproductor.
    Ej: {n:'Alba', l:'...', yt:'AbCdEfGhIjK'}  */
 /* Las alumnas, con su vídeo en Bunny Stream (biblioteca 693492, la de la
-   comunidad). Cinco por ahora (Carlos, 2026-09-18). La frase (l) solo va si
-   sale de lo que ella misma dice; las nuevas van con el nombre hasta tenerla. */
+   comunidad). Cinco por ahora, solo con el nombre (Carlos, 2026-09-18). */
 var CDN='https://vz-171fc963-c2a.b-cdn.net/';
 var ALU=[
  {n:'Mónica', l:'', v:'2d8df203-e555-45d7-9609-c13cd0fa817a'},
  {n:'Tatiana',l:'', v:'cfbc1c90-8f04-4212-8a06-befab9bd6769'},
- {n:'Cecilia',l:'Miedo al juicio de los suyos', v:'a9dec296-f5eb-48a1-8153-6aaf19b2a625'},
+ {n:'Cecilia',l:'', v:'a9dec296-f5eb-48a1-8153-6aaf19b2a625'},
  {n:'Daniela',l:'', v:'8b8894e4-8220-4df7-8276-cbc44dcd4cd5'},
  {n:'Andrea', l:'', v:'5c3a5609-c1b4-422c-aa97-960ca9cdce5c'}
 ];
@@ -863,10 +862,11 @@ ALU.forEach(function(a){
     };
     setTimeout(function(){document.addEventListener('click',cerrarFuera,true)},60);
     // Sin YouTube: nada de cookies de Google ni «más vídeos» de otros canales
-    // encima de la cara de una alumna. Safari toma el HLS, Chrome el MP4.
+    // encima de la cara de una alumna. Solo MP4: Chrome dice que «quizá» sabe
+    // HLS, lo elige, y se queda cargando sin dar error ni saltar al siguiente
+    // <source>. Comprobado el 2026-09-18 en Chrome 152.
     d.innerHTML='<video autoplay playsinline controls preload="metadata" poster="'+CDN+a.v+'/thumbnail.jpg" '
       +'style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#000" title="'+a.n+'">'
-      +'<source src="'+CDN+a.v+'/playlist.m3u8" type="application/vnd.apple.mpegurl">'
       +'<source src="'+CDN+a.v+'/play_720p.mp4" type="video/mp4"></video>';
     var vv=d.querySelector('video'); var pp=vv&&vv.play(); if(pp&&pp.catch)pp.catch(function(){});
   })}
