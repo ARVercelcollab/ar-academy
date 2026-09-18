@@ -604,6 +604,15 @@ h1 .it{color:#831A36}
 
 /* 12 · El aviso de cookies era un panel oscuro flotando sobre negro. */
 .cookie{background:#fff;border-color:rgba(22,22,22,.16)}
+
+/* ══ El VSL ═══════════════════════════════════════════════════════════════
+   Vídeo en Bunny Stream (la misma biblioteca que los de la comunidad,
+   2026-09-18). El marco pasa a 16:9, que es lo que mide el vídeo, y el
+   degradado oscuro de cuando era un placeholder se quita: taparía el
+   reproductor. El JS sigue leyendo .frame para el botón fijo. */
+.frame{aspect-ratio:16/9;display:block;background:#000}
+.frame::after{display:none}
+.frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block}
 </style>
 
 <div class="grain"></div>
@@ -624,7 +633,7 @@ h1 .it{color:#831A36}
     <p class="lede">El mismo plan que trabajamos con las alumnas de nuestra formación de más de 2.000 €. Descubre qué es lo que te falta para conseguir que las marcas te paguen por tus habilidades como modelo.</p>
     <div class="vsl">
       <div class="vabove">Mira esto primero, dura 3 minutos</div>
-      <div class="frame"><div class="play" role="img" aria-label="Reproducir"></div><span class="tag frametag">Guion pendiente</span></div>
+      <div class="frame"><iframe src="https://iframe.mediadelivery.net/embed/693492/87fc14af-4a7d-41b3-9a82-96bf02717451?autoplay=false&amp;preload=true&amp;responsive=true" loading="lazy" allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture" allowfullscreen title="Mira esto primero"></iframe></div>
       <div class="vslcta">
         <a class="pillbtn solid big" href="#quiz">Obtén acceso gratuito</a>
         <small class="ctanote">No se requiere tarjeta · Solo tarda 30 segundos</small>
