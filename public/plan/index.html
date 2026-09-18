@@ -642,6 +642,11 @@ h1 .it{color:#831A36}
 
 /* Las caras del 4,9/5 son las mismas que en la comunidad (public/img/usuarios.png). */
 .avs .avsimg{height:32px;width:auto;display:block}
+
+/* El banner de cookies cerrado no puede asomar: fuera de pantalla y sin
+   recibir clics, esté el botón fijo o no. */
+.cookie:not(.up){transform:translateY(300%);pointer-events:none}
+.cookie.off{visibility:hidden;transition:transform .7s var(--sp),visibility 0s .7s}
 </style>
 
 <div class="grain"></div>
@@ -1302,7 +1307,12 @@ addEventListener('scroll',stickyUpd,{passive:true});
 window.__planDone=function(){formDone=true;stickyUpd()};
 var ckDone=false;try{ckDone=localStorage.getItem('ar_ck')==='1'}catch(x){}
 if(!ckDone)setTimeout(function(){ck.classList.add('up')},1600);
-function ckOff(){ck.classList.remove('up');try{localStorage.setItem('ar_ck','1')}catch(x){}}
+// Al cerrar, además de bajarlo, se oculta del todo cuando acaba la
+// transición. Antes solo bajaba un 160% de su altura, y con el botón fijo
+// visible (.lift lo sube 112px) seguía asomando por abajo (2026-09-18).
+function ckOff(){ck.classList.remove('up');ck.classList.add('off');try{localStorage.setItem('ar_ck','1')}catch(x){}
+  setTimeout(function(){ck.style.display='none'},800)}
+if(ckDone){ck.style.display='none'}
 document.getElementById('ckno').onclick=ckOff;
 document.getElementById('ckyes').onclick=ckOff;
 })();
