@@ -13,8 +13,8 @@
 /* Página de después del formulario del plan. Misma casa que /plan: blanco,
    aktiv-grotesk 300 en mayúsculas, vino solo en detalles, sin esquinas. La
    estructura es la de la página de «unite al grupo» de Doglio: barra arriba,
-   progreso al 90 %, un titular y un botón. Sin cuenta atrás: Carlos no quiso
-   que la página abriera WhatsApp sola (2026-09-18); solo funciona el botón. */
+   progreso al 90 %, un titular, un botón y la cuenta atrás de 10 s, los
+   mismos que Doglio (comprobado en su código; con 5 saltaba antes de leer). */
 *{box-sizing:border-box;border-radius:0 !important}
 :root{--bg:#FFFFFF;--tx:#161616;--tx-2:rgba(22,22,22,.62);--tx-3:rgba(22,22,22,.42);--line:rgba(22,22,22,.12);--vino:#831A36;--wa:#25D366;
   --sans:"aktiv-grotesk","Inter Tight",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif}
@@ -36,6 +36,7 @@ h1 mark{background:#161616;color:#fff;padding:0 .18em;margin-right:.12em;display
 @media(max-width:420px){.btn{font-size:14.5px;padding:16px 14px;gap:10px}.btn svg{width:20px;height:20px}}
 .msg{margin:14px auto 0;font-size:13px;color:var(--tx-3);max-width:34rem}
 .cd{margin:34px auto 0;max-width:440px;border:1px solid var(--line);padding:16px 20px;font-size:15px;color:var(--tx-2)}
+.cd b{font-weight:500;color:var(--vino)}
 footer{border-top:1px solid var(--line);padding:26px 22px 34px;text-align:center;font-size:11.5px;color:var(--tx-3);line-height:1.8}
 footer a{color:inherit;text-decoration:none}
 footer a:hover{text-decoration:underline}
@@ -58,7 +59,7 @@ footer a:hover{text-decoration:underline}
   </a>
   <p class="msg">Mensaje: «Hola Arianny, quiero mi plan personalizado.»</p>
 
-  <div class="cd" id="cd">Al pulsar el botón se abre tu WhatsApp con el mensaje ya escrito. Solo tienes que darle a enviar.</div>
+  <div class="cd" id="cd">Se te va a redirigir automáticamente a WhatsApp en <b id="n">10</b> segundos.</div>
 </main>
 
 <footer>
@@ -100,11 +101,12 @@ if(leerConsent()==='accepted'){
   }
 }
 
-var wb=document.getElementById('wabtn'),cd=document.getElementById('cd');
+var wb=document.getElementById('wabtn'),cd=document.getElementById('cd'),n=document.getElementById('n');
 wb.href=URL_WA;
 setTimeout(function(){document.getElementById('rail').style.width='90%'},60);
 
-/* Al pulsar el botón se abre WhatsApp con el mensaje escrito y a GHL le llega
+/* Abrir WhatsApp cuenta igual si lo pulsa ella o si la manda la cuenta atrás:
+   en los dos casos se abre WhatsApp con el mensaje escrito, y a GHL le llega
    el aviso una sola vez para pasar la tarjeta a «WhatsApp iniciado». */
 var avisado=false;
 function avisar(){
@@ -116,9 +118,16 @@ function avisar(){
     )],{type:'application/json'}))}catch(e){}
     lead.wa=1; guardar();
   }
-  cd.innerHTML='¿No se ha abierto WhatsApp? Vuelve a pulsar el botón.';
+  cd.innerHTML='¿No se ha abierto WhatsApp? Pulsa el botón de arriba.';
 }
-wb.addEventListener('click',avisar);
+var quedan=10,timer=setInterval(function(){
+  quedan--;
+  if(quedan>0){n.textContent=quedan;return}
+  clearInterval(timer);
+  avisar();
+  location.href=URL_WA;
+},1000);
+wb.addEventListener('click',function(){clearInterval(timer);avisar()});
 })();
 </script>
 </body>
