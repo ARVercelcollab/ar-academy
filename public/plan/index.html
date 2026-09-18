@@ -561,16 +561,16 @@ h1 .it{color:#831A36}
    (216 px). Con la de movil (148 px) las vecinas se montaban unas sobre
    otras: eso era lo que se veia mal. */
 :root{--cd-hueco:15px}
+/* Medido con CINCO tarjetas (2026-09-18). Los valores de antes (hueco 88,
+   tarjeta 138, escenario 445) eran para diez: con cinco, las vecinas quedaban
+   tan separadas que se escondian tras los velos y la central flotaba en un
+   escenario vacio. Con esto: central de 160x320 con 10 px de margen arriba y
+   abajo, y las dos vecinas asomando. Si vuelven a ser diez, revisar. */
 @media(max-width:520px){
-  :root{--cd-hueco:88px}
-  .cd{width:138px}      /* 148 dejaba solo 26 px entre tarjetas; 138 deja 36 */
-  .stage{height:445px}  /* la tarjeta central mide 389 px de alto: cabe */
+  :root{--cd-hueco:40px}
+  .cd{width:158px}
+  .stage{height:340px}
 }
-
-/* El alto del escenario NO es decorativo: con hueco 88 la tarjeta central se
-   agranda hasta 423 px de alto por la perspectiva, y el escenario media 380.
-   Se cortaba por abajo. Esa era la otra mitad de por que en movil se veia mal:
-   no solo estaban juntas, es que ademas salian recortadas. */
 
 /* 11 · El formulario nuevo (2026-09-09) ─────────────────────────────────
 
