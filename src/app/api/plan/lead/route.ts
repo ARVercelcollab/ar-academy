@@ -15,9 +15,12 @@ import { NextResponse } from "next/server";
  *      «Plan personalizado». Si no tiene ninguna, tarjeta nueva en «Plan personalizado»
  *      · etapa 1. Una sola tarjeta siempre.
  *   3. Las etiquetas, con el endpoint que SUMA (`POST /contacts/{id}/tags`). Entre ellas
- *      SIEMPRE `revisar humano`: todas las del plan las llevan las setters (Carlos,
- *      2026-09-18). Está en la lista de exclusión de Sofi, así que aunque la chica
- *      escriba por Instagram, Sofi calla y la conversación es de las setters.
+ *      SIEMPRE `revisar humano` y `bot en pausa`: todas las del plan las llevan las
+ *      setters (Carlos, 2026-09-18). Las dos están en la lista de exclusión de Sofi, así
+ *      que aunque la chica escriba por Instagram, Sofi calla. `revisar humano` es la
+ *      bandeja («nadie la ha cogido»): la setter la quita al cogerla. `bot en pausa` se
+ *      queda: es lo que mantiene callada a Sofi, y va desde aquí para que no dependa de
+ *      que la setter se acuerde de ponerla.
  *
  * El formulario solo escribe evidencia. El nivel de la lead y `menor de 24` los
  * reconcilia el backend de Sofi: jamás se ponen desde aquí.
@@ -92,6 +95,7 @@ const TAG_MENOR_EDAD = "menor de edad";
 const TAG_PUEDE_PAGAR = "puede pagar";
 const TAG_HT_PAIS_OK = "ht-pais-ok";
 const TAG_REVISAR_HUMANO = "revisar humano"; // en TAGS_EXCLUSION del backend: Sofi calla
+const TAG_BOT_EN_PAUSA = "bot en pausa"; // ídem; «un humano lleva la conversación»
 const TAG_ESTUDIANTE = "estudiante"; // ya existe en el vocabulario de Sofi
 // Tramo de ingresos (paso 2), una etiqueta por respuesta, con el texto tal cual (Carlos,
 // 2026-09-18). El separador « · » es el de las demás etiquetas de la cuenta.
@@ -231,7 +235,7 @@ export async function POST(req: Request) {
   }
 
   // ── etiquetas: solo evidencia ──────────────────────────────────────────────
-  const tags = [TAG_INICIO_PLAN, TAG_REVISAR_HUMANO];
+  const tags = [TAG_INICIO_PLAN, TAG_REVISAR_HUMANO, TAG_BOT_EN_PAUSA];
   if (Number.isFinite(edad)) tags.push(edad >= 18 ? TAG_MAYOR_EDAD : TAG_MENOR_EDAD);
   const ocupacion = limpiar(b.ocupacion, 120);
   if (OCUPA_PAGO.includes(ocupacion)) tags.push(TAG_PUEDE_PAGAR);
