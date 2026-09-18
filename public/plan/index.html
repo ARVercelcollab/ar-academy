@@ -1205,7 +1205,7 @@ var API_LEAD='/api/plan/lead';
   };
   f.addEventListener('click',function(e){ if(!f.classList.contains('on')){e.preventDefault();arrancar();} });
 })();
-function enviarCRM(){
+function enviarCRM(eid){
   var pf=PREFIJOS[DATOS.pfIdx]||PREFIJOS[0];
   var carga={
     nombre:DATOS.nombre, edad:DATOS.edad, email:DATOS.email, telefono:DATOS.telefono,
@@ -1216,56 +1216,49 @@ function enviarCRM(){
     dolor_principal:ans[2]||'',
     objetivo_ingresos:ans[3]||''
   };
+  /* El event_id del píxel se genera aquí y viaja al servidor (por si un día se
+     manda por Conversions API), pero el evento `SubmitApplication` lo dispara
+     /plan/gracias al cargar: si se disparara aquí, la navegación a la página
+     siguiente podría cortarlo. */
+  carga.event_id=eid;
   // Si el CRM falla no se le dice nada a ella: ya tenemos el WhatsApp como
   // segunda vía y bloquear la pantalla por esto perdería la lead entera.
-  /* Evento propio para el plan: `SubmitApplication` (estándar de Meta). Ni
-     `Lead` (es el de la Comunidad) ni `CompleteRegistration` (el de la
-     masterclass): compartir evento mezcla las señales y Meta optimiza hacia la
-     más barata. El event_id viaja también al servidor por si un día se manda
-     por Conversions API, para que Meta lo cuente una vez. */
-  var eid=(window.crypto&&crypto.randomUUID)?crypto.randomUUID():String(Date.now())+Math.random().toString(16).slice(2);
-  carga.event_id=eid;
-  if(window.fbq)fbq('track','SubmitApplication',{content_name:'plan personalizado'},{eventID:eid});
+  var lead={eid:eid, email:DATOS.email||'', telefono:DATOS.telefono||'', ts:Date.now()};
   return fetch(API_LEAD,{method:'POST',headers:{'Content-Type':'application/json'},
-    body:JSON.stringify(carga)}).catch(function(){});
+    body:JSON.stringify(carga)})
+    .then(function(r){return r.json()})
+    .then(function(d){ if(d&&d.id)lead.id=d.id; return lead; })
+    .catch(function(){ return lead; });
 }
 
+/* Al terminar, /plan/gracias: la página del último paso, con el botón de
+   WhatsApp y la cuenta atrás. Se espera a que el CRM devuelva el id del
+   contacto (como mucho 4 s) para que el aviso de «WhatsApp iniciado» no tenga
+   que buscarla por email —el buscador de GHL tarda unos segundos en indexar
+   un contacto nuevo—. Lo que necesita la página siguiente va en
+   sessionStorage, nada en la URL. */
 function finish(){
   done=true;
   if(window.__planDone)window.__planDone();
-  enviarCRM();
   qn.textContent='LISTO'; rail.style.width='100%'; back.classList.remove('on');
   qb.classList.add('out');
   setTimeout(function(){
     qb.classList.remove('out');
-    qb.innerHTML='<h2 class="qt" data-kk>Ya lo tengo. <span class="it">Solo falta un paso.</span></h2>'
-      +'<p class="qh">Tu plan está hecho. Para mandártelo, abre tu WhatsApp: el mensaje ya está escrito, solo dale a enviar.</p>'
-      +'<div class="wa"><small>Vista previa del mensaje</small><p id="wamsg"></p></div>'
-      +'<div class="cta-wrap"><a id="wabtn" class="pillbtn big full" target="_blank" rel="noopener" style="background:#25D366;color:#04240F;font-weight:500;text-decoration:none">Recibir mi plan por WhatsApp</a></div>';
+    qb.innerHTML='<h2 class="qt" data-kk>Ya lo tengo. <span class="it">Un segundo.</span></h2>'
+      +'<p class="qh">Guardando tus respuestas…</p>';
     var t=qb.querySelector('[data-kk]'); if(t) kinetic(t);
-    var pais=ans[0]||'España', edad=ans[1]||'27', sit=ans[2]||'llevo tiempo intentándolo por mi cuenta';
-    var msg='Hola Arianny, quiero mi plan personalizado. Tengo '+edad+' años, vivo en '+pais.toLowerCase()+', y '+sit.toLowerCase()+'.';
-    var el=document.getElementById('wamsg'),p=0;
-    el.innerHTML='<span class="caret"></span>';
-    (function type(){
-      if(p<=msg.length){
-        el.innerHTML=esc(msg.slice(0,p))+'<span class="caret"></span>';
-        p++; setTimeout(type, RM?0:16);
-      } else { el.textContent=msg; }
-    })();
-    var wb=document.getElementById('wabtn');
-    if(wb){
-      wb.href='https://wa.me/'+WA_NUM+'?text='+encodeURIComponent(msg);
-      wb.addEventListener('click',function(){
-        // Marca que ha pulsado: es el paso que separa 'rellenó' de 'escribió'.
-        if(window.fbq)fbq('track','Contact',{content_name:'whatsapp plan'});
-        try{ navigator.sendBeacon(API_LEAD,new Blob([JSON.stringify(
-          {email:DATOS.email, telefono:DATOS.telefono, evento:'whatsapp_click'}
-        )],{type:'application/json'})); }catch(e){}
-      });
-    }
     document.getElementById('quiz').scrollIntoView({block:'start'});
   },250);
+  var ido=false;
+  function irse(lead){
+    if(ido)return; ido=true;
+    try{sessionStorage.setItem('plan_lead',JSON.stringify(lead))}catch(e){}
+    location.href='/plan/gracias';
+  }
+  var eid=(window.crypto&&crypto.randomUUID)?crypto.randomUUID():String(Date.now())+Math.random().toString(16).slice(2);
+  var respaldo={eid:eid, email:DATOS.email||'', telefono:DATOS.telefono||'', ts:Date.now()};
+  setTimeout(function(){irse(respaldo)},4000);
+  enviarCRM(eid).then(irse);
 }
 draw();
 if('IntersectionObserver' in window && !RM){

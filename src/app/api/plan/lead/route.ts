@@ -151,14 +151,21 @@ export async function POST(req: Request) {
   // ── aviso de clic en WhatsApp: mueve la tarjeta a la etapa 2 ──────────────
   // Es el número que separa «rellenó el formulario» de «escribió de verdad».
   if (b.evento === "whatsapp_click") {
-    const clave = limpiar(b.email, 160).toLowerCase() || limpiar(b.telefono, 40);
-    if (!clave) return NextResponse.json({ ok: true, ignorado: true });
-    const busca = await ghl("POST", "/contacts/search", {
-      locationId: process.env.GHL_LOCATION_ID,
-      pageLimit: 1,
-      filters: [{ field: "email", operator: "eq", value: clave }],
-    });
-    const cid = (busca.datos as { contacts?: { id: string }[] }).contacts?.[0]?.id;
+    // Si /plan/gracias trae el id que devolvimos al crear el contacto, se usa
+    // directamente: el buscador de GHL tarda unos segundos en indexar un
+    // contacto nuevo y, con la cuenta atrás de 5 s, buscarla por email llegaba
+    // antes de que existiera para él. El email queda como respaldo.
+    let cid = /^[A-Za-z0-9]{10,40}$/.test(String(b.id ?? "")) ? String(b.id) : "";
+    if (!cid) {
+      const clave = limpiar(b.email, 160).toLowerCase() || limpiar(b.telefono, 40);
+      if (!clave) return NextResponse.json({ ok: true, ignorado: true });
+      const busca = await ghl("POST", "/contacts/search", {
+        locationId: process.env.GHL_LOCATION_ID,
+        pageLimit: 1,
+        filters: [{ field: "email", operator: "eq", value: clave }],
+      });
+      cid = (busca.datos as { contacts?: { id: string }[] }).contacts?.[0]?.id ?? "";
+    }
     if (!cid) return NextResponse.json({ ok: true, ignorado: true });
     const opp = await oportunidadAbierta(cid, PIPELINE_PLAN);
     if (opp) {

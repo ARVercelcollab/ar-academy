@@ -36,8 +36,12 @@ const nextConfig: NextConfig = {
   // escribe en GHL a través de /api/plan/lead. Next sirve public/ por ruta exacta, así
   // que /plan necesita esta regla para llegar al index. Hasta el 2026-09-17 esto era
   // una reescritura a un subdominio aparte; se trajo aquí para tener una sola casa.
+  // /plan/gracias es la página de después del formulario (el botón de WhatsApp).
   async rewrites() {
-    return [{ source: "/plan", destination: "/plan/index.html" }];
+    return [
+      { source: "/plan", destination: "/plan/index.html" },
+      { source: "/plan/gracias", destination: "/plan/gracias/index.html" },
+    ];
   },
 };
 
