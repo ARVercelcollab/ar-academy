@@ -1218,6 +1218,14 @@ function enviarCRM(){
   };
   // Si el CRM falla no se le dice nada a ella: ya tenemos el WhatsApp como
   // segunda vía y bloquear la pantalla por esto perdería la lead entera.
+  /* Evento propio para el plan: `SubmitApplication` (estándar de Meta). Ni
+     `Lead` (es el de la Comunidad) ni `CompleteRegistration` (el de la
+     masterclass): compartir evento mezcla las señales y Meta optimiza hacia la
+     más barata. El event_id viaja también al servidor por si un día se manda
+     por Conversions API, para que Meta lo cuente una vez. */
+  var eid=(window.crypto&&crypto.randomUUID)?crypto.randomUUID():String(Date.now())+Math.random().toString(16).slice(2);
+  carga.event_id=eid;
+  if(window.fbq)fbq('track','SubmitApplication',{content_name:'plan personalizado'},{eventID:eid});
   return fetch(API_LEAD,{method:'POST',headers:{'Content-Type':'application/json'},
     body:JSON.stringify(carga)}).catch(function(){});
 }
@@ -1250,6 +1258,7 @@ function finish(){
       wb.href='https://wa.me/'+WA_NUM+'?text='+encodeURIComponent(msg);
       wb.addEventListener('click',function(){
         // Marca que ha pulsado: es el paso que separa 'rellenó' de 'escribió'.
+        if(window.fbq)fbq('track','Contact',{content_name:'whatsapp plan'});
         try{ navigator.sendBeacon(API_LEAD,new Blob([JSON.stringify(
           {email:DATOS.email, telefono:DATOS.telefono, evento:'whatsapp_click'}
         )],{type:'application/json'})); }catch(e){}
@@ -1287,16 +1296,38 @@ function stickyUpd(){
 }
 addEventListener('scroll',stickyUpd,{passive:true});
 window.__planDone=function(){formDone=true;stickyUpd()};
-var ckDone=false;try{ckDone=localStorage.getItem('ar_ck')==='1'}catch(x){}
-if(!ckDone)setTimeout(function(){ck.classList.add('up')},1600);
+/* Consentimiento de cookies: LA MISMA cookie que el resto de la web
+   (`cookie_consent`, ver src/components/CookieBanner.tsx). Como /plan vive en
+   el mismo dominio, si la chica ya aceptó en /comunidad o /masterclass, aquí
+   no se le vuelve a preguntar, y al revés. Antes esta página guardaba lo suyo
+   en localStorage y —peor— guardaba lo mismo al aceptar que al rechazar
+   (2026-09-18). */
+function leerConsent(){var m=document.cookie.match(/(?:^|; )cookie_consent=([^;]*)/);return m?decodeURIComponent(m[1]):null}
+function setConsent(v){document.cookie='cookie_consent='+v+'; path=/; max-age=31536000; SameSite=Lax'}
+
+/* El píxel de Meta, el mismo que carga MetaPixel.tsx en el resto de la web,
+   y con la misma regla: solo con consentimiento. */
+function cargarPixel(){
+  if(window.fbq)return;
+  !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+  n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+  document,'script','https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init','1613484133037939'); fbq('track','PageView');
+}
+var consent=leerConsent();
+if(consent==='accepted')cargarPixel();
+if(!consent)setTimeout(function(){ck.classList.add('up')},1600);
+else ck.style.display='none';
 // Al cerrar, además de bajarlo, se oculta del todo cuando acaba la
 // transición. Antes solo bajaba un 160% de su altura, y con el botón fijo
 // visible (.lift lo sube 112px) seguía asomando por abajo (2026-09-18).
-function ckOff(){ck.classList.remove('up');ck.classList.add('off');try{localStorage.setItem('ar_ck','1')}catch(x){}
+function ckOff(acepta){ck.classList.remove('up');ck.classList.add('off');
+  setConsent(acepta?'accepted':'rejected'); if(acepta)cargarPixel();
   setTimeout(function(){ck.style.display='none'},800)}
-if(ckDone){ck.style.display='none'}
-document.getElementById('ckno').onclick=ckOff;
-document.getElementById('ckyes').onclick=ckOff;
+document.getElementById('ckno').onclick=function(){ckOff(false)};
+document.getElementById('ckyes').onclick=function(){ckOff(true)};
 })();
 </script>
 
