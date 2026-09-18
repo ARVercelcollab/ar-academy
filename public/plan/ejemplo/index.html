@@ -172,23 +172,16 @@ section p b{color:var(--tx);font-weight:500}
 .btnwa:hover{background:#1fc45b}
 .soft{font-size:14px;color:var(--tx-3) !important;margin-top:18px}
 
-/* botón fijo */
-.sticky{position:fixed;left:0;right:0;bottom:0;z-index:65;display:flex;flex-direction:column;align-items:center;gap:5px;padding:12px 16px calc(14px + env(safe-area-inset-bottom));background:rgba(255,255,255,.9);backdrop-filter:blur(18px);border-top:1px solid var(--line);transform:translateY(110%);transition:transform .5s var(--sp)}
-.sticky.up{transform:none}
-.sticky .pillbtn{width:100%;max-width:420px}
-.sticky small{font-size:11px;color:var(--tx-3)}
-
 /* cookies: la misma cookie que el resto de la web */
 .cookie{position:fixed;bottom:16px;left:16px;right:16px;z-index:70;display:flex;flex-direction:column;gap:12px;padding:14px;background:#fff;border:1px solid var(--line-2);box-shadow:0 24px 70px rgba(22,22,22,.18);max-width:660px;margin:0 auto;transform:translateY(300%);transition:transform .7s var(--sp),bottom .35s ease}
 .cookie.up{transform:none}
-.cookie.lift{bottom:112px}
 .cookie:not(.up){transform:translateY(300%)}
 .cookie p{margin:0;font-size:13px;color:var(--tx-2)}
 .cookie p a{color:var(--tx)}
 .cookie div{display:flex;gap:8px;justify-content:flex-end}
 .cookie .pillbtn{padding:9px 14px;font-size:12px}
 
-footer{border-top:1px solid var(--line);padding:34px 22px 120px;text-align:center;font-size:11.5px;color:var(--tx-3);line-height:2.1;position:relative;z-index:2;text-transform:uppercase;letter-spacing:.06em}
+footer{border-top:1px solid var(--line);padding:34px 22px 60px;text-align:center;font-size:11.5px;color:var(--tx-3);line-height:2.1;position:relative;z-index:2;text-transform:uppercase;letter-spacing:.06em}
 footer a{color:var(--tx-2);text-decoration:none}
 footer .nota{text-transform:none;letter-spacing:0;color:var(--tx-3);font-size:11px}
 
@@ -417,11 +410,6 @@ footer .nota{text-transform:none;letter-spacing:0;color:var(--tx-3);font-size:11
   <span class="nota">Plantilla de ejemplo · «Lucía» es un perfil inventado para verla rellena</span>
 </footer>
 
-<div class="sticky" id="sticky">
-  <a class="pillbtn solid" href="#acceso">Escribir ACCESO por WhatsApp</a>
-  <small>Cuando lo tengas claro. Sin prisa.</small>
-</div>
-
 <div class="cookie" id="ck">
   <p>Usamos cookies para entender cómo se usa la página. <a href="/plan#legal">Política de privacidad</a></p>
   <div><button class="pillbtn" id="ckno">Rechazar</button><button class="pillbtn solid" id="ckyes">Aceptar</button></div>
@@ -532,15 +520,7 @@ if('IntersectionObserver' in window){
   io3.observe(wam.parentElement);
 } else { wam.textContent=word; }
 
-/* botón fijo: aparece pasada la cabecera, se esconde al llegar al final */
-var sticky=document.getElementById('sticky'),ck=document.getElementById('ck'),cab=document.querySelector('header'),fin=document.getElementById('acceso');
-function stickyUpd(){
-  var pasada=cab.getBoundingClientRect().bottom<0;
-  var f=fin.getBoundingClientRect();
-  var show=pasada&&!(f.top<innerHeight*.85);
-  sticky.classList.toggle('up',show);ck.classList.toggle('lift',show);
-}
-addEventListener('scroll',stickyUpd,{passive:true});stickyUpd();
+var ck=document.getElementById('ck');
 
 /* consentimiento + píxel: la misma cookie y el mismo píxel que el resto de la web */
 function leerConsent(){var m=document.cookie.match(/(?:^|; )cookie_consent=([^;]*)/);return m?decodeURIComponent(m[1]):null}
