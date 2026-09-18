@@ -41,6 +41,8 @@ const nextConfig: NextConfig = {
     return [
       { source: "/plan", destination: "/plan/index.html" },
       { source: "/plan/gracias", destination: "/plan/gracias/index.html" },
+      // La plantilla del plan personalizado, rellena con un perfil de ejemplo.
+      { source: "/plan/ejemplo", destination: "/plan/ejemplo/index.html" },
     ];
   },
 };
