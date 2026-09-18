@@ -1214,7 +1214,8 @@ function enviarCRM(eid){
     ocupacion:ans[0]||'',
     ingresos_actuales:ans[1]||'',
     dolor_principal:ans[2]||'',
-    objetivo_ingresos:ans[3]||''
+    objetivo_ingresos:ans[3]||'',
+    punto_actual:ans[4]||''   // solo para la nota: aquí siempre llega «activamente buscando…»
   };
   /* El event_id del píxel se genera aquí y viaja al servidor (por si un día se
      manda por Conversions API), pero el evento `SubmitApplication` lo dispara

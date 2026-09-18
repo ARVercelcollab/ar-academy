@@ -44,6 +44,36 @@ const ETAPA_WHATSAPP_INICIADO = "6bab6044-0db2-4904-8829-4f9269971094";
 const PIPELINE_CAPTACION = "lPD7Qhnb1Ak8Vlexzml8";
 
 // ── Campos personalizados (IDs reales de la location) ─────────────────────────
+// Las preguntas tal cual las ve ella en /plan (public/plan/index.html, `var S`).
+// Van en la nota del contacto para que quien la atienda lea lo que contestó sin
+// buscar campos. Si cambia una pregunta en el formulario, cambia aquí.
+const PREGUNTAS: [campo: string, texto: string][] = [
+  ["ocupacion", "¿A qué te dedicas actualmente?"],
+  ["ingresos_actuales", "¿Cuánto estás ingresando al mes ahora mismo?"],
+  ["dolor_principal", "¿Cuál es tu principal problema hoy para generar más ingresos con tu imagen?"],
+  ["objetivo_ingresos", "¿Cuánto te gustaría generar al mes con tu imagen y tu marca personal?"],
+  ["punto_actual", "¿En qué punto estás hoy?"],
+];
+
+function notaFormulario(b: Record<string, unknown>, edad: number, paisNombre: string, ig: string) {
+  const fecha = new Date().toLocaleString("es-ES", {
+    timeZone: "Europe/Madrid",
+    day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit",
+  });
+  const lineas = [`Formulario del plan personalizado · ${fecha}`, ""];
+  for (const [campo, texto] of PREGUNTAS) {
+    const r = limpiar(b[campo], 300);
+    if (r) lineas.push(texto, `→ ${r}`, "");
+  }
+  const ficha = [
+    Number.isFinite(edad) ? `Edad: ${edad}` : "",
+    paisNombre ? `País: ${paisNombre}` : "",
+    ig ? `Instagram: @${ig}` : "",
+  ].filter(Boolean);
+  if (ficha.length) lineas.push(ficha.join(" · "));
+  return lineas.join("\n").trim();
+}
+
 const CAMPO: Record<string, string> = {
   pais: "Fa3wIcXiLSVPqSiPh8IT",
   edad: "88m7ssAx938v1EDSUkwy",
@@ -226,6 +256,14 @@ export async function POST(req: Request) {
 
   const contactId = (up.datos as { contact?: { id: string } }).contact?.id;
   if (!contactId) return NextResponse.json({ ok: true });
+
+  // 1b · la nota con sus respuestas, tal cual. Los campos personalizados quedan
+  //      en «Información adicional», donde nadie mira (Carlos, 2026-09-18); la
+  //      nota sale en la ficha, en el panel de Conversaciones y en la tarjeta.
+  const nota = await ghl("POST", `/contacts/${contactId}/notes`, {
+    body: notaFormulario(b, edad, limpiar(b.pais_nombre, 60), limpiar(b.instagram, 80).replace(/^@/, "")),
+  });
+  if (!nota.ok) console.error("plan/lead: nota falló", nota.status, JSON.stringify(nota.datos).slice(0, 300));
 
   // 2 · la tarjeta. Es secundaria: si falla, la lead ya está guardada.
   let tarjeta = "nueva";
