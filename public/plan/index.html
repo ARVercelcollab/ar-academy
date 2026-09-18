@@ -633,6 +633,15 @@ h1 .it{color:#831A36}
 @keyframes latido{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.8)}}
 @media(max-width:420px){.tickbar .tickrow span{font-size:13px;padding:8px 10px}}
 @media(prefers-reduced-motion:reduce){.tickbar .dot{animation:none}}
+
+/* ══ Las alumnas ═══════════════════════════════════════════════════════════
+   Cada tarjeta lleva de fondo la miniatura de su vídeo en Bunny; el degradado
+   de abajo (.cd::after) sigue ahí para que se lea el nombre. */
+.cd{background-size:cover;background-position:center top;background-repeat:no-repeat}
+.cd[data-on="1"]::after{display:none}
+
+/* Las caras del 4,9/5 son las mismas que en la comunidad (public/img/usuarios.png). */
+.avs .avsimg{height:32px;width:auto;display:block}
 </style>
 
 <div class="grain"></div>
@@ -658,7 +667,7 @@ h1 .it{color:#831A36}
         <a class="pillbtn solid big" href="#quiz">Obtén acceso gratuito</a>
         <small class="ctanote">No se requiere tarjeta · Solo tarda 30 segundos</small>
         <div class="rate">
-          <div class="avs"><i></i><i></i><i></i><i></i></div>
+          <div class="avs"><img class="avsimg" src="/img/usuarios.png" alt="" width="219" height="48" loading="lazy"></div>
           <div class="rtx"><b>4,9/5 <span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span></b><small>De las alumnas que se han formado con nosotras</small></div>
         </div>
       </div>
@@ -826,16 +835,23 @@ tick.innerHTML='<span><i class="dot" aria-hidden="true"></i>'+MESES[new Date().g
 
 /* PRODUCCIÓN: pon el ID del Short de YouTube en yt y la tarjeta se vuelve reproductor.
    Ej: {n:'Alba', l:'...', yt:'AbCdEfGhIjK'}  */
-var ALU=[{n:'Alba',l:'«Creía que no tenía el físico»',yt:''},{n:'Laura',l:'No le daba la vida',yt:''},
-{n:'Iliana',l:'Sin un solo contacto',yt:''},{n:'Karen',l:'Después de ser madre',yt:''},
-{n:'Kim',l:'Le frenaba el qué dirán',yt:''},{n:'Cecilia',l:'Miedo al juicio de los suyos',yt:''},
-{n:'Lorena',l:'Trabajo y estudios a la vez',yt:''},{n:'Florisbel',l:'«Es tarde para mi edad»',yt:''},
-{n:'Lina',l:'Recuperarse tras la maternidad',yt:''},{n:'Alumna',l:'Empezó de cero este año',yt:''}];
+/* Las alumnas, con su vídeo en Bunny Stream (biblioteca 693492, la de la
+   comunidad). Cinco por ahora (Carlos, 2026-09-18). La frase (l) solo va si
+   sale de lo que ella misma dice; las nuevas van con el nombre hasta tenerla. */
+var CDN='https://vz-171fc963-c2a.b-cdn.net/';
+var ALU=[
+ {n:'Mónica', l:'', v:'2d8df203-e555-45d7-9609-c13cd0fa817a'},
+ {n:'Tatiana',l:'', v:'cfbc1c90-8f04-4212-8a06-befab9bd6769'},
+ {n:'Cecilia',l:'Miedo al juicio de los suyos', v:'a9dec296-f5eb-48a1-8153-6aaf19b2a625'},
+ {n:'Daniela',l:'', v:'8b8894e4-8220-4df7-8276-cbc44dcd4cd5'},
+ {n:'Andrea', l:'', v:'5c3a5609-c1b4-422c-aa97-960ca9cdce5c'}
+];
 var ring=document.getElementById('ring'),stage=document.getElementById('stage'),N=ALU.length,BA=360/N;
 ALU.forEach(function(a){
   var d=document.createElement('div');d.className='cd';
-  d.innerHTML='<span class="sh">Short</span><span class="cdplay"></span><b>'+a.n+'</b><i>'+a.l+'</i>';
-  if(a.yt){d.addEventListener('click',function(ev){
+  if(a.v) d.style.backgroundImage='url('+CDN+a.v+'/thumbnail.jpg)';
+  d.innerHTML='<span class="sh">Short</span><span class="cdplay"></span><b>'+a.n+'</b>'+(a.l?'<i>'+a.l+'</i>':'');
+  if(a.v){d.addEventListener('click',function(ev){
     var marcaOriginal=d.innerHTML;
     if(d.dataset.on)return; ev.stopPropagation(); d.dataset.on='1';
     reproduciendo=true;
@@ -846,9 +862,13 @@ ALU.forEach(function(a){
       if(!ring.querySelector('.cd[data-on="1"]')) reproduciendo=false;
     };
     setTimeout(function(){document.addEventListener('click',cerrarFuera,true)},60);
-    d.innerHTML='<iframe src="https://www.youtube.com/embed/'+a.yt+'?autoplay=1&playsinline=1&rel=0" '
-      +'style="position:absolute;inset:0;width:100%;height:100%;border:0;border-radius:14px" '
-      +'allow="autoplay; encrypted-media" allowfullscreen title="'+a.n+'"></iframe>';
+    // Sin YouTube: nada de cookies de Google ni «más vídeos» de otros canales
+    // encima de la cara de una alumna. Safari toma el HLS, Chrome el MP4.
+    d.innerHTML='<video autoplay playsinline controls preload="metadata" poster="'+CDN+a.v+'/thumbnail.jpg" '
+      +'style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#000" title="'+a.n+'">'
+      +'<source src="'+CDN+a.v+'/playlist.m3u8" type="application/vnd.apple.mpegurl">'
+      +'<source src="'+CDN+a.v+'/play_720p.mp4" type="video/mp4"></video>';
+    var vv=d.querySelector('video'); var pp=vv&&vv.play(); if(pp&&pp.catch)pp.catch(function(){});
   })}
   ring.appendChild(d);
 });
