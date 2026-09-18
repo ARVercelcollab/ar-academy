@@ -85,7 +85,7 @@ section p{color:var(--tx-2);font-size:16.5px;margin:0 0 16px;font-weight:300}
 section p:last-child{margin-bottom:0}
 section p b{color:var(--tx);font-weight:500}
 
-/* mini-mapa de los 9 pasos */
+/* mini-mapa de los 10 pasos */
 .mini{display:flex;align-items:center;gap:6px;margin:28px 0 6px}
 .mini s{flex:1;height:1px;background:var(--line-2);text-decoration:none}
 .mini b{width:26px;height:26px;border:1px solid var(--line-2);display:grid;place-items:center;font-size:10px;color:var(--tx-3);font-weight:400;flex:none;transition:.3s}
@@ -154,9 +154,9 @@ section p b{color:var(--tx);font-weight:500}
 .stplayer .clf{cursor:default}
 .youtag{display:inline-flex;align-items:center;gap:7px;margin:0 0 10px;font-size:9.5px;letter-spacing:.14em;color:#fff;background:var(--tx);padding:5px 9px;font-weight:500}
 .starttag{display:inline-flex;align-items:center;gap:7px;margin:0 0 10px;font-size:9.5px;letter-spacing:.14em;color:var(--vino);border:1px dashed var(--vino);padding:5px 9px;font-weight:500}
-.exit{margin-top:6px;border:1px solid var(--tx);padding:24px}
-.exit h3{margin:0 0 8px;font-size:22px;font-weight:300;letter-spacing:-.02em}
-.exit p{margin:0;font-size:15px;color:var(--tx-2)}
+.st.final .stn{background:var(--vino);color:#fff;border-color:var(--vino)}
+.st.final h3{color:var(--vino)}
+.st.final .stwhy b{color:var(--tx)}
 .kick{margin-top:38px;background:var(--vino-2);padding:26px;font-size:19px;line-height:1.4;letter-spacing:-.01em;font-weight:300;color:var(--tx) !important}
 .kick b{font-weight:500}
 
@@ -238,9 +238,9 @@ footer .nota{text-transform:none;letter-spacing:0;color:var(--tx-3);font-size:11
     <span class="lab">01 · Dónde estás</span>
     <h2>Hiciste lo más difícil <span class="it">en el orden equivocado.</span></h2>
     <p>Has mirado, has probado cosas sueltas, y de tanto intento sin respuesta sacaste la conclusión que parecía la única posible: que a lo mejor esto no es para ti.</p>
-    <p>Mira lo que pasa sin que nadie te lo diga: <b>casi todo el mundo entra por el paso 7 de un camino de 9.</b> Las fotos y la técnica van casi al final, y son lo primero que te enseñan a hacer. No fallaste tú. Falló el orden.</p>
+    <p>Mira lo que pasa sin que nadie te lo diga: <b>casi todo el mundo entra por el paso 7 de un camino de 10.</b> Las fotos y la técnica van casi al final, y son lo primero que te enseñan a hacer. No fallaste tú. Falló el orden.</p>
 
-    <div class="mini" id="mini" aria-label="Los 9 pasos del camino"></div>
+    <div class="mini" id="mini" aria-label="Los 10 pasos del camino"></div>
     <div class="minicap"><span><b>Paso 1</b> · por aquí empieza tu plan</span><span><b>Paso 7</b> · por aquí entra casi todo el mundo</span></div>
   </div>
 </section>
@@ -366,11 +366,13 @@ footer .nota{text-transform:none;letter-spacing:0;color:var(--tx-3);font-size:11
         <p class="stwhy">Otra vía de cobrar de las marcas, cada vez más pedida. Tu mentora vuelve a ser Pierina: la charla del paso 6 cubre también esta parte.</p>
         <div class="strow"><span class="mchip">Con <b>Pierina Alves</b> · 1 a 1</span></div>
       </div>
-    </div>
 
-    <div class="exit">
-      <h3>La salida: AR Agency</h3>
-      <p>Cuando el equipo se cerciora de que estás formada y preparada, nuestra agencia internacional te representa: castings de campaña, revistas, pasarela, contenido. <b>Y durante todo el camino, una mentora dedicada solo a ti.</b> Por eso esto no es otro curso.</p>
+      <div class="st final" data-big="10"><span class="stn">10</span>
+        <span class="starttag">La salida</span>
+        <h3>AR Agency</h3>
+        <p class="stwhy">Cuando el equipo se cerciora de que estás formada y preparada, nuestra agencia internacional te representa: castings de campaña, revistas, pasarela, contenido. <b>Y durante todo el camino, una mentora dedicada solo a ti.</b> Por eso esto no es otro curso.</p>
+        <div class="strow"><span class="mchip">Nuestra <b>agencia internacional</b> · te representamos nosotros</span></div>
+      </div>
     </div>
 
     <p class="kick"><b>Casi todo el mundo empieza por el paso 7.</b> Fotos y técnica antes que cabeza, orden, identidad, marca y voz. Por eso hay tanta chica con un book precioso y ninguna llamada. La técnica no falla: falla lo que tenía que venir antes. Tú ya no tienes ese problema: <span class="it">ya sabes el orden.</span></p>
@@ -404,7 +406,7 @@ footer .nota{text-transform:none;letter-spacing:0;color:var(--tx-3);font-size:11
     <div class="cta-wrap">
       <a class="pillbtn big full btnwa" id="wabtn" href="https://wa.me/34722655343?text=ACCESO" target="_blank" rel="noopener">Escribir ACCESO por WhatsApp</a>
     </div>
-    <p class="soft">Si todavía no estás lista, no pasa nada: quédate por aquí, mira las clases, y escríbeme cuando lo estés. 🤍</p>
+    <p class="soft">Si todavía no estás lista, no pasa nada: mira las clases, mira el contenido que subo y escríbeme si tienes alguna duda. 🤍</p>
   </div>
 </section>
 
@@ -460,11 +462,11 @@ addEventListener('scroll',leer,{passive:true});leer();
 
 /* mini-mapa */
 var mini=document.getElementById('mini');
-for(var m=1;m<=9;m++){
+for(var m=1;m<=10;m++){
   var b=document.createElement('b');b.textContent=m;
   if(m===7)b.className='hot';if(m===1)b.className='st1';
   mini.appendChild(b);
-  if(m<9){var s=document.createElement('s');mini.appendChild(s)}
+  if(m<10){var s=document.createElement('s');mini.appendChild(s)}
 }
 
 /* apariciones */
