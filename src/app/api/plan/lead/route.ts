@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { urlDePlan } from "@/lib/plan/token";
 
 /**
  * Formulario del plan personalizado (/plan) → GHL.
@@ -86,6 +87,9 @@ const CAMPO: Record<string, string> = {
   ig_handle: "HZp3lXGMOGol5cU7RvvW",
   ingresos_actuales: "Y3m8c3leyhSexHnd3fUI",
   objetivo_ingresos: "KEy5615AVTdYDoTLHVLv",
+  // `contact.plan_url`: el enlace de SU plan. Así la setter (o un mensaje de GHL) puede
+  // usar {{contact.plan_url}} sin abrir la nota.
+  plan_url: "tNATA2ZlyZ95UDQiRrkg",
 };
 
 // ── Etiquetas, con los nombres del 2026-08-19 ─────────────────────────────────
@@ -281,8 +285,31 @@ export async function POST(req: Request) {
   // 1b · la nota con sus respuestas, tal cual. Los campos personalizados quedan
   //      en «Información adicional», donde nadie mira (Carlos, 2026-09-18); la
   //      nota sale en la ficha, en el panel de Conversaciones y en la tarjeta.
+  //      Al final, los enlaces de SU plan, que se genera solo con estas respuestas
+  //      (src/lib/plan). La setter los copia de aquí cuando decide mandarlo.
+  let enlaces = "";
+  try {
+    const plan = urlDePlan(contactId);
+    enlaces = [
+      "",
+      "Su plan personalizado (se genera solo con estas respuestas):",
+      plan,
+      "Si no califica para la formación, el mismo plan con cierre de Comunidad:",
+      urlDePlan(contactId, "comunidad"),
+      "Para revisarlo sin que cuente como abierto:",
+      plan + "?previa=1",
+    ].join("\n");
+  } catch (e) {
+    console.error("plan/lead: sin enlace de plan", e);
+  }
+  if (enlaces) {
+    const pu = await ghl("PUT", `/contacts/${contactId}`, {
+      customFields: [{ id: CAMPO.plan_url, value: urlDePlan(contactId) }],
+    });
+    if (!pu.ok) console.error("plan/lead: plan_url falló", pu.status, JSON.stringify(pu.datos).slice(0, 300));
+  }
   const nota = await ghl("POST", `/contacts/${contactId}/notes`, {
-    body: notaFormulario(b, edad, limpiar(b.pais_nombre, 60), limpiar(b.instagram, 80).replace(/^@/, "")),
+    body: notaFormulario(b, edad, limpiar(b.pais_nombre, 60), limpiar(b.instagram, 80).replace(/^@/, "")) + enlaces,
   });
   if (!nota.ok) console.error("plan/lead: nota falló", nota.status, JSON.stringify(nota.datos).slice(0, 300));
 
