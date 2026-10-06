@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { urlDePlan } from "@/lib/plan/token";
+import { cierreRecomendado } from "@/lib/plan/contenido";
 
 /**
  * Formulario del plan personalizado (/plan) → GHL.
@@ -288,23 +289,31 @@ export async function POST(req: Request) {
   //      Al final, los enlaces de SU plan, que se genera solo con estas respuestas
   //      (src/lib/plan). La setter los copia de aquí cuando decide mandarlo.
   let enlaces = "";
+  const cierre = cierreRecomendado({
+    edad: Number.isFinite(edad) ? edad : null,
+    ocupacion,
+    ingresos: limpiar(b.ingresos_actuales, 60),
+    pais,
+  });
   try {
-    const plan = urlDePlan(contactId);
+    const recomendado = urlDePlan(contactId, cierre);
     enlaces = [
       "",
-      "Su plan personalizado (se genera solo con estas respuestas):",
-      plan,
-      "Si no califica para la formación, el mismo plan con cierre de Comunidad:",
-      urlDePlan(contactId, "comunidad"),
+      `Su plan personalizado (cierre recomendado: ${cierre === "formacion" ? "formación, palabra ACCESO" : "Comunidad"}):`,
+      recomendado,
+      cierre === "formacion"
+        ? "El mismo plan con cierre de Comunidad, si no califica:"
+        : "El mismo plan con cierre de formación, si al hablar con ella encaja:",
+      urlDePlan(contactId, cierre === "formacion" ? "comunidad" : "formacion"),
       "Para revisarlo sin que cuente como abierto:",
-      plan + "?previa=1",
+      recomendado + "?previa=1",
     ].join("\n");
   } catch (e) {
     console.error("plan/lead: sin enlace de plan", e);
   }
   if (enlaces) {
     const pu = await ghl("PUT", `/contacts/${contactId}`, {
-      customFields: [{ id: CAMPO.plan_url, value: urlDePlan(contactId) }],
+      customFields: [{ id: CAMPO.plan_url, value: urlDePlan(contactId, cierre) }],
     });
     if (!pu.ok) console.error("plan/lead: plan_url falló", pu.status, JSON.stringify(pu.datos).slice(0, 300));
   }

@@ -324,3 +324,23 @@ export function armarPlan(
     caso: CASO_POR_PROBLEMA[kp] ?? null,
   };
 }
+
+// ── Qué cierre lleva su plan ──────────────────────────────────────────────────
+// Propuesta pendiente de validar por Carlos (decisiones.md): la formación para quien puede
+// empezar ya; la Comunidad para menores, para quien hoy no tiene ingresos ni trabajo y para
+// Latam sin ingresos. Es una recomendación: la nota trae los dos enlaces y la setter decide.
+const PAISES_FORMACION = ["España", "Resto de Europa", "Estados Unidos o Canadá", "Australia o Emiratos"];
+const INGRESOS_BAJOS = ["Todavía nada", "Menos de 750 €"];
+
+export function cierreRecomendado(d: {
+  edad: number | null;
+  ocupacion: string;
+  ingresos: string;
+  pais: string;
+}): "formacion" | "comunidad" {
+  if (d.edad !== null && d.edad < 18) return "comunidad";
+  const sinTrabajo = d.ocupacion === OCUPACION.estudia || d.ocupacion === OCUPACION.nada;
+  if (sinTrabajo && INGRESOS_BAJOS.includes(d.ingresos)) return "comunidad";
+  if (!PAISES_FORMACION.includes(d.pais) && INGRESOS_BAJOS.includes(d.ingresos)) return "comunidad";
+  return "formacion";
+}
