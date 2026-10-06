@@ -100,6 +100,11 @@ const C = {
   marca: { yt: "PHyImmNq_oE", titulo: "Cómo construir tu marca personal desde cero", etiqueta: "Clase · 44 min" },
   casting: { yt: "M5yvR_AKbUo", titulo: "Errores que te hacen perder un casting", etiqueta: "Clase · 10 min" },
   redes: { yt: "f2sdsrpO1C0", titulo: "¿Se puede vivir de las redes y el UGC?", etiqueta: "Charla · 75 min" },
+  // La de 14 min en las primeras clases; la de 44 min (PHyImmNq_oE) se queda en la ruta.
+  marcaCorta: { yt: "KVFL8W1ikn4", titulo: "Cómo construir tu marca personal desde cero", etiqueta: "Clase · 14 min" },
+  tarifas: { yt: "lCrUKF0oWdQ", titulo: "La verdad sobre cuánto gana una modelo, principiante vs profesional", etiqueta: "Clase · 9 min" },
+  kim: { yt: "RW784i33ILU", titulo: "Kim: de cero a que la contraten marcas y a desfilar en pasarelas", etiqueta: "Tu caso" },
+  iliana: { yt: "Koios2AJNe0", titulo: "Iliana: entró como alumna y hoy tiene su propia academia", etiqueta: "Tu caso" },
 };
 
 // ── Por PROBLEMA ──────────────────────────────────────────────────────────────
@@ -159,10 +164,10 @@ const POR_PROBLEMA: Record<ClaveProblema, BloqueProblema> = {
       { t: "Pon tu precio con argumentos", p: "Una tarifa base escrita, y de ahí no se baja. La clase 3 te cuenta los errores que hacen perder trabajos, y dinero." },
     ],
     clases: [
-      { ...C.marca, porQueTitulo: "Por qué la primera:", porQue: "es tu paso, contado entero: cómo se construye una marca que las marcas entienden." },
+      { ...C.marcaCorta, porQueTitulo: "Por qué la primera:", porQue: "es tu paso: cómo se construye una marca que las marcas entienden. La versión completa está en la ruta." },
       { ...C.portafolio, porQueTitulo: "Por qué:", porQue: "tu perfil es tu portafolio. Aquí ves qué tiene que tener para que te paguen más." },
       { ...C.casting, porQueTitulo: "Por qué:", porQue: "cómo presentarte para que te elijan a ti, y no a la siguiente." },
-      { ...C.alba, porQueTitulo: "Por qué ella:", porQue: "Alba pasó de no atreverse a ganar dinero con su imagen. Escúchala contarlo." },
+      { ...C.iliana, porQueTitulo: "Por qué ella:", porQue: "Iliana construyó una marca tan suya que hoy tiene su propia academia. Escúchala contarlo." },
     ],
     remate:
       "**Casi todo el mundo intenta cobrar más con mejores fotos.** Es el paso 7. Pero lo que sube tu tarifa está antes: que se entienda quién eres y por qué contratarte a ti. Tú ya sabes dónde está tu palanca: [[en tu marca.]]",
@@ -182,13 +187,13 @@ const POR_PROBLEMA: Record<ClaveProblema, BloqueProblema> = {
     pasos: [
       { t: "Ten tu tarifa escrita antes de que te escriban", p: "Una cifra por foto, otra por vídeo y otra por jornada, y aparte los derechos de uso. Si la improvisas en el chat, pierdes." },
       { t: "Pregunta antes de contestar", p: "Qué uso le van a dar, cuánto tiempo, en qué países y cuántas piezas. Con esas cuatro respuestas el precio sale solo." },
-      { t: "Si usan tu imagen en anuncios, se paga", p: "Un canje puede tener sentido para empezar. Unos derechos de uso, nunca gratis. La clase 1 te cuenta lo que nadie cuenta." },
+      { t: "Si usan tu imagen en anuncios, se paga", p: "Un canje puede tener sentido para empezar. Unos derechos de uso, nunca gratis. La clase 1 te dice cuánto se paga de verdad." },
     ],
     clases: [
-      { ...C.casting, porQueTitulo: "Por qué la primera:", porQue: "es tu paso: presentarte y que te contraten sin regalar tu trabajo." },
-      { ...C.marca, porQueTitulo: "Por qué:", porQue: "negocia mejor quien tiene una marca clara detrás. Aquí se construye." },
-      { ...C.redes, porQueTitulo: "Por qué:", porQue: "cómo cobran de verdad las creadoras que viven de esto: tarifas, UGC y marcas." },
-      { ...C.alba, porQueTitulo: "Por qué ella:", porQue: "Alba aprendió a cobrar por su imagen. Escúchala contarlo." },
+      { ...C.tarifas, porQueTitulo: "Por qué la primera:", porQue: "antes de negociar hay que saber cuánto se paga. Aquí están las cifras, de la que empieza a la profesional." },
+      { ...C.casting, porQueTitulo: "Por qué:", porQue: "presentarte y que te contraten sin regalar tu trabajo." },
+      { ...C.marcaCorta, porQueTitulo: "Por qué:", porQue: "negocia mejor quien tiene una marca clara detrás. Aquí se construye." },
+      { ...C.kim, porQueTitulo: "Por qué ella:", porQue: "Kim empezó de cero y hoy la contratan marcas. Escucha cómo lo hizo." },
     ],
     remate:
       "**Casi todo el mundo cree que lo difícil es que te escriban.** Y lo difícil es lo que viene después: decir un precio y sostenerlo. Eso se aprende, y tiene su paso en el camino. Tú ya sabes dónde está tu palanca: [[en cómo negocias.]]",
@@ -213,8 +218,8 @@ const POR_PROBLEMA: Record<ClaveProblema, BloqueProblema> = {
     clases: [
       { ...C.zara, porQueTitulo: "Por qué la primera:", porQue: "para que una marca te elija, primero hay que entender qué busca. Contado desde dentro." },
       { ...C.redes, porQueTitulo: "Por qué:", porQue: "cómo viven de las redes y del UGC las que tienen trabajo todos los meses." },
-      { ...C.marca, porQueTitulo: "Por qué:", porQue: "lo que hace que las marcas te escriban a ti es tu marca. Aquí se construye." },
-      { ...C.alba, porQueTitulo: "Por qué ella:", porQue: "Alba pasó de no atreverse a ganar dinero con su imagen. Escúchala contarlo." },
+      { ...C.marcaCorta, porQueTitulo: "Por qué:", porQue: "lo que hace que las marcas te escriban a ti es tu marca. Aquí se construye." },
+      { ...C.kim, porQueTitulo: "Por qué ella:", porQue: "Kim pasó de cero a que la contraten marcas y a desfilar. Escucha cómo lo hizo." },
     ],
     remate:
       "**Casi todo el mundo busca la siguiente colaboración de una en una.** Por eso un mes hay y otro no. Lo que hace que no paren es un sistema: marca, contenido y una forma de cobrar que no dependa de seguidores. Tú ya sabes dónde está tu palanca: [[en tu sistema.]]",
@@ -235,7 +240,7 @@ const POR_OBJETIVO: Record<ClaveObjetivo, { chip: string; titulo: [string, strin
     chip: "Quiere vivir de esto",
     titulo: ["Que sea tu primera fuente", "de ingresos."],
     parrafos: [
-      "Ese fue el objetivo que marcaste: **de 2.000 € a 5.000 € al mes con tu imagen y tu marca personal.** Ese mercado existe, y ya viste en la página a quién está buscando.",
+      "Ese fue el objetivo que marcaste: **de 2.000 € a 5.000 € al mes con tu imagen y tu marca personal.** Ese mercado existe, y no busca un único tipo de chica: busca a la que llega preparada.",
       "Lo que te faltaba no era mercado. Era **saber qué preparar antes de presentarte, y en qué orden.** Eso es exactamente lo que tienes debajo. Y al final del camino, la salida: **AR Agency, nuestra agencia internacional,** que representa a las alumnas cuando están preparadas.",
     ],
   },

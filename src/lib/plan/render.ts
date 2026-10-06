@@ -235,19 +235,17 @@ ${cierre}
   <a href="/plan#legal">Privacidad</a> · <a href="/plan#legal">Aviso legal</a> · <a href="/plan#legal">Cookies</a>
 </footer>
 ${p.previa ? '<div class="previa">Vista previa de la setter · no cuenta como abierto</div>' : ""}
-<div class="cookie" id="ck">
-  <p>Usamos cookies para entender cómo se usa la página. <a href="/plan#legal">Política de privacidad</a></p>
-  <div><button class="pillbtn" id="ckno">Rechazar</button><button class="pillbtn solid" id="ckyes">Aceptar</button></div>
-</div>
 <script>window.__PLAN=${datosJS};</script>
 <script>${JS_PLAN}</script>
 </body>
 </html>`;
 }
 
-// El guion de la plantilla de /plan/ejemplo, con cuatro cambios: la franja lleva su nombre,
+// El guion de la plantilla de /plan/ejemplo, con estos cambios: la franja lleva su nombre,
 // el mini-mapa marca su paso de inicio, las clases vistas se guardan por plan, y se avisa al
 // servidor cuando ella lo abre y cuando reproduce una clase (nunca en la vista previa).
+// Sin píxel de Meta ni banner de cookies: la URL lleva su token y no tiene que salir de casa.
+// Lo que se mide va a GHL como etiquetas (/api/plan/evento).
 const JS_PLAN = `(function(){
 var P=window.__PLAN||{};
 var RM=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -324,7 +322,10 @@ document.querySelectorAll('.cl').forEach(function(c){
   var i=+c.dataset.cl, caja=c.querySelector('.clf');
   function marca(v){ seen[i]=v; try{localStorage.setItem(K,JSON.stringify(seen))}catch(e){} paintProg(); }
   c.querySelector('.vw').addEventListener('click',function(){marca(!seen[i])});
-  caja.addEventListener('click',function(){ embed(caja,c.dataset.yt); if(!seen[i]) marca(true); });
+  caja.setAttribute('role','button');caja.setAttribute('tabindex','0');caja.setAttribute('aria-label','Ver la clase');
+  function abre(){ embed(caja,c.dataset.yt); if(!seen[i]) marca(true); }
+  caja.addEventListener('click',abre);
+  caja.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){e.preventDefault();abre();} });
 });
 paintProg();
 document.querySelectorAll('.cchip[data-yt]').forEach(function(ch){
@@ -347,28 +348,8 @@ if(wam){
     io3.observe(wam.parentElement);
   } else { wam.textContent=word; }
 }
-var ck=document.getElementById('ck');
-function leerConsent(){var m=document.cookie.match(/(?:^|; )cookie_consent=([^;]*)/);return m?decodeURIComponent(m[1]):null}
-function setConsent(v){document.cookie='cookie_consent='+v+'; path=/; max-age=31536000; SameSite=Lax'}
-function cargarPixel(){
-  if(window.fbq||P.previa)return;
-  !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-  n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
-  n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
-  t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
-  document,'script','https://connect.facebook.net/en_US/fbevents.js');
-  fbq('init','1613484133037939'); fbq('track','PageView');
-  fbq('track','ViewContent',{content_name:'plan personalizado abierto'});
-}
-var consent=leerConsent();
-if(consent==='accepted')cargarPixel();
-if(!consent)setTimeout(function(){ck.classList.add('up')},1600);
-else ck.style.display='none';
-function ckOff(acepta){ck.classList.remove('up');setConsent(acepta?'accepted':'rejected');if(acepta)cargarPixel();setTimeout(function(){ck.style.display='none'},800)}
-document.getElementById('ckno').onclick=function(){ckOff(false)};
-document.getElementById('ckyes').onclick=function(){ckOff(true)};
 var wb=document.getElementById('wabtn');
-if(wb)wb.addEventListener('click',function(){ avisa('acceso'); if(window.fbq)fbq('track','Contact',{content_name:'acceso plan'})});
+if(wb)wb.addEventListener('click',function(){ avisa('acceso'); });
 var cb=document.getElementById('combtn');
 if(cb)cb.addEventListener('click',function(){ avisa('comunidad'); });
 })();`;
