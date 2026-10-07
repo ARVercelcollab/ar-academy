@@ -148,7 +148,7 @@ export default function HeroReordered() {
         </h1>
         <p className={styles.heroSub}>Se construye. No se nace.</p>
         <span className={styles.proofBadge}>
-          +300 alumnas iniciaron exactamente donde estás tú
+          +400 alumnas iniciaron exactamente donde estás tú
         </span>
 
         {/* VIDEO (el bloque pre-vídeo se eliminó: era redundante con el vídeo) */}

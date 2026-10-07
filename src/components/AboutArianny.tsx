@@ -11,7 +11,7 @@ export default function AboutArianny() {
           </h2>
 
           <p className={styles.intro}>
-            Después de 16 años en la industria y de ayudar a más de 300
+            Después de 16 años en la industria y de ayudar a más de 400
             mujeres, entendí algo que las agencias no quieren que sepas:
           </p>
 
