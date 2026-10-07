@@ -39,6 +39,9 @@ async function ghl(metodo: string, ruta: string, cuerpo?: unknown) {
     },
     body: cuerpo ? JSON.stringify(cuerpo) : undefined,
     cache: "no-store",
+    // Ella está esperando a que cargue su plan: si GHL no contesta, mejor el aviso de
+    // «prueba en un minuto» que una página en blanco hasta que Vercel corte la función.
+    signal: AbortSignal.timeout(8000),
   });
   const texto = await r.text();
   let datos: Record<string, unknown> = {};
@@ -55,7 +58,13 @@ type CampoGHL = { id: string; value?: unknown; fieldValue?: unknown };
 export async function leerFicha(contactId: string): Promise<Ficha | null> {
   if (!process.env.GHL_TOKEN) throw new Error("plan/ghl: falta GHL_TOKEN");
   const r = await ghl("GET", `/contacts/${contactId}`);
-  if (!r.ok) return null;
+  if (!r.ok) {
+    // GHL responde 400 a un id que no existe (comprobado el 2026-10-07): eso sí es «este
+    // enlace no vale». Lo demás (401 token caducado, 429 límite, 5xx caído) es temporal y
+    // tiene que quedar en el registro: si no, todas verían «enlace no válido» sin rastro.
+    if (r.status === 400 || r.status === 404 || r.status === 422) return null;
+    throw new Error(`plan/ghl: GHL respondió ${r.status} al leer la ficha`);
+  }
   const c = (r.datos as { contact?: Record<string, unknown> }).contact;
   if (!c || (process.env.GHL_LOCATION_ID && c.locationId !== process.env.GHL_LOCATION_ID)) return null;
   const campos = (c.customFields as CampoGHL[] | undefined) || [];

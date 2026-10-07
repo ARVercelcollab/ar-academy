@@ -15,21 +15,34 @@ export async function servirPlan(req: Request, token: string, cierre: "formacion
     "X-Robots-Tag": "noindex, nofollow",
     "Referrer-Policy": "no-referrer",
   };
-  const id = contactoDeToken(token);
+  let id: string | null;
+  try {
+    id = contactoDeToken(token);
+  } catch (e) {
+    // Sin PLAN_TOKEN_SECRET en Vercel no se puede comprobar ningún enlace.
+    console.error("plan/[token]: no se puede comprobar el enlace", String(e).slice(0, 200));
+    return new Response(paginaNoEncontrada(true), { status: 503, headers: cabeceras });
+  }
   if (!id) return new Response(paginaNoEncontrada(), { status: 404, headers: cabeceras });
 
   let ficha;
   try {
     ficha = await leerFicha(id);
   } catch (e) {
-    console.error("plan/[token]: error leyendo GHL", e);
+    console.error("plan/[token]: error leyendo GHL", String(e).slice(0, 200));
     return new Response(paginaNoEncontrada(true), { status: 503, headers: cabeceras });
   }
   if (!ficha) return new Response(paginaNoEncontrada(), { status: 404, headers: cabeceras });
 
   const previa = new URL(req.url).searchParams.get("previa") === "1";
-  const html = renderPlan(armarPlan(ficha, token, { previa, cierre }));
-  return new Response(html, { status: 200, headers: cabeceras });
+  try {
+    const html = renderPlan(armarPlan(ficha, token, { previa, cierre }));
+    return new Response(html, { status: 200, headers: cabeceras });
+  } catch (e) {
+    // Un dato de la ficha que las tablas no esperan no puede dejarla ante una página rota.
+    console.error("plan/[token]: error armando el plan", (e instanceof Error && e.stack ? e.stack : String(e)).slice(0, 800));
+    return new Response(paginaNoEncontrada(true), { status: 500, headers: cabeceras });
+  }
 }
 
 function paginaNoEncontrada(temporal = false) {

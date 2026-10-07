@@ -1407,6 +1407,9 @@ function enviarCRM(eid){
    un contacto nuevo—. Lo que necesita la página siguiente va en
    sessionStorage, nada en la URL. */
 function finish(){
+  // Una sola vez: el botón sigue pulsable mientras se desvanece (250 ms) y un doble
+  // toque mandaba el formulario dos veces (dos upserts y dos tarjetas en paralelo).
+  if(done)return;
   done=true;
   if(window.__planDone)window.__planDone();
   qn.textContent='LISTO'; rail.style.width='100%'; back.classList.remove('on');

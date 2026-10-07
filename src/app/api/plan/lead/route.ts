@@ -93,13 +93,13 @@ function notaFormulario(
   });
   const lineas = [`Formulario del plan personalizado · ${fecha}`, ""];
   for (const [campo, texto] of PREGUNTAS) {
-    const r = limpiar(b[campo], 300);
+    const r = enLinea(b[campo], 300);
     if (r) lineas.push(texto, `→ ${r}`, "");
   }
   const ficha = [
     Number.isFinite(edad) ? `Edad: ${edad}` : "",
-    paisNombre ? `País: ${paisNombre}` : "",
-    ig ? `Instagram: @${ig}` : "",
+    paisNombre ? `País: ${enLinea(paisNombre, 60)}` : "",
+    ig ? `Instagram: @${enLinea(ig, 80)}` : "",
   ].filter(Boolean);
   if (ficha.length) lineas.push(ficha.join(" · "));
   if (origen) lineas.push(origen);
@@ -158,6 +158,17 @@ const OCUPA_PAGO = [
 
 const limpiar = (v: unknown, max = 900) =>
   typeof v === "string" ? v.trim().slice(0, max) : "";
+
+// Lo que va a la nota, en UNA línea y sin < >. Si no, quien manda el formulario a mano
+// (sin pasar por la página) puede fabricar líneas enteras de la nota, por ejemplo un
+// «Su plan personalizado: <otro enlace>» falso que la setter copiaría y mandaría.
+const enLinea = (v: unknown, max = 300) =>
+  limpiar(v, max).replace(/[\u0000-\u001f\u007f\u2028\u2029<>]+/g, " ").replace(/ {2,}/g, " ").trim();
+
+// Búsqueda en una tabla SOLO por sus claves: con `obj[clave]`, una clave como «__proto__»
+// devuelve el prototipo y acaba como etiqueta o como dato de Meta.
+const deTabla = (tabla: Record<string, string>, clave: string) =>
+  Object.prototype.hasOwnProperty.call(tabla, clave) ? tabla[clave] : "";
 
 const espera = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
@@ -233,7 +244,7 @@ function leerOrigen(v: unknown): Origen | null {
   if (!v || typeof v !== "object") return null; // página antigua: no manda nada
   const o = v as Record<string, unknown>;
   // Texto corto, sin saltos de línea ni caracteres de control (va a la nota de GHL).
-  const texto = (x: unknown) => limpiar(x, 100).replace(/[\u0000-\u001f\u007f]/g, " ");
+  const texto = (x: unknown) => enLinea(x, 100);
   const fbclid = limpiar(o.fbclid, 500);
   const ref = limpiar(o.referrer, 120).toLowerCase();
   const ts = Number(o.ts);
@@ -346,7 +357,7 @@ function cuerpoMeta(d: DatosMeta) {
   const fn = normTexto(nom);
   const ln = normTexto(resto.join(" "));
   const digitos = d.telefono.replace(/\D/g, "");
-  const iso = PAIS_ISO[d.paisNombre];
+  const iso = deTabla(PAIS_ISO, d.paisNombre);
   const user_data: Record<string, string | string[]> = {};
   // Todo lo personal va hasheado; nunca en claro.
   if (d.email.includes("@")) user_data.em = [sha256(d.email.trim().toLowerCase())];
@@ -551,7 +562,11 @@ export async function POST(req: Request) {
   const nombre = limpiar(b.nombre, 120);
   const email = limpiar(b.email, 160).toLowerCase();
   const pais = limpiar(b.pais, 60);
-  const paisNombre = limpiar(b.pais_nombre, 60);
+  // Solo un país del selector de /plan (o «Otro país»). El nombre acaba en una etiqueta
+  // (`tagPais`): con texto libre se podía poner cualquier etiqueta en la ficha, también
+  // las que disparan flujos de GHL (p. ej. `set-stage:…`).
+  const paisBruto = limpiar(b.pais_nombre, 60);
+  const paisNombre = (deTabla(PAIS_ISO, paisBruto) !== "" || paisBruto === "Otro país") ? paisBruto : "";
   const telefono = telefonoE164(b.telefono, pais);
   const edad = parseInt(String(b.edad), 10);
 
@@ -577,7 +592,7 @@ export async function POST(req: Request) {
   const ocupacion = limpiar(b.ocupacion, 120);
   if (OCUPA_PAGO.includes(ocupacion)) tags.push(TAG_PUEDE_PAGAR);
   if (ocupacion === OCUPA_ESTUDIANTE) tags.push(TAG_ESTUDIANTE);
-  const tramo = TAG_INGRESOS[limpiar(b.ingresos_actuales, 60)];
+  const tramo = deTabla(TAG_INGRESOS, limpiar(b.ingresos_actuales, 60));
   if (tramo) tags.push(tramo);
   if (PAIS_HT_OK.includes(pais)) tags.push(TAG_HT_PAIS_OK);
   const tp = tagPais(pais, paisNombre);
@@ -656,25 +671,28 @@ export async function POST(req: Request) {
       // de SU plan, que se genera solo con estas respuestas (src/lib/plan). La setter los
       // copia de aquí cuando decide mandarlo.
       let enlaces = "";
-      const cierre = cierreRecomendado({
-        edad: Number.isFinite(edad) ? edad : null,
-        ocupacion,
-        ingresos: limpiar(b.ingresos_actuales, 60),
-        pais,
-      });
+      // Las menores, directas a la Comunidad: su nota no lleva el enlace de la formación
+      // (Carlos, 2026-10-07). El plan se manda después de prospectarla, nunca al llegar.
+      const cierre = cierreRecomendado({ edad: Number.isFinite(edad) ? edad : null });
       try {
         const recomendado = urlDePlan(contactId, cierre);
-        enlaces = [
-          "",
-          `Su plan personalizado (cierre recomendado: ${cierre === "formacion" ? "formación, palabra ACCESO" : "Comunidad"}):`,
-          recomendado,
-          cierre === "formacion"
-            ? "El mismo plan con cierre de Comunidad, si no califica:"
-            : "El mismo plan con cierre de formación, si al hablar con ella encaja:",
-          urlDePlan(contactId, cierre === "formacion" ? "comunidad" : "formacion"),
-          "Para revisarlo sin que cuente como abierto:",
-          recomendado + "?previa=1",
-        ].join("\n");
+        enlaces = (
+          cierre === "comunidad"
+            ? [
+                "",
+                "Menor de edad: su plan va con el cierre de la Comunidad. Se manda después de prospectarla:",
+                recomendado,
+              ]
+            : [
+                "",
+                "Su plan personalizado (formación, palabra ACCESO). Se manda después de prospectarla:",
+                recomendado,
+                "Si al hablar con ella encaja mejor la Comunidad, el mismo plan con ese cierre:",
+                urlDePlan(contactId, "comunidad"),
+              ]
+        )
+          .concat(["Para revisarlo sin que cuente como abierto:", recomendado + "?previa=1"])
+          .join("\n");
       } catch (e) {
         console.error("plan/lead: sin enlace de plan", e);
       }
