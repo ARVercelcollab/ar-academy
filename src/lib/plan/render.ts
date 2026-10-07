@@ -152,7 +152,7 @@ export function renderPlan(p: PlanArmado): string {
       <a class="pillbtn" href="https://www.youtube.com/@Ariannyrivass" target="_blank" rel="noopener">Ver el canal de YouTube</a>
       <a class="pillbtn" href="https://www.instagram.com/ariaannyrivas" target="_blank" rel="noopener">Ver mi Instagram</a>
     </div>
-    <p style="margin-top:34px">Y si después de verlo lo tienes claro: cada mes abrimos <b>un número limitado de plazas</b> para trabajar conmigo y con mi equipo, con una mentora dedicada a ti de principio a fin. No trabajamos con todo el mundo, solo con chicas comprometidas y decididas.</p>
+    <p style="margin-top:34px">Y si después de verlo lo tienes claro: cada mes abrimos <b>un número limitado de plazas</b> para trabajar conmigo y con mi equipo, acompañada de principio a fin. No trabajamos con todo el mundo, solo con chicas comprometidas y decididas.</p>
     <div class="wa">
       <small>Escríbeme esta palabra por WhatsApp</small>
       <p><span id="wamsg"></span><span class="caret"></span></p>

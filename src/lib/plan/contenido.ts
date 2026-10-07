@@ -714,7 +714,7 @@ function ruta(inicio: number, kc: ClaveOcupacion | null): PasoRuta[] {
     {
       n: "10",
       nombre: "AR Agency",
-      porQue: "Cuando el equipo se cerciora de que estás formada y preparada, nuestra agencia internacional te representa: castings de campaña, revistas, pasarela, contenido. **Y durante todo el camino, una mentora dedicada solo a ti.** Por eso esto no es otro curso.",
+      porQue: "Cuando el equipo se cerciora de que estás formada y preparada, nuestra agencia internacional te representa: castings de campaña, revistas, pasarela, contenido. **Y durante todo el camino, acompañada por el equipo.** Por eso esto no es otro curso.",
       mentora: "Nuestra **agencia internacional** · te representamos nosotros",
       clases: [{ texto: "Una agencia sin estereotipos · 14 min", yt: "C8eHs2rVncc" }],
       final: true,
