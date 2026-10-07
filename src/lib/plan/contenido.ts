@@ -727,11 +727,11 @@ function ruta(inicio: number, kc: ClaveOcupacion | null): PasoRuta[] {
 export const CASO_POR_PROBLEMA: Partial<Record<ClaveProblema, Caso>> = {};
 
 // El vídeo del bloque final de la formación: el plan contado por Ari, que acaba pidiendo ACCESO.
-const VIDEO_ACCESO: Video = {
-  yt: YT.acceso,
-  titulo: "Los pasos exactos para vivir del modelaje",
-  etiqueta: "Clase · 11 min",
-};
+// El vídeo del bloque final. Hasta el 07-10 era «Los pasos exactos para vivir del modelaje»
+// (xlwRBX-JLBM): contaba la ruta antigua y hablaba de «lista de espera». Carlos lo quitó: va
+// el vídeo nuevo de la oferta (la ruta, cómo se trabaja, las dos modalidades y cómo se paga)
+// cuando esté grabado. Mientras, el bloque final va sin vídeo.
+const VIDEO_ACCESO: Video | null = null;
 
 // ── Armar el plan ─────────────────────────────────────────────────────────────
 export function armarPlan(
