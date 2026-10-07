@@ -204,7 +204,7 @@ const CASOS: Record<ClaveCaso, ClaseBase & { semana: string }> = {
     yt: "oP92cnKRY64",
     titulo: "Mar: llegó con cero experiencia y siguió el camino paso a paso",
     etiqueta: "Su historia · 6 min",
-    semana: "Mar llegó con cero experiencia y fue paso a paso. Está en la clase 4 y son cinco minutos: apunta qué hizo primero.",
+    semana: "Mar llegó con cero experiencia y fue paso a paso. Está en la clase 4 y son seis minutos: apunta qué hizo primero.",
   },
   // ≈18:41 «modelo mi propia ropa, pero no enseño mi cara».
   frida: {
@@ -268,8 +268,9 @@ function elegirCaso(
   ko: ClaveObjetivo | null,
   kc: ClaveOcupacion | null,
   edad: number | null,
+  menor: boolean,
 ): CasoElegido {
-  if (edad !== null && edad < 18)
+  if (menor)
     return caso(
       "padres",
       "como eres menor, este es para tus padres. Les cuento cómo funciona esto hoy, qué dudas suelen tener y qué aprenderías desde el primer día. Véanlo juntos.",
@@ -309,7 +310,7 @@ function elegirCaso(
     default:
       return caso(
         "mar",
-        "Mar llegó con cero experiencia y sin saber por dónde empezar, y siguió una hoja de ruta. Son cinco minutos: escúchala entera.",
+        "Mar llegó con cero experiencia y sin saber por dónde empezar, y siguió una hoja de ruta. Son seis minutos: escúchala entera.",
       );
   }
 }
@@ -413,7 +414,7 @@ const POR_PROBLEMA: Record<ClaveProblema, BloqueProblema> = {
   },
   marca: {
     h1: ["que te paguen", "por quién eres."],
-    chip: "«Quiere cobrar más por su marca»",
+    chip: "Quiere cobrar más por su marca",
     citaRespuesta: "Y tiene solución. **Todo lo que viene ahora está construido sobre lo que me contaste.**",
     pasoInicio: 4,
     donde: {
@@ -427,7 +428,7 @@ const POR_PROBLEMA: Record<ClaveProblema, BloqueProblema> = {
       {
         ...C.marcaCorta,
         porQueTitulo: "Por qué la primera:",
-        porQue: "es tu pregunta: qué es la marca personal, por qué hoy pesa más que la foto y cinco pasos para construirla. La versión completa, de 44 minutos, está en el paso 4 del camino.",
+        porQue: "es tu pregunta: qué es la marca personal, por qué hoy pesa más que la foto y cinco pasos para construirla. Y en el paso 4 del camino tienes la ponencia de Carlos, el mentor de ese paso.",
       },
       ctx.menor ? MENOR_MAPA : claseObjetivo(ctx.ko),
     ],
@@ -452,7 +453,7 @@ const POR_PROBLEMA: Record<ClaveProblema, BloqueProblema> = {
   },
   negociar: {
     h1: ["se acabó decir", "que sí a todo."],
-    chip: "«Le llegan propuestas»",
+    chip: "Le llegan propuestas",
     citaRespuesta: "Lo más difícil ya lo tienes: te escriben. **Todo lo que viene ahora está construido sobre lo que me contaste.**",
     pasoInicio: 8,
     donde: {
@@ -472,14 +473,16 @@ const POR_PROBLEMA: Record<ClaveProblema, BloqueProblema> = {
     ],
     pasos: (ctx) => [
       {
-        t: "Ten tu tarifa escrita antes de que te escriban",
+        t: "Ten tu tarifa escrita antes de la próxima propuesta",
         p: ctx.menor
-          ? "Una cifra por foto, otra por vídeo y otra por jornada, y aparte los derechos de uso. Si la improvisas en el chat, pierdes."
+          ? "Una cifra por foto, otra por vídeo y otra por jornada, y aparte los derechos de uso, pensada con tus padres. Si la improvisas en el chat, pierdes."
           : `Una cifra por foto, otra por vídeo y otra por jornada, y aparte los derechos de uso. Si la improvisas en el chat, pierdes. La clase 2 te dice cuánto se paga ${NIVEL(ctx.ko)}.`,
       },
       {
         t: "Pregunta antes de contestar",
-        p: "Qué uso le van a dar, durante cuánto tiempo, en qué países, si piden exclusividad y qué gastos van incluidos. Con esas respuestas, el precio sale solo. La clase 1 te da la lista entera.",
+        p: ctx.menor
+          ? "Qué uso le van a dar, durante cuánto tiempo, en qué países, si piden exclusividad y qué gastos van incluidos. Y que tus padres vean cada propuesta antes de que contestes. La clase 1 te da la lista entera."
+          : "Qué uso le van a dar, durante cuánto tiempo, en qué países, si piden exclusividad y qué gastos van incluidos. Con esas respuestas, el precio sale solo. La clase 1 te da la lista entera.",
       },
       ctx.menor
         ? pasoCaso(ctx)
@@ -493,27 +496,28 @@ const POR_PROBLEMA: Record<ClaveProblema, BloqueProblema> = {
   },
   colaboraciones: {
     h1: ["que trabajar no dependa", "de la suerte."],
-    chip: "«Quiere colaboraciones continuas»",
+    chip: "Quiere colaboraciones continuas",
     citaRespuesta: "Y se puede ordenar. **Todo lo que viene ahora está construido sobre lo que me contaste.**",
     pasoInicio: 4,
     donde: {
       titulo: ["Colaboras a veces.", "Falta que sea siempre."],
       parrafos: [
         "Te sale un trabajo, luego nada durante semanas, y vuelta a empezar. No es mala suerte: es que tus colaboraciones dependen de que alguien te encuentre, y no de **un sistema que haga que te encuentren.**",
-        "Ese sistema son tres pasos del camino: **marca personal (4), redes sociales (6) y UGC (9).** Cuando están en orden, las marcas llegan y tú eliges con quién trabajar.",
+        "Ese sistema son tres pasos del camino: **marca personal (4), redes sociales (6) y UGC (9).** Cuando están en orden, las marcas empiezan a llegar, y puedes elegir con quién trabajar.",
       ],
     },
     // Aquí la clase de «cuánto gana» es la 1, en el capítulo de versatilidad, y la 2 es la de
     // marca personal: un vídeo no se repite.
     clases: (ctx) => [
-      {
-        ...cuantoGana(START_VERSATILIDAD),
-        porQueTitulo: "Por qué la primera:",
-        porQue:
-          ctx.ko && !ctx.menor
-            ? `te la dejo en el minuto que va de lo tuyo: no depender de una sola vía para que el trabajo no pare. Y si quieres ver cuánto se paga en el nivel que marcaste, vuelve al ${mmss(START_OBJETIVO[ctx.ko])}.`
-            : "te la dejo en el minuto que va de lo tuyo: no depender de una sola vía para que el trabajo no pare.",
-      },
+      ctx.menor
+        ? MENOR_MAPA
+        : {
+            ...cuantoGana(START_VERSATILIDAD),
+            porQueTitulo: "Por qué la primera:",
+            porQue: ctx.ko
+              ? `te la dejo en el minuto que va de lo tuyo: no depender de una sola vía para que el trabajo no pare. Y si quieres ver cuánto se paga en el nivel que marcaste, vuelve al ${mmss(START_OBJETIVO[ctx.ko])}.`
+              : "te la dejo en el minuto que va de lo tuyo: no depender de una sola vía para que el trabajo no pare.",
+          },
       {
         ...C.marcaCorta,
         porQueTitulo: "Por qué:",
@@ -523,7 +527,9 @@ const POR_PROBLEMA: Record<ClaveProblema, BloqueProblema> = {
     pasos: (ctx) => [
       {
         t: "No dependas de una sola vía",
-        p: "E-commerce, UGC, publicidad: cuantas más formas de trabajar con marcas tengas, menos depende cada mes de la suerte. La clase 1 empieza justo ahí.",
+        p: ctx.menor
+          ? "E-commerce, UGC, publicidad: hay muchas formas de trabajar con marcas, y conviene conocerlas todas antes de elegir. La clase 1 te enseña el mapa entero."
+          : "E-commerce, UGC, publicidad: cuantas más formas de trabajar con marcas tengas, menos depende cada mes de la suerte. La clase 1 empieza justo ahí.",
       },
       {
         t: "Publica pensando en las marcas",
@@ -532,8 +538,8 @@ const POR_PROBLEMA: Record<ClaveProblema, BloqueProblema> = {
       ctx.menor
         ? pasoCaso(ctx)
         : {
-            t: "Escribe tú a cinco marcas esta semana",
-            p: "No esperes a que te encuentren. Cinco marcas que ya consumes, un mensaje corto y tu perfil ordenado. El primero da vergüenza; el quinto, ya no.",
+            t: "Escribe a 50 marcas esta semana",
+            p: "No esperes a que te encuentren. Mínimo 50 marcas, y si llegas a 100, mejor: cuantas más escribas, más te contestan. Un mensaje corto y tu perfil ordenado. Las primeras dan vergüenza; a la décima ya no. Y es la mejor prueba de que vas en serio.",
           },
     ],
     remate:
@@ -567,7 +573,8 @@ const POR_OBJETIVO: Record<ClaveObjetivo, BloqueObjetivo> = {
     titulo: ["Vas con todo.", "Y se nota."],
     parrafos: [
       "Marcaste **más de 5.000 € al mes.** Ese nivel existe: campañas, derechos de uso, contratos con marcas, representación. Pero no se llega saltando pasos ni de un día para otro: se llega con **una marca que las marcas reconocen y alguien que negocie por ti.**",
-      "Eso es justo el final de tu camino: **AR Agency, nuestra agencia internacional,** que representa a las alumnas cuando están preparadas. En la clase {cn} te dejo el nivel de la profesional, y todo lo que tienes debajo es lo que te pone en esa puerta.",
+      // Sin «Eso es…»: entre este párrafo y el anterior entra la línea de su ocupación.
+      "Y al final de tu camino está **AR Agency, nuestra agencia internacional,** que representa a las alumnas cuando están preparadas. En la clase {cn} te dejo el nivel de la profesional, y todo lo que tienes debajo es lo que te pone en esa puerta.",
     ],
   },
 };
@@ -577,18 +584,20 @@ const SIN_OBJETIVO: BloqueObjetivo = {
   chip: "",
   titulo: ["Un camino", "con salida al final."],
   parrafos: [
-    "Primero hay que saber cómo funciona esto, y luego ponerse una meta. En la clase {cn} te cuento cuánto se paga en cada nivel, de la que empieza a la profesional, para que la tuya tenga los pies en la tierra.",
+    // «a partir del 1:50»: el capítulo de la principiante (START_OBJETIVO.extra). En «colaboraciones»
+    // esa clase arranca en el 5:45, y los niveles quedan antes.
+    "Primero hay que saber cómo funciona esto, y luego ponerse una meta. En la clase {cn}, a partir del 1:50, te cuento cuánto se paga en cada nivel, de la que empieza a la profesional, para que la tuya tenga los pies en la tierra.",
     "Lo que sí te digo es que el camino tiene salida: **AR Agency, nuestra agencia internacional,** que representa a las alumnas cuando están preparadas. Todo lo que tienes debajo es lo que te lleva hasta ahí.",
   ],
 };
 
 // Menor de edad: nada de ingresos. Formarse con calma, y con su familia.
-function adondeMenor(edad: number): BloqueObjetivo {
+function adondeMenor(edad: number | null): BloqueObjetivo {
   return {
     chip: "",
     titulo: ["Fórmate con calma,", "y en familia."],
     parrafos: [
-      `Tienes ${edad} años, y aquí nadie te va a meter prisa. Ahora toca **formarte con calma:** tu cabeza, tu imagen, cómo te presentas. Lo demás llega después, y llega mejor cuando esto está hecho. Al final del camino, cuando estés preparada, está **AR Agency, nuestra agencia internacional.**`,
+      `${edad !== null ? `Tienes ${edad} años, y aquí` : "Aquí"} nadie te va a meter prisa. Ahora toca **formarte con calma:** tu cabeza, tu imagen, cómo te presentas. Lo demás llega después, y llega mejor cuando esto está hecho. Al final del camino, cuando estés preparada, está **AR Agency, nuestra agencia internacional.**`,
       "Y esto se hace **con tu familia, no a escondidas.** Enséñales este plan a tus padres y vean juntos la clase 4, que es para ellos. Que sepan qué vas a hacer y con quién.",
     ],
   };
@@ -608,12 +617,12 @@ const POR_OCUPACION: Record<ClaveOcupacion, { chip: string; linea: string; organ
   },
   cero: {
     chip: "Trabaja por cuenta ajena",
-    linea: "Trabajas por cuenta ajena, así que tu tiempo cuenta: este plan está pensado para avanzar **con tu trabajo, no en lugar de él.**",
+    linea: "Trabajas por cuenta ajena, así que tu tiempo cuenta: este plan está pensado para empezar **sin dejar tu trabajo.**",
     organiza: "con las horas que te deja tu trabajo.",
   },
   estudia: {
     chip: "Estudia",
-    linea: "Estudias, y eso juega a tu favor: **empiezas antes que casi todas**, y con tiempo para hacerlo bien.",
+    linea: "Estudias, y eso juega a tu favor: **ya sabes lo que es aprender con constancia**, y aquí es justo lo que hace falta.",
     organiza: "con tus clases y tus exámenes.",
   },
   nada: {
@@ -631,7 +640,7 @@ function ruta(inicio: number, kc: ClaveOcupacion | null): PasoRuta[] {
       n: "01",
       nombre: "Mentalidad",
       porQue: "La cabeza antes que la técnica. Sin esto, cada silencio se convierte en un veredicto sobre ti, y ya sabes cómo acaba eso.",
-      mentora: "Con **Flor Caminero** · psicóloga y modelo · 1 a 1",
+      mentora: "Con **Flor Caminero**",
       // La clase 3 es siempre la de mentalidad. Y la de Flor, para ver por dentro a la mentora.
       clases: [
         { texto: "La tienes arriba · clase 3", ancla: true },
@@ -642,42 +651,46 @@ function ruta(inicio: number, kc: ClaveOcupacion | null): PasoRuta[] {
       n: "02",
       nombre: "Organización",
       porQue: `Marcaste «cuanto antes». Aquí es donde ese «ya» se convierte en calendario: tu tiempo, ordenado para que el plan se cumpla, ${organiza}`,
-      mentora: "Con **Victoria Poggioli** · 1 a 1",
+      mentora: "Con **Victoria Poggioli**",
+      // Pendiente: una clase de Victoria (Carlos, 07-10: solo de la mentora de cada paso).
       clases: [],
     },
     {
       n: "03",
       nombre: "Imagen y estilismo",
       porQue: "Quién eres tú delante de una cámara, antes de ponerte delante de una. Tu imagen habla antes de que tú lo hagas.",
-      mentora: "Con **Jazmín Pérez** · 1 a 1",
-      clases: [{ texto: "Clase · Colorimetría para modelos · 24 min", yt: "mUhYzmRkKB0" }],
+      mentora: "Con **Jazmín Pérez**",
+      // La ponencia de Jazmín, en el canal de la academia (la eligió Carlos).
+      clases: [{ texto: "Ponencia de Jazmín · estilismo · 11 min", yt: "SprugSv8TZQ" }],
     },
     {
       n: "04",
       nombre: "Marca personal",
       porQue: "Que las marcas te encuentren a ti, confíen en ti y te paguen más por ello. Aquí se construye.",
-      mentora: "Con **Carlos Correa** · grupal",
-      clases: [{ texto: "Clase completa · 44 min", yt: "PHyImmNq_oE" }],
+      mentora: "Con **Carlos Correa**",
+      // La ponencia de Carlos, en el canal de la academia: el mentor de este paso es él.
+      clases: [{ texto: "Ponencia de Carlos · marca personal · 11 min", yt: "lwf_1F7kXjo" }],
     },
     {
       n: "05",
       nombre: "Oratoria",
       porQue: "Comunicar bien en castings, eventos y redes. De esto dependen tus relaciones, tus contactos y tus oportunidades.",
       mentora: "Con **Angélica Triana**",
+      // Pendiente: una clase de Angélica (Carlos, 07-10: solo de la mentora de cada paso).
       clases: [],
     },
     {
       n: "06",
       nombre: "Redes sociales",
       porQue: "Todo lo anterior, llevado a tu contenido: perder el miedo a la cámara, crear, editar, publicar. Es donde miran las marcas.",
-      mentora: "Con **Pierina Alves** · 1 a 1",
+      mentora: "Con **Pierina Alves**",
       clases: [{ texto: "Charla · ¿Se puede vivir de las redes? · 75 min", yt: "f2sdsrpO1C0" }],
     },
     {
       n: "07",
       nombre: "Pasarela y fotopose",
       porQue: "La técnica. Es donde casi todas empiezan, con un book por delante y seis pasos por detrás sin hacer. Ahora sí le toca.",
-      mentora: "Con **Arianny** · 1 a 1 con **Mili Wirtz**",
+      mentora: "Con **Arianny** y **Mili Wirtz**",
       clases: [
         { texto: "Domina la pasarela · 6 min", yt: "uxNjzq3DRrg" },
         { texto: "Posado para marcas · ZARA · 5 min", yt: "oXrZwDEh2Q4" },
@@ -687,15 +700,15 @@ function ruta(inicio: number, kc: ClaveOcupacion | null): PasoRuta[] {
     {
       n: "08",
       nombre: "Técnicas de casting",
-      porQue: "Presentarte, que te contraten, cobrar bien y estar protegida legalmente. Lo que nadie te contó, contado entero.",
-      mentora: "Con **Arianny** · 1 a 1 con **Mili Wirtz**",
+      porQue: "Presentarte, que te contraten, cobrar bien y estar protegida legalmente. Lo que casi nadie te cuenta, contado entero.",
+      mentora: "Con **Arianny** y **Mili Wirtz**",
       clases: [{ texto: "Errores que te hacen perder un casting · 10 min", yt: "M5yvR_AKbUo" }],
     },
     {
       n: "09",
       nombre: "UGC",
       porQue: "Otra vía de cobrar de las marcas, cada vez más pedida. Tu mentora vuelve a ser Pierina: la charla del paso 6 cubre también esta parte.",
-      mentora: "Con **Pierina Alves** · 1 a 1",
+      mentora: "Con **Pierina Alves**",
       clases: [],
     },
     {
@@ -734,14 +747,16 @@ export function armarPlan(
   const edad = typeof f.edad === "number" && Number.isFinite(f.edad) ? Math.round(f.edad) : null;
   // Menor de edad: sin cifras de ingresos y con el cierre de la Comunidad (negocio.md §5:
   // a la menor se le vende la Comunidad, con sus padres en la llamada de bienvenida).
-  const menor = edad !== null && edad < 18;
+  // Si la edad no está en la ficha, vale la etiqueta `menor de edad` (la pone el formulario o Sofi).
+  const menor =
+    edad !== null ? edad < 18 : f.tags.some((t) => t.trim().toLowerCase() === "menor de edad");
   const ko = menor ? null : (ro?.k ?? null);
   const bp = POR_PROBLEMA[kp];
 
-  const ctx: Ctx = { menor, dijo: !!rp, ko, caso: elegirCaso(kp, ko, kc, edad) };
+  const ctx: Ctx = { menor, dijo: !!rp, ko, caso: elegirCaso(kp, ko, kc, edad, menor) };
   const clases: Clase[] = [...bp.clases(ctx), MENTE, ctx.caso.clase];
 
-  const bo = menor ? adondeMenor(edad as number) : ko ? POR_OBJETIVO[ko] : SIN_OBJETIVO;
+  const bo = menor ? adondeMenor(edad) : ko ? POR_OBJETIVO[ko] : SIN_OBJETIVO;
   const cn = clases.findIndex((c) => c.yt === YT.cuantoGana) + 1;
   // Si esa clase no está en su plan (no debería pasar fuera de las menores), la frase se cae.
   const conClase = (s: string) =>
@@ -792,21 +807,11 @@ export function armarPlan(
 }
 
 // ── Qué cierre lleva su plan ──────────────────────────────────────────────────
-// Propuesta pendiente de validar por Carlos (decisiones.md): la formación para quien puede
-// empezar ya; la Comunidad para menores, para quien hoy no tiene ingresos ni trabajo y para
-// Latam sin ingresos. Es una recomendación: la nota trae los dos enlaces y la setter decide.
-const PAISES_FORMACION = ["España", "Resto de Europa", "Estados Unidos o Canadá", "Australia o Emiratos"];
-const INGRESOS_BAJOS = ["Todavía nada", "Menos de 750 €"];
-
-export function cierreRecomendado(d: {
-  edad: number | null;
-  ocupacion: string;
-  ingresos: string;
-  pais: string;
-}): "formacion" | "comunidad" {
-  if (d.edad !== null && d.edad < 18) return "comunidad";
-  const sinTrabajo = d.ocupacion === OCUPACION.estudia || d.ocupacion === OCUPACION.nada;
-  if (sinTrabajo && INGRESOS_BAJOS.includes(d.ingresos)) return "comunidad";
-  if (!PAISES_FORMACION.includes(d.pais) && INGRESOS_BAJOS.includes(d.ingresos)) return "comunidad";
-  return "formacion";
+// Carlos, 2026-10-07: las menores de 18 van directas a la Comunidad. El resto, formación
+// (palabra ACCESO) por defecto; si al prospectarla la setter ve que encaja mejor la
+// Comunidad, manda el otro enlace de la nota. Sin reglas por dinero ni por país: «el
+// dinero no califica ni descalifica» (criterio de Carlos). La regla de los 24 años del
+// SOP no se aplica al plan.
+export function cierreRecomendado(d: { edad: number | null }): "formacion" | "comunidad" {
+  return d.edad !== null && d.edad < 18 ? "comunidad" : "formacion";
 }

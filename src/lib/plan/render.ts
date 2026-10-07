@@ -125,7 +125,7 @@ export function renderPlan(p: PlanArmado): string {
   // La Comunidad. A una menor se le pide que lo hable antes con sus padres: en la llamada de
   // bienvenida se les invita a estar (negocio.md §5).
   const comunidadTexto = p.menor
-    ? `<p>Para empezar a formarte no tienes que esperar a nada. En la <b>Comunidad AR</b> tienes los primeros módulos de la formación, los directos conmigo y chicas que están justo donde tú, a tu ritmo y sin prisa.</p>
+    ? `<p>En la <b>Comunidad AR</b> tienes los primeros módulos de la formación, los directos conmigo y chicas que están justo donde tú, a tu ritmo y sin prisa.</p>
     <p><b>Antes de entrar, háblalo con tus padres.</b> Enséñales este plan y la clase 4, que es para ellos. En la llamada de bienvenida les pedimos que estén contigo: así lo empiezan juntos.</p>`
     : `<p>Si ahora mismo no es el momento de la formación completa, no pasa nada: no tienes que esperar para empezar. En la <b>Comunidad AR</b> tienes los primeros módulos de la formación, los directos conmigo y chicas que están justo donde tú.</p>
     <p>Es la forma de hacer tus tres pasos de esta semana con alguien al lado, y cuando estés lista para ir a por todo, ya sabes dónde estoy.</p>`;
@@ -135,7 +135,7 @@ export function renderPlan(p: PlanArmado): string {
       ? `<section class="top-line" id="acceso">
   <div class="wrap">
     <span class="lab">${pad(n + 1)} · Tu siguiente paso</span>
-    <h2>Empieza ya, <span class="it">acompañada.</span></h2>
+    <h2>Empieza <span class="it">acompañada.</span></h2>
     ${comunidadTexto}
     <div class="cta-wrap">
       <a class="pillbtn big full solid" id="combtn" href="${esc(p.urlComunidad)}" target="_blank" rel="noopener">Entrar en la Comunidad AR</a>
@@ -146,7 +146,7 @@ export function renderPlan(p: PlanArmado): string {
       : `<section class="top-line" id="acceso">
   <div class="wrap">
     <span class="lab">${pad(n + 1)} · Cuando estés lista</span>
-    <h2>Antes de escribirme, <span class="it">conóceme.</span></h2>
+    <h2>Antes de dar el paso, <span class="it">conóceme.</span></h2>
     <p>Mira el contenido del canal y de mi Instagram. Ahí está gran parte de lo que enseño, gratis y sin pedirte nada. Quiero que sepas cómo trabajo antes de que decidas nada.</p>${videoAcceso}
     <div class="know">
       <a class="pillbtn" href="https://www.youtube.com/@Ariannyrivass" target="_blank" rel="noopener">Ver el canal de YouTube</a>
@@ -345,6 +345,10 @@ setTimeout(function(){ if(document.visibilityState!=='hidden') avisa('abierto');
 function embed(caja,id,s){
   if(caja.querySelector('iframe'))return;
   var f=document.createElement('iframe');
+  /* La página no manda «de dónde vienes» (no-referrer: la URL lleva su token), pero el
+     reproductor de YouTube lo exige y sin él da «Error 153». Al iframe solo le llega el
+     dominio (strict-origin-when-cross-origin), nunca la URL con el token. */
+  f.referrerPolicy='strict-origin-when-cross-origin';
   s=Math.floor(+s||0);
   f.src='https://www.youtube-nocookie.com/embed/'+id+'?autoplay=1&rel=0&modestbranding=1&playsinline=1'+(s>0?'&start='+s:'');
   f.allow='autoplay; encrypted-media; picture-in-picture';f.allowFullscreen=true;f.title='Clase';
