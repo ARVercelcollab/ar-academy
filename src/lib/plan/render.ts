@@ -25,6 +25,23 @@ function titulo(t: [string, string]): string {
   return `${esc(t[0])} <span class="it">${esc(t[1])}</span>`;
 }
 
+// Segundo en el que arranca un vídeo (para el ?start= del reproductor). 0 = desde el principio.
+function seg(s: unknown): number {
+  const n = Math.floor(Number(s));
+  return Number.isFinite(n) && n > 0 ? n : 0;
+}
+
+function mayuscula(s: string): string {
+  return s ? s.charAt(0).toUpperCase() + s.slice(1) : s;
+}
+
+// Estilos que la plantilla de /plan/ejemplo no trae: el vídeo del bloque final.
+const CSS_EXTRA = `<style>
+.accv{margin:22px 0 0;border:1px solid var(--line)}
+.accv .clf{cursor:pointer}
+.accvt{padding:14px 16px;margin:0 !important;font-size:14.5px}
+</style>`;
+
 export function renderPlan(p: PlanArmado): string {
   const chips = p.chips
     .map((c, k) => `<span class="chip" style="animation-delay:${(0.15 + k * 0.1).toFixed(2)}s">${esc(c)}</span>`)
@@ -39,7 +56,7 @@ export function renderPlan(p: PlanArmado): string {
 
   const clases = p.clases
     .map(
-      (c, k) => `<article class="cl" data-cl="${k}" data-yt="${esc(c.yt)}">
+      (c, k) => `<article class="cl" data-cl="${k}" data-yt="${esc(c.yt)}" data-start="${seg(c.start)}">
         <div class="clf"><img src="https://i.ytimg.com/vi/${esc(c.yt)}/hqdefault.jpg" alt="" loading="lazy"><div class="play"></div><span class="dur">${esc(c.etiqueta)}</span></div>
         <div class="clb"><span class="tag2">Clase ${k + 1}</span><h3>${esc(c.titulo)}</h3><button class="vw" aria-label="Marcar como vista">✓</button></div>
         <p class="clwhy"><b>${esc(c.porQueTitulo)}</b> ${esc(c.porQue)}</p>
@@ -60,7 +77,7 @@ export function renderPlan(p: PlanArmado): string {
         .map((c) =>
           c.ancla
             ? `<a class="cchip" href="#clases">${esc(c.texto)}</a>`
-            : `<button class="cchip" data-yt="${esc(c.yt)}" data-t="${esc(c.texto)}">${esc(c.texto)}</button>`,
+            : `<button class="cchip" data-yt="${esc(c.yt)}" data-start="${seg(c.start)}" data-t="${esc(c.texto)}">${esc(c.texto)}</button>`,
         )
         .join("");
       const conPlayer = st.clases.some((c) => !c.ancla);
@@ -94,25 +111,43 @@ export function renderPlan(p: PlanArmado): string {
   const n = p.caso ? 7 : 6;
   const pad = (x: number) => (x < 10 ? "0" + x : String(x));
 
+  // El vídeo del bloque final: miniatura y, al pulsar, el reproductor (mismo patrón que las clases).
+  const va = p.videoAcceso;
+  const videoAcceso = va
+    ? `
+    <p>Y si solo te da tiempo a ver una cosa, que sea esta: cómo trabajamos con cada alumna, paso a paso, contado por mí.</p>
+    <div class="accv">
+      <div class="clf" data-yt="${esc(va.yt)}" data-start="${seg(va.start)}"><img src="https://i.ytimg.com/vi/${esc(va.yt)}/hqdefault.jpg" alt="" loading="lazy"><div class="play"></div><span class="dur">${esc(va.etiqueta)}</span></div>
+      <p class="accvt">${esc(va.titulo)}</p>
+    </div>`
+    : "";
+
+  // La Comunidad. A una menor se le pide que lo hable antes con sus padres: en la llamada de
+  // bienvenida se les invita a estar (negocio.md §5).
+  const comunidadTexto = p.menor
+    ? `<p>Para empezar a formarte no tienes que esperar a nada. En la <b>Comunidad AR</b> tienes los primeros módulos de la formación, los directos conmigo y chicas que están justo donde tú, a tu ritmo y sin prisa.</p>
+    <p><b>Antes de entrar, háblalo con tus padres.</b> Enséñales este plan y la clase 4, que es para ellos. En la llamada de bienvenida les pedimos que estén contigo: así lo empiezan juntos.</p>`
+    : `<p>Si ahora mismo no es el momento de la formación completa, no pasa nada: no tienes que esperar para empezar. En la <b>Comunidad AR</b> tienes los primeros módulos de la formación, los directos conmigo y chicas que están justo donde tú.</p>
+    <p>Es la forma de hacer tus tres pasos de esta semana con alguien al lado, y cuando estés lista para ir a por todo, ya sabes dónde estoy.</p>`;
+
   const cierre =
     p.cierre === "comunidad"
       ? `<section class="top-line" id="acceso">
   <div class="wrap">
     <span class="lab">${pad(n + 1)} · Tu siguiente paso</span>
     <h2>Empieza ya, <span class="it">acompañada.</span></h2>
-    <p>Si ahora mismo no es el momento de la formación completa, no pasa nada: no tienes que esperar para empezar. En la <b>Comunidad AR</b> tienes las clases de cada paso del camino, los directos conmigo y chicas que están justo donde tú.</p>
-    <p>Es la forma de hacer tus tres pasos de esta semana con alguien al lado, y cuando estés lista para ir a por todo, ya sabes dónde estoy.</p>
+    ${comunidadTexto}
     <div class="cta-wrap">
       <a class="pillbtn big full solid" id="combtn" href="${esc(p.urlComunidad)}" target="_blank" rel="noopener">Entrar en la Comunidad AR</a>
     </div>
-    <p class="soft">Y si tienes cualquier duda, contéstame por WhatsApp. Te leo yo. 🤍</p>
+    <p class="soft">${p.menor ? "Y si tienes cualquier duda, o la tienen tus padres, escríbeme por WhatsApp." : "Y si tienes cualquier duda, contéstame por WhatsApp."} Te leo yo. 🤍</p>
   </div>
 </section>`
       : `<section class="top-line" id="acceso">
   <div class="wrap">
     <span class="lab">${pad(n + 1)} · Cuando estés lista</span>
     <h2>Antes de escribirme, <span class="it">conóceme.</span></h2>
-    <p>Mira el contenido del canal y de mi Instagram. Ahí está gran parte de lo que enseño, gratis y sin pedirte nada. Quiero que sepas cómo trabajo antes de que decidas nada.</p>
+    <p>Mira el contenido del canal y de mi Instagram. Ahí está gran parte de lo que enseño, gratis y sin pedirte nada. Quiero que sepas cómo trabajo antes de que decidas nada.</p>${videoAcceso}
     <div class="know">
       <a class="pillbtn" href="https://www.youtube.com/@Ariannyrivass" target="_blank" rel="noopener">Ver el canal de YouTube</a>
       <a class="pillbtn" href="https://www.instagram.com/ariaannyrivas" target="_blank" rel="noopener">Ver mi Instagram</a>
@@ -153,6 +188,7 @@ export function renderPlan(p: PlanArmado): string {
 <link rel="apple-touch-icon" href="/plan/icono-180.png">
 <link rel="stylesheet" href="https://use.typekit.net/cbv1cvv.css">
 ${CSS_PLAN}
+${CSS_EXTRA}
 </head>
 <body>
 <div class="rp"><i id="rp"></i></div>
@@ -161,15 +197,19 @@ ${CSS_PLAN}
   <div class="halo"></div>
   <div class="wrap">
     <span class="lab">Tu plan · preparado para ti · léelo con calma</span>
-    <h1 id="h1">${p.nombre ? esc(p.nombre) + ", " : ""}${esc(p.h1[0])} <span class="it">${esc(p.h1[1])}</span></h1>
+    <h1 id="h1">${p.nombre ? esc(p.nombre) + ", " + esc(p.h1[0]) : esc(mayuscula(p.h1[0]))} <span class="it">${esc(p.h1[1])}</span></h1>
     <div class="chips">
       ${chips}
-    </div>
+    </div>${
+      p.cita
+        ? `
     <div class="said">
       <small>Esto me lo contaste tú</small>
       <p>«${esc(p.cita)}»</p>
       <p class="saidr">${rico(p.citaRespuesta)}</p>
-    </div>
+    </div>`
+        : ""
+    }
   </div>
 </header>
 <section class="top-line">
@@ -242,8 +282,9 @@ ${p.previa ? '<div class="previa">Vista previa de la setter · no cuenta como ab
 }
 
 // El guion de la plantilla de /plan/ejemplo, con estos cambios: la franja lleva su nombre,
-// el mini-mapa marca su paso de inicio, las clases vistas se guardan por plan, y se avisa al
-// servidor cuando ella lo abre y cuando reproduce una clase (nunca en la vista previa).
+// el mini-mapa marca su paso de inicio, las clases vistas se guardan por plan, cada vídeo
+// arranca en su minuto (data-start → ?start=), y se avisa al servidor cuando ella lo abre y
+// cuando reproduce una clase (nunca en la vista previa).
 // Sin píxel de Meta ni banner de cookies: la URL lleva su token y no tiene que salir de casa.
 // Lo que se mide va a GHL como etiquetas (/api/plan/evento).
 const JS_PLAN = `(function(){
@@ -301,10 +342,11 @@ function avisa(ev,extra){
   try{ fetch('/api/plan/evento',{method:'POST',headers:{'Content-Type':'application/json'},body:body,keepalive:true}) }catch(e){}
 }
 setTimeout(function(){ if(document.visibilityState!=='hidden') avisa('abierto'); },2500);
-function embed(caja,id){
+function embed(caja,id,s){
   if(caja.querySelector('iframe'))return;
   var f=document.createElement('iframe');
-  f.src='https://www.youtube-nocookie.com/embed/'+id+'?autoplay=1&rel=0&modestbranding=1&playsinline=1';
+  s=Math.floor(+s||0);
+  f.src='https://www.youtube-nocookie.com/embed/'+id+'?autoplay=1&rel=0&modestbranding=1&playsinline=1'+(s>0?'&start='+s:'');
   f.allow='autoplay; encrypted-media; picture-in-picture';f.allowFullscreen=true;f.title='Clase';
   caja.appendChild(f);
   avisa('clase',id);
@@ -323,7 +365,7 @@ document.querySelectorAll('.cl').forEach(function(c){
   function marca(v){ seen[i]=v; try{localStorage.setItem(K,JSON.stringify(seen))}catch(e){} paintProg(); }
   c.querySelector('.vw').addEventListener('click',function(){marca(!seen[i])});
   caja.setAttribute('role','button');caja.setAttribute('tabindex','0');caja.setAttribute('aria-label','Ver la clase');
-  function abre(){ embed(caja,c.dataset.yt); if(!seen[i]) marca(true); }
+  function abre(){ embed(caja,c.dataset.yt,c.dataset.start); if(!seen[i]) marca(true); }
   caja.addEventListener('click',abre);
   caja.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){e.preventDefault();abre();} });
 });
@@ -334,9 +376,16 @@ document.querySelectorAll('.cchip[data-yt]').forEach(function(ch){
     var mismo=ch.classList.contains('on');
     st.querySelectorAll('.cchip').forEach(function(o){o.classList.remove('on')});
     if(mismo){pl.classList.remove('on');caja.innerHTML='';return}
-    ch.classList.add('on');caja.innerHTML='';pl.classList.add('on');embed(caja,ch.dataset.yt);
+    ch.classList.add('on');caja.innerHTML='';pl.classList.add('on');embed(caja,ch.dataset.yt,ch.dataset.start);
     pl.scrollIntoView({block:'nearest',behavior:RM?'auto':'smooth'});
   });
+});
+/* el vídeo del bloque final */
+document.querySelectorAll('.accv .clf').forEach(function(caja){
+  caja.setAttribute('role','button');caja.setAttribute('tabindex','0');caja.setAttribute('aria-label','Ver la clase');
+  function abre(){ embed(caja,caja.dataset.yt,caja.dataset.start); }
+  caja.addEventListener('click',abre);
+  caja.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){e.preventDefault();abre();} });
 });
 var wam=document.getElementById('wamsg'),word='ACCESO',wp=0;
 if(wam){
