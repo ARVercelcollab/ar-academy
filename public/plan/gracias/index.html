@@ -35,6 +35,7 @@ h1 mark{background:#161616;color:#fff;padding:0 .18em;margin-right:.12em;display
 .btn svg{width:22px;height:22px;flex:0 0 auto}
 @media(max-width:420px){.btn{font-size:14.5px;padding:16px 14px;gap:10px}.btn svg{width:20px;height:20px}}
 .msg{margin:14px auto 0;font-size:13px;color:var(--tx-3);max-width:34rem}
+.hor{margin:8px auto 0;font-size:13px;color:var(--tx-2);max-width:34rem}
 .cd{margin:34px auto 0;max-width:440px;border:1px solid var(--line);padding:16px 20px;font-size:15px;color:var(--tx-2)}
 .cd b{font-weight:500;color:var(--vino)}
 footer{border-top:1px solid var(--line);padding:26px 22px 34px;text-align:center;font-size:11.5px;color:var(--tx-3);line-height:1.8}
@@ -53,11 +54,18 @@ footer a:hover{text-decoration:underline}
   <h1><mark>¡Último paso!</mark> Abre WhatsApp para recibir tu plan personalizado</h1>
   <p class="sub">El mensaje ya está escrito. Solo tienes que darle a enviar y te contestamos por ahí con tu plan.</p>
 
-  <a class="btn" id="wabtn" href="#" target="_blank" rel="noopener">
+  <!-- El enlace va escrito aquí (no solo por JS): si el script falla, el botón funciona igual.
+       Si cambia el número o el mensaje, se cambia aquí Y en WA_NUM/MSG de abajo. -->
+  <a class="btn" id="wabtn" href="https://wa.me/34722655343?text=Hola%20Arianny%2C%20quiero%20mi%20plan%20personalizado." target="_blank" rel="noopener">
     <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 1.8a8.2 8.2 0 0 1 0 16.4c-1.5 0-2.9-.4-4.1-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 0 1 12 3.8zm-3.3 4.4c-.2 0-.5 0-.7.3-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.1 4.9 4.3 2.4 1 2.9.8 3.4.7.5 0 1.7-.7 1.9-1.4.2-.7.2-1.2.2-1.4-.1-.1-.3-.2-.6-.3l-2-1c-.3-.1-.5-.1-.7.1l-.9 1.1c-.2.2-.3.2-.6.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.4.1-.2 0-.4 0-.5L10 8.6c-.2-.4-.4-.4-.6-.4h-.7z"/></svg>
     <span>Recibir mi plan por WhatsApp</span>
   </a>
   <p class="msg">Mensaje: «Hola Arianny, quiero mi plan personalizado.»</p>
+  <!-- HORARIO DE RESPUESTA — pendiente de Carlos (fase 2, 2026-10-07). Para que quien
+       escribe a las 2 de la mañana no espere el plan al momento. Va OCULTA (hidden)
+       hasta que se rellene el hueco: se cambia el corchete por el horario real (p. ej.
+       «de lunes a viernes, de 10:00 a 20:00») y se quita `hidden`. -->
+  <p class="hor" id="hor" hidden>Te respondemos por WhatsApp [HORARIO — pendiente de Carlos] (hora de España).</p>
 
   <div class="cd" id="cd">Se te va a redirigir automáticamente a WhatsApp en <b id="n">10</b> segundos.</div>
 </main>

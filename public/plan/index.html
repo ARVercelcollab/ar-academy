@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Tu Plan Personalizado · variante comunidad · AR Academy</title>
+<title>Tu plan personalizado · AR Academy</title>
 <meta name="description" content="Responde 6 preguntas y recibe gratis tu plan personalizado para conseguir que las marcas te contraten como modelo. +300 alumnas en 17 países.">
 <meta name="theme-color" content="#831A36">
 <link rel="canonical" href="https://www.ariannyrivasacademy.com/plan">
@@ -706,7 +706,7 @@ h1 .it{color:#831A36}
     <p class="lede">El mismo plan que trabajamos con las alumnas de nuestra formación de más de 2.000 €. Descubre qué es lo que te falta para conseguir que las marcas te paguen por tus habilidades como modelo.</p>
     <div class="vsl">
       <div class="vabove">Mira esto primero, son menos de 3 minutos</div>
-      <div class="frame" id="vslframe"><video id="vsl" autoplay muted loop playsinline preload="metadata" poster="https://vz-171fc963-c2a.b-cdn.net/87fc14af-4a7d-41b3-9a82-96bf02717451/thumbnail.jpg" aria-label="Mira esto primero"><source src="https://vz-171fc963-c2a.b-cdn.net/87fc14af-4a7d-41b3-9a82-96bf02717451/play_720p.mp4" type="video/mp4"></video><button class="vslbtn" id="vslbtn" type="button">Haz click y activa el sonido</button></div>
+      <div class="frame" id="vslframe"><video id="vsl" autoplay muted loop playsinline preload="metadata" poster="https://vz-171fc963-c2a.b-cdn.net/87fc14af-4a7d-41b3-9a82-96bf02717451/thumbnail.jpg" aria-label="Mira esto primero"><source src="https://vz-171fc963-c2a.b-cdn.net/87fc14af-4a7d-41b3-9a82-96bf02717451/play_720p.mp4" type="video/mp4"></video><button class="vslbtn" id="vslbtn" type="button">Haz clic y activa el sonido</button></div>
       <div class="vslcta">
         <a class="pillbtn solid big" href="#quiz">Quiero mi plan personalizado</a>
         <small class="ctanote">No se requiere tarjeta · Solo tarda 30 segundos</small>
@@ -847,6 +847,28 @@ h1 .it{color:#831A36}
 (function(){
 var RM=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+/* DE DÓNDE VIENE (2026-10-07). Sin esto no se distingue una chica de YouTube de
+   una de un anuncio o de la bio de Ari. Al cargar se guardan los utm_*, el fbclid
+   y solo el DOMINIO de la web de la que llega (document.referrer), en
+   sessionStorage: sobreviven si recarga a mitad del cuestionario y no salen de
+   esta pestaña. Viajan con el formulario a /api/plan/lead, que los escribe en la
+   nota de GHL («Origen: …») y en la etiqueta `origen · <canal>`.
+   Si la URL trae utm o fbclid, mandan esos (el último clic con pista); si no, se
+   respeta lo guardado. `ts` es cuándo se vio el fbclid: Meta lo pide en el `fbc`. */
+var ORIGEN=(function(){
+  var K='plan_origen',CL=['utm_source','utm_medium','utm_campaign','utm_content','utm_term','fbclid'];
+  var viejo=null; try{viejo=JSON.parse(sessionStorage.getItem(K)||'null')}catch(e){}
+  var q=null; try{q=new URLSearchParams(location.search)}catch(e){}
+  var nuevo={},hay=false;
+  CL.forEach(function(k){var v=q&&q.get(k); if(v){nuevo[k]=String(v).slice(0,k==='fbclid'?500:100); hay=true}});
+  if(!hay && viejo) return viejo;
+  var ref=''; try{ if(document.referrer) ref=new URL(document.referrer).hostname.toLowerCase() }catch(e){}
+  nuevo.referrer=ref;
+  nuevo.ts=(viejo&&viejo.fbclid&&viejo.fbclid===nuevo.fbclid&&viejo.ts)||Date.now();
+  try{sessionStorage.setItem(K,JSON.stringify(nuevo))}catch(e){}
+  return nuevo;
+})();
+
 function kinetic(el){
   if(el.dataset.k)return;el.dataset.k='1';
   var out='',idx=0;
@@ -919,50 +941,170 @@ if(!RM){
    variante-clara.py lee este fichero y lo inyecta tal cual. Aquí no se escapa
    nada, que es justo el motivo de tenerlo aparte. */
 
+/* Columnas: bandera, país, prefijo, grupo (el que va a GHL), y para el número
+   NACIONAL (sin prefijo ni 0 inicial) cifras mínimas y máximas de un móvil, y un
+   ejemplo para el hueco. La 8.ª, si está, son las cifras por las que empieza un
+   móvil (Austria: 6) y ayuda a ver si escribió el prefijo dos veces.
+   República Dominicana es +1 (como EE. UU.) con el 809, 829 u 849 delante: antes
+   iba como +1809 fijo y las de 829 y 849 quedaban mal. */
 var PREFIJOS=[
- ['🇪🇸','España','+34','España'],
- ['🇩🇪','Alemania','+49','Resto de Europa'],
- ['🇦🇩','Andorra','+376','Resto de Europa'],
- ['🇦🇷','Argentina','+54','Latinoamérica'],
- ['🇦🇺','Australia','+61','Australia o Emiratos'],
- ['🇦🇹','Austria','+43','Resto de Europa'],
- ['🇧🇪','Bélgica','+32','Resto de Europa'],
- ['🇧🇴','Bolivia','+591','Latinoamérica'],
- ['🇧🇷','Brasil','+55','Latinoamérica'],
- ['🇨🇦','Canadá','+1','Estados Unidos o Canadá'],
- ['🇨🇱','Chile','+56','Latinoamérica'],
- ['🇨🇴','Colombia','+57','Latinoamérica'],
- ['🇨🇷','Costa Rica','+506','Latinoamérica'],
- ['🇩🇰','Dinamarca','+45','Resto de Europa'],
- ['🇪🇨','Ecuador','+593','Latinoamérica'],
- ['🇸🇻','El Salvador','+503','Latinoamérica'],
- ['🇦🇪','Emiratos Árabes','+971','Australia o Emiratos'],
- ['🇺🇸','Estados Unidos','+1','Estados Unidos o Canadá'],
- ['🇫🇷','Francia','+33','Resto de Europa'],
- ['🇬🇷','Grecia','+30','Resto de Europa'],
- ['🇬🇹','Guatemala','+502','Latinoamérica'],
- ['🇭🇳','Honduras','+504','Latinoamérica'],
- ['🇮🇪','Irlanda','+353','Resto de Europa'],
- ['🇮🇹','Italia','+39','Resto de Europa'],
- ['🇲🇦','Marruecos','+212','Otro'],
- ['🇲🇽','México','+52','Latinoamérica'],
- ['🇳🇮','Nicaragua','+505','Latinoamérica'],
- ['🇳🇴','Noruega','+47','Resto de Europa'],
- ['🇳🇱','Países Bajos','+31','Resto de Europa'],
- ['🇵🇦','Panamá','+507','Latinoamérica'],
- ['🇵🇾','Paraguay','+595','Latinoamérica'],
- ['🇵🇪','Perú','+51','Latinoamérica'],
- ['🇵🇱','Polonia','+48','Resto de Europa'],
- ['🇵🇹','Portugal','+351','Resto de Europa'],
- ['🇬🇧','Reino Unido','+44','Resto de Europa'],
- ['🇩🇴','República Dominicana','+1809','Latinoamérica'],
- ['🇷🇴','Rumanía','+40','Resto de Europa'],
- ['🇸🇪','Suecia','+46','Resto de Europa'],
- ['🇨🇭','Suiza','+41','Resto de Europa'],
- ['🇺🇾','Uruguay','+598','Latinoamérica'],
- ['🇻🇪','Venezuela','+58','Latinoamérica'],
- ['🌐','Otro país','','Otro']
+ ['🇪🇸','España','+34','España',9,9,'600 000 000'],
+ ['🇩🇪','Alemania','+49','Resto de Europa',7,11,'151 23456789'],
+ ['🇦🇩','Andorra','+376','Resto de Europa',6,6,'312 345'],
+ ['🇦🇷','Argentina','+54','Latinoamérica',10,11,'11 2345 6789'],
+ ['🇦🇺','Australia','+61','Australia o Emiratos',9,9,'412 345 678'],
+ ['🇦🇹','Austria','+43','Resto de Europa',7,13,'664 1234567','6'],
+ ['🇧🇪','Bélgica','+32','Resto de Europa',8,9,'470 12 34 56'],
+ ['🇧🇴','Bolivia','+591','Latinoamérica',8,8,'712 34567'],
+ ['🇧🇷','Brasil','+55','Latinoamérica',10,11,'11 91234 5678'],
+ ['🇨🇦','Canadá','+1','Estados Unidos o Canadá',10,10,'416 555 0123'],
+ ['🇨🇱','Chile','+56','Latinoamérica',9,9,'9 1234 5678'],
+ ['🇨🇴','Colombia','+57','Latinoamérica',10,10,'300 123 4567'],
+ ['🇨🇷','Costa Rica','+506','Latinoamérica',8,8,'8312 3456'],
+ ['🇩🇰','Dinamarca','+45','Resto de Europa',8,8,'20 12 34 56'],
+ ['🇪🇨','Ecuador','+593','Latinoamérica',9,9,'99 123 4567'],
+ ['🇸🇻','El Salvador','+503','Latinoamérica',8,8,'7012 3456'],
+ ['🇦🇪','Emiratos Árabes','+971','Australia o Emiratos',9,9,'50 123 4567'],
+ ['🇺🇸','Estados Unidos','+1','Estados Unidos o Canadá',10,10,'305 555 0123'],
+ ['🇫🇷','Francia','+33','Resto de Europa',9,9,'6 12 34 56 78'],
+ ['🇬🇷','Grecia','+30','Resto de Europa',10,10,'691 234 5678'],
+ ['🇬🇹','Guatemala','+502','Latinoamérica',8,8,'5123 4567'],
+ ['🇭🇳','Honduras','+504','Latinoamérica',8,8,'9123 4567'],
+ ['🇮🇪','Irlanda','+353','Resto de Europa',7,9,'85 123 4567'],
+ ['🇮🇹','Italia','+39','Resto de Europa',9,11,'312 345 6789'],
+ ['🇲🇦','Marruecos','+212','Otro',9,9,'612 345678'],
+ ['🇲🇽','México','+52','Latinoamérica',10,10,'55 1234 5678'],
+ ['🇳🇮','Nicaragua','+505','Latinoamérica',8,8,'8123 4567'],
+ ['🇳🇴','Noruega','+47','Resto de Europa',8,8,'412 34 567'],
+ ['🇳🇱','Países Bajos','+31','Resto de Europa',9,9,'6 12345678'],
+ ['🇵🇦','Panamá','+507','Latinoamérica',7,8,'6123 4567'],
+ ['🇵🇾','Paraguay','+595','Latinoamérica',9,9,'961 456789'],
+ ['🇵🇪','Perú','+51','Latinoamérica',9,9,'912 345 678'],
+ ['🇵🇱','Polonia','+48','Resto de Europa',9,9,'512 345 678'],
+ ['🇵🇹','Portugal','+351','Resto de Europa',9,9,'912 345 678'],
+ ['🇬🇧','Reino Unido','+44','Resto de Europa',10,10,'7400 123456'],
+ ['🇩🇴','República Dominicana','+1','Latinoamérica',10,10,'809 555 0123'],
+ ['🇷🇴','Rumanía','+40','Resto de Europa',9,9,'712 345 678'],
+ ['🇸🇪','Suecia','+46','Resto de Europa',7,9,'70 123 45 67'],
+ ['🇨🇭','Suiza','+41','Resto de Europa',9,9,'78 123 45 67'],
+ ['🇺🇾','Uruguay','+598','Latinoamérica',8,8,'94 123 456'],
+ ['🇻🇪','Venezuela','+58','Latinoamérica',10,10,'412 123 4567'],
+ ['🌐','Otro país','','Otro',0,0,'+ prefijo y número']
 ];
+function idxPais(nombre){for(var k=0;k<PREFIJOS.length;k++)if(PREFIJOS[k][1]===nombre)return k;return -1}
+var IDX_OTRO=idxPais('Otro país');
+
+/* El país que sale marcado de entrada, por la zona horaria del navegador (sin
+   llamar a nadie). Antes arrancaba siempre en España y la que no lo cambiaba
+   dejaba un número imposible. Si no se reconoce la zona, España. */
+var ZONAS={
+ 'España':'Europe/Madrid Atlantic/Canary Africa/Ceuta',
+ 'Alemania':'Europe/Berlin Europe/Busingen',
+ 'Andorra':'Europe/Andorra',
+ 'Argentina':'America/Buenos_Aires America/Cordoba America/Catamarca America/Jujuy America/Mendoza',
+ 'Austria':'Europe/Vienna',
+ 'Bélgica':'Europe/Brussels',
+ 'Bolivia':'America/La_Paz',
+ 'Brasil':'America/Sao_Paulo America/Bahia America/Fortaleza America/Recife America/Belem America/Maceio America/Manaus America/Cuiaba America/Campo_Grande America/Porto_Velho America/Boa_Vista America/Rio_Branco America/Araguaina America/Santarem America/Noronha America/Eirunepe',
+ 'Canadá':'America/Toronto America/Montreal America/Vancouver America/Edmonton America/Winnipeg America/Halifax America/St_Johns America/Regina America/Moncton America/Glace_Bay America/Goose_Bay America/Whitehorse America/Dawson America/Dawson_Creek America/Fort_Nelson America/Creston America/Cambridge_Bay America/Inuvik America/Iqaluit America/Rankin_Inlet America/Resolute America/Swift_Current America/Atikokan America/Coral_Harbour America/Blanc-Sablon America/Nipigon America/Thunder_Bay America/Rainy_River America/Pangnirtung America/Yellowknife',
+ 'Chile':'America/Santiago America/Punta_Arenas Pacific/Easter',
+ 'Colombia':'America/Bogota',
+ 'Costa Rica':'America/Costa_Rica',
+ 'Dinamarca':'Europe/Copenhagen',
+ 'Ecuador':'America/Guayaquil Pacific/Galapagos',
+ 'El Salvador':'America/El_Salvador',
+ 'Emiratos Árabes':'Asia/Dubai',
+ 'Estados Unidos':'America/New_York America/Chicago America/Denver America/Los_Angeles America/Phoenix America/Anchorage America/Detroit America/Boise America/Juneau America/Sitka America/Metlakatla America/Yakutat America/Nome America/Adak America/Menominee America/Indianapolis America/Louisville America/Puerto_Rico Pacific/Honolulu',
+ 'Francia':'Europe/Paris',
+ 'Grecia':'Europe/Athens',
+ 'Guatemala':'America/Guatemala',
+ 'Honduras':'America/Tegucigalpa',
+ 'Irlanda':'Europe/Dublin',
+ 'Italia':'Europe/Rome',
+ 'Marruecos':'Africa/Casablanca',
+ 'México':'America/Mexico_City America/Cancun America/Merida America/Monterrey America/Matamoros America/Chihuahua America/Ojinaga America/Mazatlan America/Bahia_Banderas America/Hermosillo America/Tijuana America/Ciudad_Juarez',
+ 'Nicaragua':'America/Managua',
+ 'Noruega':'Europe/Oslo',
+ 'Países Bajos':'Europe/Amsterdam',
+ 'Panamá':'America/Panama',
+ 'Paraguay':'America/Asuncion',
+ 'Perú':'America/Lima',
+ 'Polonia':'Europe/Warsaw',
+ 'Portugal':'Europe/Lisbon Atlantic/Madeira Atlantic/Azores',
+ 'Reino Unido':'Europe/London',
+ 'República Dominicana':'America/Santo_Domingo',
+ 'Rumanía':'Europe/Bucharest',
+ 'Suecia':'Europe/Stockholm',
+ 'Suiza':'Europe/Zurich',
+ 'Uruguay':'America/Montevideo',
+ 'Venezuela':'America/Caracas'
+};
+function paisPorZona(tz){
+  tz=String(tz||'');
+  if(/^America\/Argentina\//.test(tz))return 'Argentina';
+  if(/^Australia\//.test(tz))return 'Australia';
+  if(/^America\/(Indiana|Kentucky|North_Dakota)\//.test(tz))return 'Estados Unidos';
+  for(var p in ZONAS) if((' '+ZONAS[p]+' ').indexOf(' '+tz+' ')>=0) return p;
+  return '';
+}
+var PF_INICIAL=(function(){
+  var tz=''; try{tz=Intl.DateTimeFormat().resolvedOptions().timeZone}catch(e){}
+  var k=idxPais(paisPorZona(tz)); return k<0?0:k;
+})();
+
+/* El WhatsApp en formato internacional (+prefijo y número, solo cifras). Antes se
+   pegaba el prefijo del selector a lo que ella escribiera: si ya lo había puesto
+   salía +34346…, «Otro país» iba sin + y República Dominicana solo valía con 809.
+   Cada fallo así es una chica cuyo WhatsApp no casa con su ficha de GHL: escribe y
+   la setter no ve sus respuestas.
+     · Si empieza por + o 00, manda lo que escribió y el país sale de su prefijo,
+       aunque el selector diga otra cosa.
+     · Si no, fuera los 0 iniciales y, si le sobran cifras y empieza por el prefijo
+       elegido, fuera el prefijo (lo escribió dos veces).
+     · México: fuera el 1 antiguo de móvil (+52 1…). Argentina: en WhatsApp los
+       móviles llevan un 9 detrás del +54.
+     · «Otro país»: se pide el número con +.
+   Devuelve {ok, tel, pf} o {ok:false, msg}. `pf` es el país que vale de verdad. */
+function paisDePrefijo(d,sel){
+  if(d.charAt(0)==='1'){
+    if(/^18[024]9/.test(d))return idxPais('República Dominicana');
+    return (PREFIJOS[sel]&&PREFIJOS[sel][1]==='Canadá')?sel:idxPais('Estados Unidos');
+  }
+  for(var n=3;n>=2;n--){
+    var c='+'+d.slice(0,n);
+    for(var k=0;k<PREFIJOS.length;k++) if(PREFIJOS[k][2]===c) return k;
+  }
+  return -1;
+}
+function normalizarTel(sel,bruto){
+  var t=String(bruto||'').trim(), d=t.replace(/\D/g,'');
+  if(d.length<4) return {ok:false,msg:'Escribe tu número de WhatsApp.'};
+  var pf=sel, p=PREFIJOS[sel]||PREFIJOS[0];
+  if(t.charAt(0)==='+' || /^00/.test(d)){
+    if(t.charAt(0)!=='+') d=d.slice(2);
+    var k=paisDePrefijo(d,sel);
+    if(k<0){
+      if(d.length>=8 && d.length<=15 && /^[1-9]/.test(d)) return {ok:true,tel:'+'+d,pf:IDX_OTRO};
+      return {ok:false,msg:'Revisa tu número de WhatsApp: el prefijo y las cifras.'};
+    }
+    pf=k; p=PREFIJOS[k];
+    d=d.slice(p[2].length-1);
+  } else if(!p[2]){
+    return {ok:false,msg:'Escribe tu número empezando por + y el prefijo de tu país.'};
+  }
+  var cc=p[2].slice(1), italia=p[1]==='Italia';
+  if(!italia) d=d.replace(/^0+/,'');                       // en Italia el 0 es parte del número
+  var dosVeces=d.indexOf(cc)===0 && d.length-cc.length>=p[4] &&
+    (d.length>p[5] || (p[7] && p[7].indexOf(d.charAt(0))<0 && p[7].indexOf(d.charAt(cc.length))>=0));
+  if(dosVeces){ d=d.slice(cc.length); if(!italia) d=d.replace(/^0+/,''); }
+  if(p[1]==='México' && d.length===11 && d.charAt(0)==='1') d=d.slice(1);
+  if(p[1]==='Argentina' && d.length===10) d='9'+d;
+  var ej=' Por ejemplo: '+p[2]+' '+p[6]+'.';
+  if(d.length<p[4]) return {ok:false,msg:'A tu número de WhatsApp le faltan cifras.'+ej};
+  if(d.length>p[5] || (cc+d).length>15) return {ok:false,msg:'A tu número de WhatsApp le sobran cifras.'+ej};
+  if(p[1]==='República Dominicana' && !/^8[024]9/.test(d)) return {ok:false,msg:'Con República Dominicana, el número empieza por 809, 829 u 849.'};
+  return {ok:true,tel:'+'+cc+d,pf:pf};
+}
 
 /* Las fichas de arriba no caben si la respuesta es larga. */
 function corto(v){return v.length>34?v.slice(0,32)+'…':v}
@@ -1062,14 +1204,21 @@ function draw(){
     h+='<div class="meter"><span id="ml">Cuéntame un poco más</span><span class="mbar"><i id="mb"></i></span></div>';
     h+='<div class="cta-wrap"><button class="pillbtn solid big full" data-n>Continuar</button></div>';
   } else if(s.k==='datos'){
-    h+='<div class="fld"><label for="nm">Nombre completo</label><input id="nm" placeholder="Nombre y apellidos"></div>'
-      +'<div class="fld"><label for="ed">Edad</label><input id="ed" type="number" inputmode="numeric" min="14" max="99" placeholder="27"></div>'
-      +'<div class="fld"><label for="em">Correo electr\u00f3nico</label><input id="em" type="email" inputmode="email" placeholder="tu@email.com"></div>'
+    /* autocomplete: en el móvil se rellenan solos nombre, correo y teléfono. El
+       teléfono va como «tel» (con su +): normalizarTel saca el país del prefijo.
+       El campo «comentario» es la trampa para robots: fuera de la pantalla, sin
+       tabulador y sin autocompletar. Una persona no lo ve; si llega relleno,
+       /api/plan/lead no guarda nada. */
+    var pfSel=(DATOS.pfIdx!=null&&PREFIJOS[DATOS.pfIdx])?DATOS.pfIdx:PF_INICIAL;
+    h+='<div class="fld"><label for="nm">Nombre completo</label><input id="nm" name="name" autocomplete="name" autocapitalize="words" placeholder="Nombre y apellidos"></div>'
+      +'<div class="fld"><label for="ed">Edad</label><input id="ed" name="edad" type="number" inputmode="numeric" min="14" max="99" autocomplete="off" placeholder="27"></div>'
+      +'<div class="fld"><label for="em">Correo electr\u00f3nico</label><input id="em" name="email" type="email" inputmode="email" autocomplete="email" autocapitalize="none" spellcheck="false" placeholder="tu@email.com"></div>'
       +'<div class="fld"><label for="wp">WhatsApp</label><div class="tel">'
       +'<select id="pf" aria-label="Pa\u00eds">'
-      +PREFIJOS.map(function(p,k){return '<option value="'+k+'">'+p[0]+'\u00a0\u00a0'+p[2]+'\u00a0\u00a0'+p[1]+'</option>'}).join('')
-      +'</select><input id="wp" type="tel" inputmode="tel" placeholder="600 000 000"></div></div>'
-      +'<div class="fld"><label for="ig">Instagram</label><input id="ig" placeholder="@tu_usuario"></div>'
+      +PREFIJOS.map(function(p,k){return '<option value="'+k+'"'+(k===pfSel?' selected':'')+'>'+p[0]+'\u00a0\u00a0'+p[2]+'\u00a0\u00a0'+p[1]+'</option>'}).join('')
+      +'</select><input id="wp" name="tel" type="tel" inputmode="tel" autocomplete="tel" placeholder="'+esc(PREFIJOS[pfSel][6])+'"></div></div>'
+      +'<div class="fld"><label for="ig">Instagram</label><input id="ig" name="instagram" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" placeholder="@tu_usuario"></div>'
+      +'<div aria-hidden="true" style="position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden"><label for="hp">Deja este campo vac\u00edo</label><input id="hp" name="comentario" type="text" tabindex="-1" autocomplete="off"></div>'
       +'<label class="chk"><input type="checkbox"><span>Acepto los <a href="#legal">t\u00e9rminos y condiciones</a></span></label>'
       +'<div class="cta-wrap"><button class="pillbtn solid big full" data-n>Recibir mi plan personalizado</button></div>'
       +'<p class="note">En cuanto lo env\u00edes te doy el enlace para recibirlo por WhatsApp. Ponme un n\u00famero que uses de verdad: el plan solo va por ah\u00ed.</p>';
@@ -1099,6 +1248,12 @@ function draw(){
     });
     setTimeout(function(){inp.focus()},280);
   }
+  var pfEl=document.getElementById('pf');
+  if(pfEl) pfEl.addEventListener('change',function(){
+    var p=PREFIJOS[+pfEl.value], w=document.getElementById('wp');
+    if(p&&w) w.placeholder=p[6];
+    DATOS.pfIdx=+pfEl.value;
+  });
   var tx=document.getElementById('tx');
   if(tx){
     var mb=document.getElementById('mb'),ml=document.getElementById('ml');
@@ -1135,11 +1290,18 @@ qb.addEventListener('click',function(e){
 var DATOS={};
 function recogerDatos(){
   var v=function(id){var el=document.getElementById(id); return el?el.value.trim():''};
-  var marcar=function(id,mal){var el=document.getElementById(id); if(el)el.style.borderColor=mal?'#D9436B':''};
+  var marcar=function(id,mal){
+    var el=document.getElementById(id); if(!el)return;
+    if(id==='wp') el=el.parentNode;   // el borde del teléfono es el de su caja (.tel)
+    el.style.borderColor=mal?'#D9436B':'';
+    var inp=document.getElementById(id); if(mal)inp.setAttribute('aria-invalid','true'); else inp.removeAttribute('aria-invalid');
+  };
   var nm=v('nm'), ed=v('ed'), em=v('em'), wp=v('wp'), ig=v('ig'), mal=false;
+  var pfSel=+((document.getElementById('pf')||{}).value||0);
+  var tel=normalizarTel(pfSel, wp);
   var okNm=nm.split(/\s+/).filter(Boolean).length>=2;
   var okEm=/^[^@\s]+@[^@\s]+\.[a-zA-Z]{2,}$/.test(em);
-  var okWp=wp.replace(/\D/g,'').length>=8;
+  var okWp=tel.ok;
   var okIg=ig.length>1;
   var okEd=/^\d{2}$/.test(ed) && +ed>=14 && +ed<=99;
   [['nm',okNm],['ed',okEd],['em',okEm],['wp',okWp],['ig',okIg]].forEach(function(par){
@@ -1152,20 +1314,22 @@ function recogerDatos(){
   var aviso=document.getElementById('qerr');
   if(mal){
     if(!aviso){
-      aviso=document.createElement('p'); aviso.id='qerr';
+      aviso=document.createElement('p'); aviso.id='qerr'; aviso.setAttribute('role','alert');
       aviso.style.cssText='color:#D9436B;font-size:12.5px;margin:10px 0 0';
       qb.appendChild(aviso);
     }
-    aviso.textContent = faltaChk && !okNm===false && chks.length
-      ? 'Revisa los campos marcados y acepta los términos.'
-      : 'Revisa los campos marcados en rojo.';
+    var soloChk=okNm&&okEd&&okEm&&okWp&&okIg;
+    aviso.textContent = (faltaChk
+        ? (soloChk ? 'Acepta los términos para continuar.' : 'Revisa los campos marcados y acepta los términos.')
+        : 'Revisa los campos marcados en rojo.')
+      + (!okWp && tel.msg ? ' '+tel.msg : '');
     return false;
   }
   if(aviso) aviso.remove();
-  var pfIdx=+((document.getElementById('pf')||{}).value||0);
-  var pfx=(PREFIJOS[pfIdx]||PREFIJOS[0])[2];
-  DATOS={nombre:nm, edad:ed, email:em, instagram:ig.replace(/^@/,''), pfIdx:pfIdx,
-    telefono:pfx+wp.replace(/\D/g,'').replace(/^0+/,'')};
+  // Si el número traía otro prefijo, manda el número: el selector se pone en su país.
+  if(tel.pf!==pfSel){ var sel=document.getElementById('pf'); if(sel) sel.value=String(tel.pf); }
+  DATOS={nombre:nm, edad:ed, email:em, instagram:ig.replace(/^@/,''), pfIdx:tel.pf,
+    telefono:tel.tel, trampa:v('hp')};
   return true;
 }
 
@@ -1211,22 +1375,26 @@ function enviarCRM(eid){
     nombre:DATOS.nombre, edad:DATOS.edad, email:DATOS.email, telefono:DATOS.telefono,
     instagram:DATOS.instagram,
     pais:pf[3], pais_nombre:pf[1],
+    origen:ORIGEN,                 // utm_*, fbclid y dominio de procedencia (arriba)
+    comentario:DATOS.trampa||'',   // el campo trampa: vacío si es una persona
     ocupacion:ans[0]||'',
     ingresos_actuales:ans[1]||'',
     dolor_principal:ans[2]||'',
     objetivo_ingresos:ans[3]||'',
     punto_actual:ans[4]||''   // solo para la nota: aquí siempre llega «activamente buscando…»
   };
-  /* El event_id del píxel se genera aquí y viaja al servidor (por si un día se
-     manda por Conversions API), pero el evento `SubmitApplication` lo dispara
-     /plan/gracias al cargar: si se disparara aquí, la navegación a la página
-     siguiente podría cortarlo. */
+  /* El event_id del píxel se genera aquí y viaja al servidor, que manda el mismo
+     `SubmitApplication` por la Conversions API de Meta (si está configurada). El
+     del navegador lo dispara /plan/gracias al cargar, con este mismo id: Meta los
+     junta en uno. Si se disparara aquí, la navegación a la página siguiente
+     podría cortarlo. */
   carga.event_id=eid;
   // Si el CRM falla no se le dice nada a ella: ya tenemos el WhatsApp como
   // segunda vía y bloquear la pantalla por esto perdería la lead entera.
   var lead={eid:eid, email:DATOS.email||'', telefono:DATOS.telefono||'', ts:Date.now()};
+  // keepalive: si a los 4 s se pasa a /plan/gracias, la petición no se corta.
   return fetch(API_LEAD,{method:'POST',headers:{'Content-Type':'application/json'},
-    body:JSON.stringify(carga)})
+    body:JSON.stringify(carga), keepalive:true})
     .then(function(r){return r.json()})
     .then(function(d){ if(d&&d.id)lead.id=d.id; return lead; })
     .catch(function(){ return lead; });
