@@ -670,7 +670,7 @@ function ruta(inicio: number, kc: ClaveOcupacion | null): PasoRuta[] {
       mentora: "Con **Carlos Correa**",
       // La clase con Carlos y Ari en la que analizan y construyen el perfil de Ari, en su
       // canal (Carlos, 08-10: sustituye a la ponencia de Carlos, lwf_1F7kXjo).
-      clases: [{ texto: "Clase con Carlos y Ari · construimos su perfil · 44 min", yt: "PHyImmNq_oE" }],
+      clases: [{ texto: "Cómo Construir Tu Marca Personal como Modelo desde Cero (Clase Completa) · 44 min", yt: "PHyImmNq_oE" }],
     },
     {
       n: "05",

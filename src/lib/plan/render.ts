@@ -57,7 +57,7 @@ export function renderPlan(p: PlanArmado): string {
   const clases = p.clases
     .map(
       (c, k) => `<article class="cl" data-cl="${k}" data-yt="${esc(c.yt)}" data-start="${seg(c.start)}">
-        <div class="clf"><img src="https://i.ytimg.com/vi/${esc(c.yt)}/hqdefault.jpg" alt="" loading="lazy"><div class="play"></div><span class="dur">${esc(c.etiqueta)}</span></div>
+        <div class="clf"><img src="https://i.ytimg.com/vi/${esc(c.yt)}/maxresdefault.jpg" alt="" loading="lazy" onload="if(this.naturalWidth<200)this.onerror()" onerror="this.onerror=this.onload=null;this.src=this.src.replace('maxresdefault','sddefault')"><div class="play"></div><span class="dur">${esc(c.etiqueta)}</span></div>
         <div class="clb"><span class="tag2">Clase ${k + 1}</span><h3>${esc(c.titulo)}</h3><button class="vw" aria-label="Marcar como vista">✓</button></div>
         <p class="clwhy"><b>${esc(c.porQueTitulo)}</b> ${esc(c.porQue)}</p>
       </article>`,
@@ -117,7 +117,7 @@ export function renderPlan(p: PlanArmado): string {
     ? `
     <p>Y si solo te da tiempo a ver una cosa, que sea esta: cómo trabajamos con cada alumna, paso a paso, contado por mí.</p>
     <div class="accv">
-      <div class="clf" data-yt="${esc(va.yt)}" data-start="${seg(va.start)}"><img src="https://i.ytimg.com/vi/${esc(va.yt)}/hqdefault.jpg" alt="" loading="lazy"><div class="play"></div><span class="dur">${esc(va.etiqueta)}</span></div>
+      <div class="clf" data-yt="${esc(va.yt)}" data-start="${seg(va.start)}"><img src="https://i.ytimg.com/vi/${esc(va.yt)}/maxresdefault.jpg" alt="" loading="lazy" onload="if(this.naturalWidth<200)this.onerror()" onerror="this.onerror=this.onload=null;this.src=this.src.replace('maxresdefault','sddefault')"><div class="play"></div><span class="dur">${esc(va.etiqueta)}</span></div>
       <p class="accvt">${esc(va.titulo)}</p>
     </div>`
     : "";
