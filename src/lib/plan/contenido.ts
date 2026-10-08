@@ -641,11 +641,9 @@ function ruta(inicio: number, kc: ClaveOcupacion | null): PasoRuta[] {
       nombre: "Mentalidad",
       porQue: "La cabeza antes que la técnica. Sin esto, cada silencio se convierte en un veredicto sobre ti, y ya sabes cómo acaba eso.",
       mentora: "Con **Flor Caminero**",
-      // La clase 3 es siempre la de mentalidad. Y la de Flor, para ver por dentro a la mentora.
-      clases: [
-        { texto: "La tienes arriba · clase 3", ancla: true },
-        { texto: "Clase de Flor · mentalidad · 1 h", yt: "DOq5-LsbM7s" },
-      ],
+      // La de Flor, para ver por dentro a la mentora. La de mentalidad ya está arriba (clase 3) y no se
+      // repite aquí (Carlos, 08-10).
+      clases: [{ texto: "Clase de Flor · mentalidad · 1 h", yt: "DOq5-LsbM7s" }],
     },
     {
       n: "02",
