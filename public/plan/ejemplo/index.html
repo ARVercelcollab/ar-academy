@@ -310,7 +310,8 @@ footer .nota{text-transform:none;letter-spacing:0;color:var(--tx-3);font-size:11
       <div class="st" data-big="02"><span class="stn">02</span>
         <h3>Organización</h3>
         <p class="stwhy">Marcaste «cuanto antes». Aquí es donde ese ya se convierte en calendario: tu tiempo, ordenado para que el plan se cumpla, con tu trabajo y con todo lo que ya tienes encima.</p>
-        <div class="strow"><span class="mchip">Con <b>Victoria Poggioli</b></span></div>
+        <div class="strow"><span class="mchip">Con <b>Victoria Poggioli</b></span><button class="cchip" data-yt="Y7Qs_G8TRX0" data-start="478" data-t="¿Cómo definir tus metas y objetivos en 2026?">¿Cómo definir tus metas y objetivos en 2026? · desde el 7:58</button></div>
+        <div class="stplayer"><div class="clf"></div></div>
       </div>
 
       <div class="st" data-big="03"><span class="stn">03</span>
@@ -473,10 +474,11 @@ if(route&&!RM){
 } else if(rl){ rl.style.transform='scaleY(1)'; }
 
 /* reproductores: miniatura primero, YouTube al pulsar */
-function embed(caja,id){
+function embed(caja,id,s){
   if(caja.querySelector('iframe'))return;
   var f=document.createElement('iframe');
-  f.src='https://www.youtube-nocookie.com/embed/'+id+'?autoplay=1&rel=0&modestbranding=1&playsinline=1';
+  s=Math.floor(+s||0);
+  f.src='https://www.youtube-nocookie.com/embed/'+id+'?autoplay=1&rel=0&modestbranding=1&playsinline=1'+(s>0?'&start='+s:'');
   f.allow='autoplay; encrypted-media; picture-in-picture; fullscreen';f.allowFullscreen=true;f.title='Clase';
   caja.appendChild(f);
 }
@@ -505,7 +507,7 @@ document.querySelectorAll('.cchip[data-yt]').forEach(function(ch){
     var mismo=ch.classList.contains('on');
     st.querySelectorAll('.cchip').forEach(function(o){o.classList.remove('on')});
     if(mismo){pl.classList.remove('on');caja.innerHTML='';return}
-    ch.classList.add('on');caja.innerHTML='';pl.classList.add('on');embed(caja,ch.dataset.yt);
+    ch.classList.add('on');caja.innerHTML='';pl.classList.add('on');embed(caja,ch.dataset.yt,ch.dataset.start);
     pl.scrollIntoView({block:'nearest',behavior:RM?'auto':'smooth'});
   });
 });

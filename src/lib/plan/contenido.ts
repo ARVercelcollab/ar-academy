@@ -652,8 +652,8 @@ function ruta(inicio: number, kc: ClaveOcupacion | null): PasoRuta[] {
       nombre: "Organización",
       porQue: `Marcaste «cuanto antes». Aquí es donde ese «ya» se convierte en calendario: tu tiempo, ordenado para que el plan se cumpla, ${organiza}`,
       mentora: "Con **Victoria Poggioli**",
-      // Pendiente: una clase de Victoria (Carlos, 07-10: solo de la mentora de cada paso).
-      clases: [],
+      // La clase de Victoria en su canal, desde el 7:58 (Carlos, 08-10).
+      clases: [{ texto: "¿Cómo definir tus metas y objetivos en 2026? · desde el 7:58", yt: "Y7Qs_G8TRX0", start: 478 }],
     },
     {
       n: "03",
