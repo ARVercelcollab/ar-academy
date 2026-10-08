@@ -659,7 +659,7 @@ function ruta(inicio: number, kc: ClaveOcupacion | null): PasoRuta[] {
       porQue: "Quién eres tú delante de una cámara, antes de ponerte delante de una. Tu imagen habla antes de que tú lo hagas.",
       mentora: "Con **Jazmín Pérez**",
       // La ponencia de Jazmín, en el canal de la academia (la eligió Carlos).
-      clases: [{ texto: "Ponencia de Jazmín · estilismo · 11 min", yt: "SprugSv8TZQ" }],
+      clases: [{ texto: "Tu imagen esta a nivel de prada? | Mentoria de Estilismo para MODELOS · 11 min", yt: "SprugSv8TZQ" }],
     },
     {
       n: "04",
