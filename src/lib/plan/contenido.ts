@@ -428,7 +428,7 @@ const POR_PROBLEMA: Record<ClaveProblema, BloqueProblema> = {
       {
         ...C.marcaCorta,
         porQueTitulo: "Por qué la primera:",
-        porQue: "es tu pregunta: qué es la marca personal, por qué hoy pesa más que la foto y cinco pasos para construirla. Y en el paso 4 del camino tienes la ponencia de Carlos, el mentor de ese paso.",
+        porQue: "es tu pregunta: qué es la marca personal, por qué hoy pesa más que la foto y cinco pasos para construirla. Y en el paso 4 del camino tienes la clase en la que Carlos, el mentor de ese paso, y yo construimos mi perfil.",
       },
       ctx.menor ? MENOR_MAPA : claseObjetivo(ctx.ko),
     ],
@@ -668,8 +668,9 @@ function ruta(inicio: number, kc: ClaveOcupacion | null): PasoRuta[] {
       nombre: "Marca personal",
       porQue: "Que las marcas te encuentren a ti, confíen en ti y te paguen más por ello. Aquí se construye.",
       mentora: "Con **Carlos Correa**",
-      // La ponencia de Carlos, en el canal de la academia: el mentor de este paso es él.
-      clases: [{ texto: "Ponencia de Carlos · marca personal · 11 min", yt: "lwf_1F7kXjo" }],
+      // La clase con Carlos y Ari en la que analizan y construyen el perfil de Ari, en su
+      // canal (Carlos, 08-10: sustituye a la ponencia de Carlos, lwf_1F7kXjo).
+      clases: [{ texto: "Clase con Carlos y Ari · construimos su perfil · 44 min", yt: "PHyImmNq_oE" }],
     },
     {
       n: "05",

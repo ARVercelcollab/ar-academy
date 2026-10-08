@@ -160,7 +160,6 @@ export function renderPlan(p: PlanArmado): string {
     <div class="cta-wrap">
       <a class="pillbtn big full btnwa" id="wabtn" href="https://wa.me/34722655343?text=ACCESO" target="_blank" rel="noopener">Escribir ACCESO por WhatsApp</a>
     </div>
-    <p class="soft">Si todavía no estás lista, no pasa nada: mira las clases, mira el contenido que subo y escríbeme si tienes alguna duda. 🤍</p>
   </div>
 </section>`;
 
@@ -351,7 +350,7 @@ function embed(caja,id,s){
   f.referrerPolicy='strict-origin-when-cross-origin';
   s=Math.floor(+s||0);
   f.src='https://www.youtube-nocookie.com/embed/'+id+'?autoplay=1&rel=0&modestbranding=1&playsinline=1'+(s>0?'&start='+s:'');
-  f.allow='autoplay; encrypted-media; picture-in-picture';f.allowFullscreen=true;f.title='Clase';
+  f.allow='autoplay; encrypted-media; picture-in-picture; fullscreen';f.allowFullscreen=true;f.title='Clase';
   caja.appendChild(f);
   avisa('clase',id);
 }
