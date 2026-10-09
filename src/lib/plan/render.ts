@@ -125,9 +125,9 @@ export function renderPlan(p: PlanArmado): string {
   // La Comunidad. A una menor se le pide que lo hable antes con sus padres: en la llamada de
   // bienvenida se les invita a estar (negocio.md §5).
   const comunidadTexto = p.menor
-    ? `<p>En la <b>Comunidad AR</b> tienes los primeros módulos de la formación, los directos conmigo y chicas que están justo donde tú, a tu ritmo y sin prisa.</p>
+    ? `<p>En la <b>Comunidad de AR Academy</b> tienes el entorno correcto para empezar: estás con todas mis alumnas, tienes acceso a todos los eventos, a los primeros módulos de la formación y a los directos conmigo. A tu ritmo y sin prisa.</p>
     <p><b>Antes de entrar, háblalo con tus padres.</b> Enséñales este plan y la clase 4, que es para ellos. En la llamada de bienvenida les pedimos que estén contigo: así lo empiezan juntos.</p>`
-    : `<p>Si ahora mismo no es el momento de la formación completa, no pasa nada: no tienes que esperar para empezar. En la <b>Comunidad AR</b> tienes los primeros módulos de la formación, los directos conmigo y chicas que están justo donde tú.</p>
+    : `<p>Si ahora mismo no es el momento de la formación completa, no pasa nada: no tienes que esperar para empezar. En la <b>Comunidad de AR Academy</b> tienes el entorno correcto: estás con todas mis alumnas, tienes acceso a todos los eventos, a los primeros módulos de la formación y a los directos conmigo.</p>
     <p>Es la forma de hacer tus tres pasos de esta semana con alguien al lado, y cuando estés lista para ir a por todo, ya sabes dónde estoy.</p>`;
 
   const cierre =
@@ -138,7 +138,7 @@ export function renderPlan(p: PlanArmado): string {
     <h2>Empieza <span class="it">acompañada.</span></h2>
     ${comunidadTexto}
     <div class="cta-wrap">
-      <a class="pillbtn big full solid" id="combtn" href="${esc(p.urlComunidad)}" target="_blank" rel="noopener">Entrar en la Comunidad AR</a>
+      <a class="pillbtn big full solid" id="combtn" href="${esc(p.urlComunidad)}" target="_blank" rel="noopener">Entrar en la Comunidad de AR Academy</a>
     </div>
     <p class="soft">${p.menor ? "Y si tienes cualquier duda, o la tienen tus padres, escríbeme por WhatsApp." : "Y si tienes cualquier duda, contéstame por WhatsApp."} Te leo yo. 🤍</p>
   </div>
