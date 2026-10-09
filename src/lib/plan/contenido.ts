@@ -172,10 +172,10 @@ const START_VERSATILIDAD = 345;
 
 type ClaseBase = Omit<Clase, "porQueTitulo" | "porQue">;
 const C: Record<"mapa" | "marcaCorta" | "publicidad" | "mente", ClaseBase> = {
-  mapa: { yt: YT.mapa, titulo: "Cómo ser modelo profesional empezando desde cero", etiqueta: "Clase · 16 min" },
-  marcaCorta: { yt: YT.marcaCorta, titulo: "Sin marca personal no hay carrera como modelo", etiqueta: "Clase · 7 min" },
+  mapa: { yt: YT.mapa, titulo: "Cómo ser Modelo Profesional en 2026 (Empezando desde CERO)", etiqueta: "Clase · 16 min" },
+  marcaCorta: { yt: YT.marcaCorta, titulo: "Sin MARCA PERSONAL no hay carrera como MODELO en 2026", etiqueta: "Clase · 7 min" },
   // Capítulo «Cuánto puede cobrar una modelo y qué son los derechos de imagen».
-  publicidad: { yt: YT.publicidad, start: 98, titulo: "El trabajo mejor pagado en el modelaje", etiqueta: "Clase · desde el 1:38" },
+  publicidad: { yt: YT.publicidad, start: 98, titulo: "El trabajo mejor pagado en el MODELAJE", etiqueta: "Clase · desde el 1:38" },
   mente: { yt: YT.mente, titulo: "Reprogramar tu mente también es parte del modelaje", etiqueta: "Clase · 6 min" },
 };
 
@@ -183,7 +183,7 @@ function cuantoGana(start: number): ClaseBase {
   return {
     yt: YT.cuantoGana,
     start: start || undefined,
-    titulo: "La verdad sobre cuánto gana una modelo, de principiante a profesional",
+    titulo: "La verdad sobre cuánto gana una modelo (principiante vs profesional)",
     etiqueta: start ? `Clase · desde el ${mmss(start)}` : "Clase · 9 min",
   };
 }
@@ -202,7 +202,7 @@ const CASOS: Record<ClaveCaso, ClaseBase & { semana: string }> = {
   // Entero: es el más corto de todos (5:39). Vende la formación, no la Comunidad.
   mar: {
     yt: "oP92cnKRY64",
-    titulo: "Mar: llegó con cero experiencia y siguió el camino paso a paso",
+    titulo: "El paso a paso para vivir del modelaje (CASO REAL)",
     etiqueta: "Su historia · 6 min",
     semana: "Mar llegó con cero experiencia y fue paso a paso. Está en la clase 4 y son seis minutos: apunta qué hizo primero.",
   },
@@ -210,7 +210,7 @@ const CASOS: Record<ClaveCaso, ClaseBase & { semana: string }> = {
   frida: {
     yt: "gV6qMJvgieQ",
     start: 1090,
-    titulo: "Frida: ser madre y tener 30 años no le impidió modelar",
+    titulo: "FRIDA: Ser madre y tener 30 años no me impidió modelar",
     etiqueta: "Su historia · desde el 18:10",
     semana: "Frida es madre de dos, tiene 30 años y no dejó que eso la frenara. Escúchala en la clase 4 y apunta qué hizo primero.",
   },
@@ -219,7 +219,7 @@ const CASOS: Record<ClaveCaso, ClaseBase & { semana: string }> = {
   alba: {
     yt: "Y579S4qK0BY",
     start: 1045,
-    titulo: "Alba: de no atreverse a modelar a cobrar por su imagen",
+    titulo: "Alba: de no atreverse a MODELAR, a GANAR DINERO con su imagen",
     etiqueta: "Su historia · desde el 17:25",
     semana: "Alba no se atrevía ni a modelar. Escúchala en la clase 4 y apunta qué hizo primero.",
   },
@@ -227,28 +227,28 @@ const CASOS: Record<ClaveCaso, ClaseBase & { semana: string }> = {
   kim: {
     yt: "RW784i33ILU",
     start: 755,
-    titulo: "Kim: de cero a que la contraten marcas y a desfilar",
+    titulo: "KIM: De 0 a ser contratada por MARCAS y a estar en PASARELAS",
     etiqueta: "Su historia · desde el 12:35",
     semana: "Kim empezó de cero y muy insegura con las redes. Escúchala en la clase 4 y apunta qué hizo primero.",
   },
   // ≈0:30 «tengo 37 años». Desde el principio: se presenta enseguida.
   monica: {
     yt: "PWlRaa5xLs8",
-    titulo: "Mónica: nunca es tarde para empezar como modelo y creadora UGC",
+    titulo: "Mónica: Nunca es tarde para iniciar tu carrera como MODELO y creadora de contenido UGC",
     etiqueta: "Su historia · 42 min",
     semana: "Mónica empezó con 37 años. Escúchala en la clase 4 y apunta qué hizo primero.",
   },
   // ≈0:52 «trabajo en administración y lo compagino un poco con el modelaje».
   laura: {
     yt: "LwOLf5d-TX8",
-    titulo: "Laura: de no atreverse a hacerse fotos en la calle a desfilar",
+    titulo: "Laura: De no poder hacerse FOTOS en la calle a DESFILAR en PASARELA",
     etiqueta: "Su historia · 17 min",
     semana: "Laura lo compagina con su trabajo. Escúchala en la clase 4 y apunta qué hizo primero.",
   },
   // Lo mismo que hace Sofi desde el 21-08 con las menores: el vídeo para que lo vean con sus padres.
   padres: {
     yt: YT.padres,
-    titulo: "Para tus padres: cómo funciona esto hoy, contado por mí",
+    titulo: "¿Tu hija quiere ser MODELO o CREADORA DE CONTENIDO? Te cuento TODO sobre la industria",
     etiqueta: "Para tus padres · 12 min",
     semana: "",
   },
@@ -643,7 +643,7 @@ function ruta(inicio: number, kc: ClaveOcupacion | null): PasoRuta[] {
       mentora: "Con **Flor Caminero**",
       // La de Flor, para ver por dentro a la mentora. La de mentalidad ya está arriba (clase 3) y no se
       // repite aquí (Carlos, 08-10).
-      clases: [{ texto: "Clase de Flor · mentalidad · 1 h", yt: "DOq5-LsbM7s" }],
+      clases: [{ texto: "La mentalidad que necesitas para triunfar como modelo: clase de AR MODELS COMMUNITY · 1 h", yt: "DOq5-LsbM7s" }],
     },
     {
       n: "02",
@@ -683,7 +683,7 @@ function ruta(inicio: number, kc: ClaveOcupacion | null): PasoRuta[] {
       nombre: "Redes sociales",
       porQue: "Todo lo anterior, llevado a tu contenido: perder el miedo a la cámara, crear, editar, publicar. Es donde miran las marcas.",
       mentora: "Con **Pierina Alves**",
-      clases: [{ texto: "Charla · ¿Se puede vivir de las redes? · 75 min", yt: "f2sdsrpO1C0" }],
+      clases: [{ texto: "Ep. 3: Pierina Alves: Se puede vivir de las REDES y el UGC?? · 75 min", yt: "f2sdsrpO1C0" }],
     },
     {
       n: "07",
@@ -691,8 +691,8 @@ function ruta(inicio: number, kc: ClaveOcupacion | null): PasoRuta[] {
       porQue: "La técnica. Es donde casi todas empiezan, con un book por delante y seis pasos por detrás sin hacer. Ahora sí le toca.",
       mentora: "Con **Arianny** y **Mili Wirtz**",
       clases: [
-        { texto: "Domina la pasarela · 6 min", yt: "uxNjzq3DRrg" },
-        { texto: "Posado para marcas · ZARA · 5 min", yt: "oXrZwDEh2Q4" },
+        { texto: "Domina la pasarela con estos pasos 👠 · 6 min", yt: "uxNjzq3DRrg" },
+        { texto: "Si quieres modelar para ZARA, primero necesitas ver esta clase · 5 min", yt: "oXrZwDEh2Q4" },
       ],
       entraTodoElMundo: true,
     },
@@ -701,7 +701,7 @@ function ruta(inicio: number, kc: ClaveOcupacion | null): PasoRuta[] {
       nombre: "Técnicas de casting",
       porQue: "Presentarte, que te contraten, cobrar bien y estar protegida legalmente. Lo que casi nadie te cuenta, contado entero.",
       mentora: "Con **Arianny** y **Mili Wirtz**",
-      clases: [{ texto: "Errores que te hacen perder un casting · 10 min", yt: "M5yvR_AKbUo" }],
+      clases: [{ texto: "Errores que te hacen perder un CASTING (y cómo evitarlos) · 10 min", yt: "M5yvR_AKbUo" }],
     },
     {
       n: "09",
@@ -715,7 +715,7 @@ function ruta(inicio: number, kc: ClaveOcupacion | null): PasoRuta[] {
       nombre: "AR Agency",
       porQue: "Cuando el equipo se cerciora de que estás formada y preparada, nuestra agencia internacional te representa: castings de campaña, revistas, pasarela, contenido. **Y durante todo el camino, acompañada por el equipo.** Por eso esto no es otro curso.",
       mentora: "Nuestra **agencia internacional** · te representamos nosotros",
-      clases: [{ texto: "Una agencia sin estereotipos · 14 min", yt: "C8eHs2rVncc" }],
+      clases: [{ texto: "Agencia de modelos sin estereotipos, EXISTE?? · 14 min", yt: "C8eHs2rVncc" }],
       final: true,
     },
   ];
