@@ -228,6 +228,8 @@
 
   .fld{display:flex;flex-direction:column;gap:7px;margin-bottom:12px}
   .fld label{font-size:11px;letter-spacing:.11em;text-transform:uppercase;color:var(--tx-3)}
+  /* La aclaración junto a «WhatsApp» (Carlos, 2026-10-12): debajo, en la nota, no se leía. */
+  .fld label .acl{text-transform:none;letter-spacing:0;font-size:12.5px;color:var(--tx-2)}
   .fld input,.fld textarea{background:rgba(22,22,22,.04);border:1px solid var(--line);border-radius:16px;
     color:#161616;font-family:var(--sans);font-size:16px;font-weight:300;padding:15px;width:100%;transition:border-color .2s,background .2s}
   .fld textarea{min-height:160px;resize:vertical;line-height:1.55}
@@ -1213,7 +1215,7 @@ function draw(){
     h+='<div class="fld"><label for="nm">Nombre completo</label><input id="nm" name="name" autocomplete="name" autocapitalize="words" placeholder="Nombre y apellidos"></div>'
       +'<div class="fld"><label for="ed">Edad</label><input id="ed" name="edad" type="number" inputmode="numeric" min="14" max="99" autocomplete="off" placeholder="27"></div>'
       +'<div class="fld"><label for="em">Correo electr\u00f3nico</label><input id="em" name="email" type="email" inputmode="email" autocomplete="email" autocapitalize="none" spellcheck="false" placeholder="tu@email.com"></div>'
-      +'<div class="fld"><label for="wp">WhatsApp</label><div class="tel">'
+      +'<div class="fld"><label for="wp">WhatsApp <span class="acl">(Pon el n\u00famero de WhatsApp que usas para recibir el plan)</span></label><div class="tel">'
       +'<select id="pf" aria-label="Pa\u00eds">'
       +PREFIJOS.map(function(p,k){return '<option value="'+k+'"'+(k===pfSel?' selected':'')+'>'+p[0]+'\u00a0\u00a0'+p[2]+'\u00a0\u00a0'+p[1]+'</option>'}).join('')
       +'</select><input id="wp" name="tel" type="tel" inputmode="tel" autocomplete="tel" placeholder="'+esc(PREFIJOS[pfSel][6])+'"></div></div>'
@@ -1221,7 +1223,7 @@ function draw(){
       +'<div aria-hidden="true" style="position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden"><label for="hp">Deja este campo vac\u00edo</label><input id="hp" name="comentario" type="text" tabindex="-1" autocomplete="off"></div>'
       +'<label class="chk"><input type="checkbox"><span>Acepto los <a href="#legal">t\u00e9rminos y condiciones</a></span></label>'
       +'<div class="cta-wrap"><button class="pillbtn solid big full" data-n>Recibir mi plan personalizado</button></div>'
-      +'<p class="note">En cuanto lo env\u00edes te doy el enlace para recibirlo por WhatsApp. Pon el n\u00famero con el que tienes WhatsApp, aunque sea de otro pa\u00eds: el plan solo va por ah\u00ed.</p>';
+      +'<p class="note">En cuanto lo env\u00edes te doy el enlace para recibirlo por WhatsApp.</p>';
   } else {
     h+='<div class="opts" id="op">';
     for(var k=0;k<s.o.length;k++)
