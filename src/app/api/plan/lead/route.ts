@@ -480,6 +480,39 @@ async function fichaDeInstagram(ig: string): Promise<Candidata | null> {
   return elegirFicha((r.datos as { contacts?: Candidata[] }).contacts ?? [], h, CAMPO.ig_handle);
 }
 
+// Sus otras fichas (2026-10-12): si su ficha de Instagram no apareció por el @, el backend
+// de Sofi la busca por su nombre y apellidos y, si aparece, la apunta debajo de su plan (al
+// final de la nota) y avisa en Slack. La regla vive allí (setter/plan_fichas.py), no aquí:
+// quién es la misma chica se decide en un solo sitio. Va a la misma casa que la masterclass
+// (MASTERCLASS_WEBHOOK_URL / _SECRET); sin ellas no se hace nada y no se rompe nada.
+async function revisarOtrasFichas(contactId: string) {
+  const base = process.env.MASTERCLASS_WEBHOOK_URL;
+  if (!base) return;
+  let url = "";
+  try {
+    url = new URL("/plan/fichas", base).toString();
+  } catch {
+    return;
+  }
+  try {
+    const r = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        ...(process.env.MASTERCLASS_WEBHOOK_SECRET
+          ? { "X-Setter-Secret": process.env.MASTERCLASS_WEBHOOK_SECRET }
+          : {}),
+      },
+      body: JSON.stringify({ contact_id: contactId }),
+      signal: AbortSignal.timeout(15000),
+      cache: "no-store",
+    });
+    if (!r.ok) console.error("plan/lead: /plan/fichas respondió", r.status);
+  } catch (e) {
+    console.error("plan/lead: /plan/fichas falló", String(e).slice(0, 200));
+  }
+}
+
 // La tarjeta. Si ya tiene una abierta en Captación (la de Sofi) se mueve; si no, nueva.
 async function ponerTarjeta(contactId: string, nombre: string) {
   const enCaptacion = await oportunidadAbierta(contactId, PIPELINE_CAPTACION);
@@ -758,8 +791,11 @@ export async function POST(req: Request) {
       if (!nota.ok) console.error("plan/lead: nota falló", nota.status, corto(nota));
     };
 
+    // Si el plan no quedó en su ficha de Instagram, después de la nota (lo nuevo se añade al
+    // final de ella) se pide al backend que busque sus otras fichas por el nombre.
+    const enSuInstagram = !!deInstagram && deInstagram.id === contactId;
     const r = await Promise.allSettled([
-      contacto(),
+      contacto().then(() => (enSuInstagram ? undefined : revisarOtrasFichas(contactId))),
       ponerTarjeta(contactId, nombre), // secundaria: si falla, la lead ya está guardada
       mandarAMeta ? enviarMeta(datosMeta) : Promise.resolve(),
     ]);
