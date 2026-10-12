@@ -2,6 +2,7 @@ import { NextResponse, after } from "next/server";
 import { createHash } from "node:crypto";
 import { urlDePlan, URL_BASE } from "@/lib/plan/token";
 import { cierreRecomendado } from "@/lib/plan/contenido";
+import { type Candidata, elegirFicha, normalizaHandle } from "@/lib/plan/instagram";
 
 /**
  * Formulario del plan personalizado (/plan) → GHL (y Meta, si está configurado).
@@ -15,9 +16,14 @@ import { cierreRecomendado } from "@/lib/plan/contenido";
  *      trampa tiene que llegar vacío y el email y el teléfono tienen que tener forma de
  *      email y de teléfono. La página ya valida lo mismo: esto es para lo que no pasa
  *      por la página.
- *   1. Upsert del contacto por email/teléfono — SIN etiquetas. Comprobado el 2026-09-17:
- *      si se le pasan, GHL SUSTITUYE las que tenía. Una chica que ya hablaba con Sofi
- *      perdía su estado entero al rellenar el formulario. Un reintento si GHL falla.
+ *   1. Su ficha de Instagram, si ya la tiene: se busca por el @ (`fichaDeInstagram`) y,
+ *      si aparece una sola, se escriben AHÍ su nombre, el correo, el teléfono y las
+ *      respuestas. Así la conversación de Instagram, el plan y el WhatsApp que manda
+ *      después quedan en una sola ficha, y su tarjeta de Captación pasa al Plan. Si no
+ *      la tiene (o no se puede escribir en ella), upsert del contacto por email/teléfono
+ *      como siempre — SIN etiquetas. Comprobado el 2026-09-17: si se le pasan, GHL
+ *      SUSTITUYE las que tenía. Una chica que ya hablaba con Sofi perdía su estado entero
+ *      al rellenar el formulario. Un reintento si GHL falla.
  *   2. RESPONDE YA, con el id del contacto. La página espera como mucho 4 s antes de
  *      pasar a /plan/gracias; antes se hacían 6-7 llamadas en serie y, si GHL iba lento,
  *      se iba sin el id. Lo demás va en `after()` (sigue corriendo tras responder):
@@ -457,6 +463,23 @@ async function oportunidadAbierta(contactId: string, pipelineId: string) {
 
 const corto = (r: Resp) => JSON.stringify(r.datos).slice(0, 300);
 
+// ── Su ficha de Instagram ─────────────────────────────────────────────────────
+// Por qué y con qué regla: src/lib/plan/instagram.ts.
+async function fichaDeInstagram(ig: string): Promise<Candidata | null> {
+  const h = normalizaHandle(ig);
+  if (h.length < 3) return null;
+  const r = await ghl("POST", "/contacts/search", {
+    locationId: process.env.GHL_LOCATION_ID,
+    pageLimit: 20,
+    query: h,
+  });
+  if (!r.ok) {
+    console.error("plan/lead: búsqueda por @ falló", r.status, corto(r));
+    return null;
+  }
+  return elegirFicha((r.datos as { contacts?: Candidata[] }).contacts ?? [], h, CAMPO.ig_handle);
+}
+
 // La tarjeta. Si ya tiene una abierta en Captación (la de Sofi) se mueve; si no, nueva.
 async function ponerTarjeta(contactId: string, nombre: string) {
   const enCaptacion = await oportunidadAbierta(contactId, PIPELINE_CAPTACION);
@@ -623,18 +646,45 @@ export async function POST(req: Request) {
       .filter(([, v]) => v)
       .map(([k, v]) => ({ id: CAMPO[k], value: v })),
   };
-  let up = await ghl("POST", "/contacts/upsert", cuerpoUpsert);
-  if (!up.ok && (up.status === 0 || up.status === 429 || up.status >= 500)) {
-    await espera(700);
-    up = await ghl("POST", "/contacts/upsert", cuerpoUpsert);
+
+  // 1a · si ya tiene ficha de Instagram, todo va a esa. El nombre se escribe porque su
+  // plan dice «El plan de <nombre>» y la ficha de Instagram se llama a veces como su @.
+  // El correo y el teléfono, solo si el hueco está vacío. Si GHL no deja (ese correo o
+  // ese teléfono ya están en otra ficha), se sigue como siempre, por el upsert.
+  let contactId = "";
+  const deInstagram = await fichaDeInstagram(ig);
+  if (deInstagram) {
+    const cambios = {
+      firstName: cuerpoUpsert.firstName,
+      lastName: cuerpoUpsert.lastName,
+      name: cuerpoUpsert.name,
+      customFields: cuerpoUpsert.customFields,
+      ...(deInstagram.email ? {} : { email }),
+      ...(deInstagram.phone ? {} : { phone: telefono }),
+    };
+    const put = await ghl("PUT", `/contacts/${deInstagram.id}`, cambios);
+    if (put.ok) {
+      contactId = deInstagram.id;
+      console.log("plan/lead: escrito en su ficha de Instagram", deInstagram.id);
+    } else {
+      console.warn("plan/lead: no se pudo escribir en su ficha de Instagram; upsert", put.status, corto(put));
+    }
   }
 
-  if (!up.ok) {
-    console.error("plan/lead: upsert falló", up.status, corto(up));
-    return NextResponse.json({ error: "crm" }, { status: 502 });
+  if (!contactId) {
+    let up = await ghl("POST", "/contacts/upsert", cuerpoUpsert);
+    if (!up.ok && (up.status === 0 || up.status === 429 || up.status >= 500)) {
+      await espera(700);
+      up = await ghl("POST", "/contacts/upsert", cuerpoUpsert);
+    }
+
+    if (!up.ok) {
+      console.error("plan/lead: upsert falló", up.status, corto(up));
+      return NextResponse.json({ error: "crm" }, { status: 502 });
+    }
+    contactId = (up.datos as { contact?: { id: string } }).contact?.id ?? "";
   }
 
-  const contactId = (up.datos as { contact?: { id: string } }).contact?.id;
   if (!contactId) {
     console.error("plan/lead: el upsert no devolvió id; sin tarjeta, etiquetas ni nota");
     return NextResponse.json({ ok: true });
