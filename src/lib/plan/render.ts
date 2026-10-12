@@ -127,7 +127,7 @@ export function renderPlan(p: PlanArmado): string {
   const comunidadTexto = p.menor
     ? `<p>En la <b>Comunidad de AR Academy</b> tienes el entorno correcto para empezar: estás con todas mis alumnas, tienes acceso a todos los eventos y a los directos conmigo, y las bases para empezar a trabajar con tu imagen. A tu ritmo y sin prisa.</p>
     <p><b>Antes de entrar, háblalo con tus padres.</b> Enséñales este plan y la clase 4, que es para ellos. En la llamada de bienvenida les pedimos que estén contigo: así lo empiezan juntos.</p>`
-    : `<p>Si ahora mismo no es el momento de la formación completa, no pasa nada: no tienes que esperar para empezar. En la <b>Comunidad de AR Academy</b> tienes el entorno correcto: estás con todas mis alumnas, tienes acceso a todos los eventos y a los directos conmigo, y las bases para empezar a generar ingresos con tu imagen.</p>
+    : `<p>En la <b>Comunidad de AR Academy</b> tienes el entorno correcto: estás con todas mis alumnas, tienes acceso a todos los eventos y a los directos conmigo, y las bases para empezar a generar ingresos con tu imagen.</p>
     <p>Es la forma de hacer tus tres pasos de esta semana con alguien al lado, y cuando estés lista para ir a por todo, ya sabes dónde estoy.</p>`;
 
   const cierre =
