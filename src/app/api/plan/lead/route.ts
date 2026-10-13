@@ -66,10 +66,11 @@ const API = "https://services.leadconnectorhq.com";
 // ── Pipelines ─────────────────────────────────────────────────────────────────
 // «Plan personalizado», creado por API el 2026-09-17.
 const PIPELINE_PLAN = "fBlrzlgSgTbZ5mlA9lh8";
+// La 1 («Formulario recibido») es donde entran todas (Carlos, 2026-10-13). Hasta ese día
+// el clic en WhatsApp de /plan/gracias las pasaba a una etapa «2 · WhatsApp iniciado» y la
+// 1 se quedaba vacía; esa etapa ya no existe. De la 2 («En prospección») en adelante las
+// mueve la setter a mano. Desde aquí no se tocan.
 const ETAPA_FORMULARIO_RECIBIDO = "e8d262bf-006e-4e59-93b9-3457d406b8d3";
-const ETAPA_WHATSAPP_INICIADO = "6bab6044-0db2-4904-8829-4f9269971094";
-// De la 3 («En prospección», desde el 2026-09-18) en adelante las mueve la setter a
-// mano. Desde aquí no se tocan.
 
 // «Captación», el de Sofi.
 const PIPELINE_CAPTACION = "lPD7Qhnb1Ak8Vlexzml8";
@@ -536,42 +537,6 @@ async function ponerTarjeta(contactId: string, nombre: string) {
   if (!opp.ok) console.error("plan/lead: oportunidad falló", opp.status, corto(opp));
 }
 
-// Aviso de /plan/gracias: pasa la tarjeta a «2 · WhatsApp iniciado». Como la tarjeta se
-// crea ahora en `after()`, puede que ella pulse antes de que exista: se reintenta unas
-// cuantas veces, con calma (va después de responder, nadie espera).
-async function moverAWhatsApp(b: Record<string, unknown>) {
-  let cid = /^[A-Za-z0-9]{10,40}$/.test(String(b.id ?? "")) ? String(b.id) : "";
-  const email = limpiar(b.email, 160).toLowerCase();
-  const telefono = limpiar(b.telefono, 40);
-  if (!cid && !email && !telefono) return;
-  for (let intento = 0; intento < 4; intento++) {
-    if (intento) await espera(2500);
-    if (!cid) {
-      // Sin id, se busca por email; si no hay email, por teléfono (antes se buscaba el
-      // teléfono en el campo email y nunca la encontraba).
-      const busca = await ghl("POST", "/contacts/search", {
-        locationId: process.env.GHL_LOCATION_ID,
-        pageLimit: 1,
-        filters: [email
-          ? { field: "email", operator: "eq", value: email }
-          : { field: "phone", operator: "eq", value: telefono }],
-      });
-      cid = (busca.datos as { contacts?: { id: string }[] }).contacts?.[0]?.id ?? "";
-      if (!cid) continue;
-    }
-    const opp = await oportunidadAbierta(cid, PIPELINE_PLAN);
-    if (!opp) continue;
-    if (opp.pipelineStageId !== ETAPA_FORMULARIO_RECIBIDO) return; // ya va más adelante
-    const mv = await ghl("PUT", `/opportunities/${opp.id}`, {
-      pipelineId: PIPELINE_PLAN,
-      pipelineStageId: ETAPA_WHATSAPP_INICIADO,
-    });
-    if (!mv.ok) console.error("plan/lead: paso a WhatsApp iniciado falló", mv.status, corto(mv));
-    return;
-  }
-  console.error("plan/lead: aviso de WhatsApp sin tarjeta que mover", cid ? "(con id)" : "(sin id)");
-}
-
 export async function POST(req: Request) {
   if (!origenPermitido(req)) {
     console.warn("plan/lead: origen no permitido", (req.headers.get("origin") || "").slice(0, 80));
@@ -593,16 +558,10 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Petición mal formada" }, { status: 400 });
   }
 
-  // ── aviso de clic en WhatsApp: mueve la tarjeta a la etapa 2 ──────────────
-  // Es el número que separa «rellenó el formulario» de «escribió de verdad».
-  // Si /plan/gracias trae el id que devolvimos al crear el contacto, se usa
-  // directamente: el buscador de GHL tarda unos segundos en indexar un contacto
-  // nuevo y, con la cuenta atrás de 10 s, buscarla por email podía llegar antes de
-  // que existiera para él. El email (o el teléfono) queda como respaldo.
+  // ── aviso de clic en WhatsApp ───────────────────────────────────────────────
+  // /plan/gracias lo sigue mandando, pero desde el 2026-10-13 ya no mueve la tarjeta: todas
+  // se quedan en la 1 hasta que una setter la coge (Carlos). Se contesta que sí y nada más.
   if (b.evento === "whatsapp_click") {
-    after(() =>
-      moverAWhatsApp(b).catch((e) => console.error("plan/lead: aviso de WhatsApp", String(e).slice(0, 200))),
-    );
     return NextResponse.json({ ok: true });
   }
 

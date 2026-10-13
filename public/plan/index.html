@@ -1406,10 +1406,9 @@ function enviarCRM(eid){
 
 /* Al terminar, /plan/gracias: la página del último paso, con el botón de
    WhatsApp y la cuenta atrás. Se espera a que el CRM devuelva el id del
-   contacto (como mucho 4 s) para que el aviso de «WhatsApp iniciado» no tenga
-   que buscarla por email —el buscador de GHL tarda unos segundos en indexar
-   un contacto nuevo—. Lo que necesita la página siguiente va en
-   sessionStorage, nada en la URL. */
+   contacto (como mucho 4 s): lo usa el aviso de clic de /plan/gracias, y el
+   buscador de GHL tarda unos segundos en indexar un contacto nuevo. Lo que
+   necesita la página siguiente va en sessionStorage, nada en la URL. */
 function finish(){
   // Una sola vez: el botón sigue pulsable mientras se desvanece (250 ms) y un doble
   // toque mandaba el formulario dos veces (dos upserts y dos tarjetas en paralelo).
