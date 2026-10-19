@@ -138,7 +138,7 @@ const TAG_ESTUDIANTE = "estudiante"; // ya existe en el vocabulario de Sofi
 // Tramo de ingresos (paso 2), una etiqueta por respuesta, con el texto tal cual (Carlos,
 // 2026-09-18). El separador « · » es el de las demás etiquetas de la cuenta.
 const TAG_INGRESOS: Record<string, string> = {
-  "Todavía nada": "ingresos · todavía nada",
+  "Todavía nada": "ingresos · todavía nada", // ya no sale en el formulario (19-10); por si llega una vieja
   "Menos de 750 €": "ingresos · menos de 750",
   "Entre 750 € y 1.500 €": "ingresos · 750 a 1.500",
   "Entre 1.500 € y 3.000 €": "ingresos · 1.500 a 3.000",
