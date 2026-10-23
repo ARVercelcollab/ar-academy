@@ -4,7 +4,7 @@ import { armarPlan } from "./contenido";
 import { renderPlan, esc } from "./render";
 
 /**
- * GET /plan/{token}            → el plan con el cierre de la formación (palabra ACCESO)
+ * GET /plan/{token}            → el plan con el cierre de la formación («¡QUIERO ACCEDER!»)
  * GET /plan/{token}/comunidad  → el mismo plan con el cierre de la Comunidad
  * ?previa=1                    → vista de la setter: no cuenta como abierto ni carga el píxel
  */

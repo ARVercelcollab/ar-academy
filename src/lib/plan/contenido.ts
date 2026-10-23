@@ -822,7 +822,7 @@ export function armarPlan(
 
 // ── Qué cierre lleva su plan ──────────────────────────────────────────────────
 // Carlos, 2026-10-07: las menores de 18 van directas a la Comunidad. El resto, formación
-// (palabra ACCESO) por defecto; si al prospectarla la setter ve que encaja mejor la
+// (mensaje «¡QUIERO ACCEDER!») por defecto; si al prospectarla la setter ve que encaja mejor la
 // Comunidad, manda el otro enlace de la nota. Sin reglas por dinero ni por país: «el
 // dinero no califica ni descalifica» (criterio de Carlos). La regla de los 24 años del
 // SOP no se aplica al plan.

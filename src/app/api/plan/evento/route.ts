@@ -7,7 +7,7 @@ import { sumarEtiquetas } from "@/lib/plan/ghl";
  *   abierto    → `plan · abierto`        (lo abrió y estuvo al menos 2,5 s)
  *   clase      → `plan · vio clase`      (dio al play en alguna clase)
  *   ruta       → `plan · vio la hoja de ruta` (dio al play en el vídeo de la hoja de ruta)
- *   acceso     → `plan · pulsó acceso`   (pulsó «Escribir ACCESO por WhatsApp»)
+ *   acceso     → `plan · pulsó acceso`   (pulsó «Enviar mi mensaje por WhatsApp», el de «¡QUIERO ACCEDER!»)
  *   comunidad  → `plan · pulsó comunidad`
  * Lo manda el navegador; los robots que abren el enlace para la vista previa de WhatsApp no
  * ejecutan JavaScript, así que no cuentan como abierto. La vista previa de la setter tampoco.

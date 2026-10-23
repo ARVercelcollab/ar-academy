@@ -727,7 +727,7 @@ export async function POST(req: Request) {
               ]
             : [
                 "",
-                "Su plan personalizado (formación, palabra ACCESO). Se manda después de prospectarla:",
+                "Su plan personalizado (formación, mensaje «¡QUIERO ACCEDER!»). Se manda después de prospectarla:",
                 recomendado,
                 "Si al hablar con ella encaja mejor la Comunidad, el mismo plan con ese cierre:",
                 urlDePlan(contactId, "comunidad"),
