@@ -59,6 +59,9 @@ const CSS_EXTRA = `<style>
 .capt{flex:none;width:44px;font-variant-numeric:tabular-nums;color:var(--vino);font-weight:500;font-size:13px}
 .capn em{font-style:normal;display:inline-block;margin:4px 0 0 8px;font-size:9.5px;letter-spacing:.14em;color:var(--vino);border:1px dashed var(--vino);padding:3px 7px;font-weight:500;text-transform:uppercase;vertical-align:1px}
 .rcta{margin-top:30px}
+/* Los próximos pasos de la Comunidad (cierre nuevo) */
+.nxl{display:block;margin:30px 0 4px;font-size:10.5px;letter-spacing:.16em;color:var(--tx-3);font-weight:500;text-transform:uppercase}
+.nx{margin-bottom:8px}
 </style>`;
 
 export function renderPlan(p: PlanArmado): string {
@@ -190,6 +193,33 @@ export function renderPlan(p: PlanArmado): string {
   // lista», sin mandarla fuera del plan (ni canal ni Instagram), y directa a su paso: ACCESO por
   // WhatsApp, o el formulario de pago de la Comunidad (/comunidad#registro lo abre solo).
   const sentido = `<p>Si has visto todo esto y te hace sentido, ya sabes cómo trabajamos. Con esta hoja de ruta preparamos a cada alumna en todas sus facetas para que sea una profesional excelente, no solo en el modelaje, sino en todas las áreas de su vida.`;
+  // Comunidad: qué pasa cuando entra (Carlos, 23-10: la llamada de onboarding y los próximos
+  // pasos). Tras pagar, la web le dice que revise el correo para entrar (Skool); la llamada de
+  // bienvenida la agenda el equipo por WhatsApp (negocio.md §2; con la menor, con sus padres).
+  const pasosCom: [string, string][] = [
+    ["Rellenas tus datos y haces el pago", p.menor ? "Desde el botón de abajo, con tus padres al lado." : "Desde el botón de abajo. Te lleva directa."],
+    ["Te llega un correo con tu acceso", "Con él entras a la Comunidad, donde están todas mis alumnas."],
+    [
+      "Agendamos tu llamada de bienvenida",
+      p.menor
+        ? "Te escribimos por WhatsApp para buscar el día. Es con una persona de mi equipo y con tus padres: les explicamos cómo funciona todo y por dónde vas a empezar."
+        : "Te escribimos por WhatsApp para buscar el día. Una persona de mi equipo te enseña exactamente cómo funciona la Comunidad y por dónde empezar con tu plan.",
+    ],
+    ["Empiezas por la mentalidad", "Es el paso 1 de la hoja de ruta y el primer módulo que te espera dentro. A tu ritmo."],
+  ];
+  // Lo que tiene en la Comunidad, con la llamada de bienvenida como un «además». A la menor se le
+  // pide que lo hable con sus padres; que estén en la llamada lo dice el paso 3.
+  const comunidadNuevo = `<p>En la <b>Comunidad de AR Academy</b> tienes el entorno correcto${p.menor ? " para empezar" : ""}: estás con todas mis alumnas, tienes acceso a todos los eventos y a los directos conmigo, y las bases para empezar a ${p.menor ? "trabajar con tu imagen, a tu ritmo y sin prisa" : "generar ingresos con tu imagen"}. <b>Y además, una llamada de bienvenida</b> con una persona de mi equipo, para que conozcas exactamente cómo funciona la Comunidad y cuáles son tus próximos pasos.</p>${
+    p.menor
+      ? `
+    <p><b>Antes de entrar, háblalo con tus padres.</b> Enséñales este plan y la clase 4, que es para ellos.</p>`
+      : ""
+  }`;
+  const proximosCom = `
+    <small class="nxl">Así entras</small>
+    <div class="steps nx">
+      ${pasosCom.map(([t, x], k) => `<div class="step"><span class="n">${k + 1}</span><div><h3>${esc(t)}</h3><p>${esc(x)}</p></div></div>`).join("\n      ")}
+    </div>`;
   const cierreNuevo =
     p.cierre === "comunidad"
       ? `<section class="top-line" id="acceso">
@@ -197,11 +227,10 @@ export function renderPlan(p: PlanArmado): string {
     <span class="lab">${pad(n + 1)} · Tu siguiente paso</span>
     <h2>Si estás lista, <span class="it">empieza acompañada.</span></h2>
     ${sentido}</p>
-    ${comunidadTexto}
+    ${comunidadNuevo}${proximosCom}
     <div class="cta-wrap">
       <a class="pillbtn big full solid" id="combtn" href="${esc(p.urlComunidad)}#registro" target="_blank" rel="noopener">Quiero acceder a la Comunidad de AR Academy</a>
     </div>
-    <p class="soft">${p.menor ? "Y si tienes cualquier duda, o la tienen tus padres, escríbeme por WhatsApp." : "Y si tienes cualquier duda, contéstame por WhatsApp."} Te leo yo. 🤍</p>
   </div>
 </section>`
       : `<section class="top-line" id="acceso">
