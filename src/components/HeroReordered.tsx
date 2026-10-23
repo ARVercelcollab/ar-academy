@@ -219,14 +219,14 @@ export default function HeroReordered() {
             </p>
             <button className={styles.priceCta} onClick={handleStart}>
               <span className={styles.priceCtaMain}>
-                Reserva tu plaza · <strong>27€</strong>/mes
+                Reserva tu plaza · <strong>99€</strong> pago único
               </span>
               <span className={styles.priceCtaSub}>
-                Antes 97€/mes · precio por tiempo limitado
+                Acceso para siempre · sin cuotas cada mes
               </span>
             </button>
             <p className={styles.afterCta}>
-              <strong>Menos de lo que te cuesta una cena.</strong>
+              <strong>Un solo pago, y es para siempre.</strong>
               <br />
               <em>
                 Saldrás siendo otra mujer: más segura, más auténtica, más

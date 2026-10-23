@@ -24,9 +24,8 @@ export default function FinalCta() {
             <span className={styles.priceLabel}>Únete hoy</span>
             <div className={styles.priceRow}>
               <span className={styles.price}>
-                <strong>27€</strong>/mes
+                <strong>99€</strong> pago único
               </span>
-              <span className={styles.priceOld}>97€</span>
             </div>
             <p className={styles.priceSubtext}>
               Menos de lo que cuesta una sesión de fotos que no te lleva a

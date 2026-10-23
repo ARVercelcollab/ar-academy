@@ -19,12 +19,12 @@ const faqs = [
     answerRest: " Los eventos presenciales son un bonus, no un requisito.",
   },
   {
-    question: "¿Qué pasa si no me gusta? ¿Puedo cancelar?",
+    question: "¿Tengo que pagar cada mes?",
     answer: "",
     answerBold: "",
     answerRest:
-      "Sí. Sin permanencia ni letra pequeña. ",
-    answerBold2: "Cancelas cuando quieras desde tu perfil.",
+      "No. Es un solo pago de 99 €, sin cuotas ni letra pequeña. ",
+    answerBold2: "Y el acceso es para siempre.",
   },
   {
     question: "Ya tengo 25 años. ¿Es demasiado tarde?",

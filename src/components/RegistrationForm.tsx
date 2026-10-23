@@ -145,7 +145,7 @@ function PaymentStep({
       const data = await res.json();
 
       if (data.success) {
-        trackEvent("Purchase", { content_name: "AR Academy", currency: "EUR", value: 27 });
+        trackEvent("Purchase", { content_name: "AR Academy", currency: "EUR", value: 99 });
         const params = new URLSearchParams({
           name: userData.name,
           email: userData.email,
@@ -317,8 +317,8 @@ export default function RegistrationForm() {
   const handleContinue = () => {
     if (step === "payment") return;
     if (validate()) {
-      trackEvent("Lead", { content_name: "AR Academy", currency: "EUR", value: 27 });
-      trackEvent("InitiateCheckout", { content_name: "AR Academy", currency: "EUR", value: 27 });
+      trackEvent("Lead", { content_name: "AR Academy", currency: "EUR", value: 99 });
+      trackEvent("InitiateCheckout", { content_name: "AR Academy", currency: "EUR", value: 99 });
       setStep("payment");
       scrollToForm();
     } else {
@@ -340,7 +340,7 @@ export default function RegistrationForm() {
         <div className={styles.successMessage}>
           <h3>¡Bienvenida a AR Academy!</h3>
           <p>
-            Tu suscripción se ha activado correctamente. Revisa tu correo
+            Tu pago se ha completado correctamente. Revisa tu correo
             electrónico para acceder a la comunidad.
           </p>
         </div>

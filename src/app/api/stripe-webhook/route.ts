@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { stripe } from "@/lib/stripe";
+import { stripe, PAGO_COMUNIDAD } from "@/lib/stripe";
 import Stripe from "stripe";
 
 export async function POST(req: NextRequest) {
@@ -23,8 +23,11 @@ export async function POST(req: NextRequest) {
     case "invoice.payment_succeeded": {
       const invoice = event.data.object;
 
-      // Only fire on the first invoice of a new subscription, not renewals
-      if (invoice.billing_reason !== "subscription_create") {
+      // Se avisa a Make en el primer cobro de una suscripción (la Comunidad a 27 €/mes, hasta el
+      // 23-10), nunca en las renovaciones, y en el pago único de la Comunidad (99 €): el del
+      // formulario de la web y el del enlace de pago, que crea la factura con la misma marca.
+      const pagoUnico = invoice.metadata?.producto === PAGO_COMUNIDAD;
+      if (invoice.billing_reason !== "subscription_create" && !pagoUnico) {
         break;
       }
 
@@ -56,7 +59,9 @@ export async function POST(req: NextRequest) {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          // El escenario de Make espera este nombre: se mantiene también en el pago único.
           event: "subscription_created",
+          pago: pagoUnico ? "unico" : "suscripcion",
           name: customer.name,
           email: customer.email,
           phone: customer.phone,

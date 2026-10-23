@@ -35,7 +35,7 @@ function BienvenidaContent() {
           ¡Bienvenida a <strong>AR Academy!</strong>
         </h1>
         <p className={styles.text}>
-          Tu suscripción se ha activado correctamente.
+          Tu pago se ha completado correctamente.
           <br />
           Revisa tu correo electrónico para acceder a la comunidad.
         </p>
