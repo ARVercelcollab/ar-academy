@@ -147,7 +147,7 @@ export function renderPlan(p: PlanArmado): string {
   const mmssR = (s: number) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
   const tramoSuyo = vr?.capitulos.find((c) => c.pasos && p.pasoInicio >= c.pasos[0] && p.pasoInicio <= c.pasos[1]);
   const introRuta = vr
-    ? `<p>Con ella, Irene ha desfilado en la París Fashion Week, Andrea va a trabajar con Mercedes-Benz en Alemania e Iliana tiene hoy su propia academia de modelos en México. <b>Antes de que la leas, quiero contártela yo.</b></p>
+    ? `<p>Con ella, Irene ha desfilado en la Paris Fashion Week, Andrea va a trabajar con Mercedes-Benz y con Mattel, Mar ha salido en Vogue e Iliana tiene hoy su propia academia de modelos en México. <b>Antes de que la leas, quiero contártela yo.</b></p>
     <div class="rv" id="rv">
       <div class="clf" data-yt="${esc(vr.yt)}"><img src="https://i.ytimg.com/vi/${esc(vr.yt)}/maxresdefault.jpg" alt="" loading="lazy" onload="if(this.naturalWidth<200)this.onerror()" onerror="this.onerror=this.onload=null;this.src=this.src.replace('maxresdefault','sddefault')"><div class="play"></div><span class="dur">${esc(vr.etiqueta)}</span></div>
       <div class="rvt"><small>La hoja de ruta · contada por mí</small><h3>${esc(vr.titulo)}</h3></div>
@@ -179,16 +179,55 @@ export function renderPlan(p: PlanArmado): string {
   const comunidadTexto = p.menor
     ? `<p>En la <b>Comunidad de AR Academy</b> tienes el entorno correcto para empezar: estás con todas mis alumnas, tienes acceso a todos los eventos y a los directos conmigo, y las bases para empezar a trabajar con tu imagen. A tu ritmo y sin prisa.</p>
     <p><b>Antes de entrar, háblalo con tus padres.</b> Enséñales este plan y la clase 4, que es para ellos. En la llamada de bienvenida les pedimos que estén contigo: así lo empiezan juntos.</p>`
-    : `<p>En la <b>Comunidad de AR Academy</b> tienes el entorno correcto: estás con todas mis alumnas, tienes acceso a todos los eventos y a los directos conmigo, y las bases para empezar a generar ingresos con tu imagen.</p>
+    : `<p>En la <b>Comunidad de AR Academy</b> tienes el entorno correcto: estás con todas mis alumnas, tienes acceso a todos los eventos y a los directos conmigo, y las bases para empezar a generar ingresos con tu imagen.</p>`;
+  // El cierre de antes remata con esta frase; el nuevo («si estás lista») no la lleva.
+  const comunidadCola = p.menor
+    ? ""
+    : `
     <p>Es la forma de hacer tus tres pasos de esta semana con alguien al lado, y cuando estés lista para ir a por todo, ya sabes dónde estoy.</p>`;
 
-  const cierre =
+  // Los cierres nuevos (Carlos, 23-10), en prueba junto al vídeo de la hoja de ruta: «si estás
+  // lista», sin mandarla fuera del plan (ni canal ni Instagram), y directa a su paso: ACCESO por
+  // WhatsApp, o el formulario de pago de la Comunidad (/comunidad#registro lo abre solo).
+  const sentido = `<p>Si has visto todo esto y te hace sentido, ya sabes cómo trabajamos. Con esta hoja de ruta preparamos a cada alumna en todas sus facetas para que sea una profesional excelente, no solo en el modelaje, sino en todas las áreas de su vida.`;
+  const cierreNuevo =
     p.cierre === "comunidad"
       ? `<section class="top-line" id="acceso">
   <div class="wrap">
     <span class="lab">${pad(n + 1)} · Tu siguiente paso</span>
-    <h2>Empieza <span class="it">acompañada.</span></h2>
+    <h2>Si estás lista, <span class="it">empieza acompañada.</span></h2>
+    ${sentido}</p>
     ${comunidadTexto}
+    <div class="cta-wrap">
+      <a class="pillbtn big full solid" id="combtn" href="${esc(p.urlComunidad)}#registro" target="_blank" rel="noopener">Quiero acceder a la Comunidad de AR Academy</a>
+    </div>
+    <p class="soft">${p.menor ? "Y si tienes cualquier duda, o la tienen tus padres, escríbeme por WhatsApp." : "Y si tienes cualquier duda, contéstame por WhatsApp."} Te leo yo. 🤍</p>
+  </div>
+</section>`
+      : `<section class="top-line" id="acceso">
+  <div class="wrap">
+    <span class="lab">${pad(n + 1)} · Tu siguiente paso</span>
+    <h2>Si estás lista, <span class="it">da el paso.</span></h2>
+    ${sentido} Y le abrimos un abanico de oportunidades en marcas, castings, pasarelas y contenido.</p>
+    <p>Si tienes claro que quieres trabajar con nosotros: cada mes abrimos <b>un número limitado de plazas</b> para trabajar conmigo y con mi equipo, acompañada de principio a fin. No trabajamos con todo el mundo, solo con chicas comprometidas y decididas.</p>
+    <div class="wa">
+      <small>Escríbeme esta palabra por WhatsApp</small>
+      <p><span id="wamsg"></span><span class="caret"></span></p>
+    </div>
+    <div class="cta-wrap">
+      <a class="pillbtn big full btnwa" id="wabtn" href="https://wa.me/34722655343?text=ACCESO" target="_blank" rel="noopener">Escribir ACCESO por WhatsApp</a>
+    </div>
+  </div>
+</section>`;
+
+  const cierre = vr
+    ? cierreNuevo
+    : p.cierre === "comunidad"
+      ? `<section class="top-line" id="acceso">
+  <div class="wrap">
+    <span class="lab">${pad(n + 1)} · Tu siguiente paso</span>
+    <h2>Empieza <span class="it">acompañada.</span></h2>
+    ${comunidadTexto}${comunidadCola}
     <div class="cta-wrap">
       <a class="pillbtn big full solid" id="combtn" href="${esc(p.urlComunidad)}" target="_blank" rel="noopener">Entrar en la Comunidad de AR Academy</a>
     </div>
