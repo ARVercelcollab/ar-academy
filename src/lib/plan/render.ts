@@ -40,6 +40,22 @@ const CSS_EXTRA = `<style>
 .accv{margin:22px 0 0;border:1px solid var(--line)}
 .accv .clf{cursor:pointer}
 .accvt{padding:14px 16px;margin:0 !important;font-size:14.5px}
+/* La hoja de ruta contada por Ari (bloque 05) */
+.rv{margin:26px 0 0;border:1px solid var(--line)}
+.rv .clf .play{width:68px;height:68px}
+.rv .clf .play::before{border-left-width:18px;border-top-width:10px;border-bottom-width:10px;margin-left:5px}
+.rvt{padding:15px 16px}
+.rvt small{display:block;font-size:9.5px;letter-spacing:.14em;color:var(--vino);font-weight:500;margin-bottom:6px;text-transform:uppercase}
+.rvt h3{margin:0;font-size:15px;font-weight:400;line-height:1.3;letter-spacing:-.01em}
+.caps{margin:20px 0 30px}
+.caps small{display:block;font-size:10.5px;letter-spacing:.16em;color:var(--tx-3);font-weight:500;margin-bottom:8px;text-transform:uppercase}
+.caps ol{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+.cap{all:unset;box-sizing:border-box;display:flex;gap:14px;align-items:baseline;width:100%;padding:12px 2px;border-bottom:1px solid var(--line);cursor:pointer;font-family:var(--sans);color:var(--tx-2);font-size:15px;font-weight:300;line-height:1.35;transition:color .2s}
+.cap:hover,.cap.on{color:var(--tx)}
+.cap:focus-visible{outline:2px solid var(--vino);outline-offset:2px}
+.capt{flex:none;width:44px;font-variant-numeric:tabular-nums;color:var(--vino);font-weight:500;font-size:13px}
+.capn em{font-style:normal;display:inline-block;margin:4px 0 0 8px;font-size:9.5px;letter-spacing:.14em;color:var(--vino);border:1px dashed var(--vino);padding:3px 7px;font-weight:500;text-transform:uppercase;vertical-align:1px}
+.rcta{margin-top:30px}
 </style>`;
 
 export function renderPlan(p: PlanArmado): string {
@@ -119,6 +135,39 @@ export function renderPlan(p: PlanArmado): string {
     <div class="accv">
       <div class="clf" data-yt="${esc(va.yt)}" data-start="${seg(va.start)}"><img src="https://i.ytimg.com/vi/${esc(va.yt)}/maxresdefault.jpg" alt="" loading="lazy" onload="if(this.naturalWidth<200)this.onerror()" onerror="this.onerror=this.onload=null;this.src=this.src.replace('maxresdefault','sddefault')"><div class="play"></div><span class="dur">${esc(va.etiqueta)}</span></div>
       <p class="accvt">${esc(va.titulo)}</p>
+    </div>`
+    : "";
+
+  // La hoja de ruta contada por Ari: va antes de la ruta por escrito, con sus capítulos. El tramo
+  // en el que empieza su plan lleva la misma marca que el paso en la ruta.
+  const vr = p.videoRuta;
+  const mmssR = (s: number) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
+  const tramoSuyo = vr?.capitulos.find((c) => c.pasos && p.pasoInicio >= c.pasos[0] && p.pasoInicio <= c.pasos[1]);
+  const introRuta = vr
+    ? `<p>Con ella, Irene ha desfilado en la París Fashion Week, Andrea va a trabajar con Mercedes-Benz en Alemania e Iliana tiene hoy su propia academia de modelos en México. <b>Antes de que la leas, quiero contártela yo.</b></p>
+    <div class="rv" id="rv">
+      <div class="clf" data-yt="${esc(vr.yt)}"><img src="https://i.ytimg.com/vi/${esc(vr.yt)}/maxresdefault.jpg" alt="" loading="lazy" onload="if(this.naturalWidth<200)this.onerror()" onerror="this.onerror=this.onload=null;this.src=this.src.replace('maxresdefault','sddefault')"><div class="play"></div><span class="dur">${esc(vr.etiqueta)}</span></div>
+      <div class="rvt"><small>La hoja de ruta · contada por mí</small><h3>${esc(vr.titulo)}</h3></div>
+    </div>
+    <div class="caps">
+      <small>Lo que vas a ver</small>
+      <ol>
+        ${vr.capitulos
+          .map(
+            (c) =>
+              `<li><button class="cap" data-start="${seg(c.s)}"><span class="capt">${mmssR(seg(c.s))}</span><span class="capn">${esc(c.t)}${c === tramoSuyo ? "<em>Por aquí empieza tu plan</em>" : ""}</span></button></li>`,
+          )
+          .join("\n        ")}
+      </ol>
+    </div>
+    <p>Y aquí abajo la tienes por escrito, paso a paso. En cada paso te dejo quién lo imparte y, donde la hay, <b>una clase abierta</b>: para que veas un poco de lo que hay dentro de la academia y de lo que trabajamos con nuestras alumnas.</p>`
+    : `<p>En cada paso te dejo quién lo imparte y, donde la hay, <b>una clase abierta</b>: para que veas un poco de lo que hay dentro de la academia y de lo que trabajamos con nuestras alumnas.</p>`;
+  // Al final de la ruta, las ganas de hacerla acompañada: lleva a su siguiente paso (#acceso).
+  const ctaRuta = vr
+    ? `
+    <div class="rcta">
+      <p>Este orden lo puedes seguir sola. Lo que cambia cuando lo haces acompañada es que no vas a ciegas: alguien revisa lo que haces y te dice qué está bien, qué no y por dónde seguir.</p>
+      <div class="cta-wrap"><a class="pillbtn big full solid" href="#acceso">Quiero hacer este camino acompañada</a></div>
     </div>`
     : "";
 
@@ -251,12 +300,12 @@ ${CSS_EXTRA}
     <span class="lab">05 · El camino completo</span>
     <h2>Esto es lo que hace falta. <span class="it">En este orden.</span></h2>
     <p>No es un temario. Es la hoja de ruta que siguen mis alumnas, la secuencia que llevamos tres años viendo funcionar, y cada paso existe porque el anterior lo hizo posible.</p>
-    <p>En cada paso te dejo quién lo imparte y, donde la hay, <b>una clase abierta</b>: para que veas un poco de lo que hay dentro de la academia y de lo que trabajamos con nuestras alumnas.</p>
+    ${introRuta}
     <div class="route" id="route">
       <div class="rline"><i id="rl"></i></div>
       ${ruta}
     </div>
-    <p class="kick">${rico(p.remate)}</p>
+    <p class="kick">${rico(p.remate)}</p>${ctaRuta}
   </div>
 </section>
 ${caso}
@@ -342,7 +391,7 @@ function avisa(ev,extra){
   try{ fetch('/api/plan/evento',{method:'POST',headers:{'Content-Type':'application/json'},body:body,keepalive:true}) }catch(e){}
 }
 setTimeout(function(){ if(document.visibilityState!=='hidden') avisa('abierto'); },2500);
-function embed(caja,id,s){
+function embed(caja,id,s,ev){
   if(caja.querySelector('iframe'))return;
   var f=document.createElement('iframe');
   /* La página no manda «de dónde vienes» (no-referrer: la URL lleva su token), pero el
@@ -353,7 +402,7 @@ function embed(caja,id,s){
   f.src='https://www.youtube-nocookie.com/embed/'+id+'?autoplay=1&rel=0&modestbranding=1&playsinline=1'+(s>0?'&start='+s:'');
   f.allow='autoplay; encrypted-media; picture-in-picture; fullscreen';f.allowFullscreen=true;f.title='Clase';
   caja.appendChild(f);
-  avisa('clase',id);
+  avisa(ev||'clase',id);
 }
 var N=P.nclases||4,K='plan_vistas_'+(P.t||'x').slice(-8),seen=[];
 for(var z=0;z<N;z++)seen.push(false);
@@ -384,6 +433,21 @@ document.querySelectorAll('.cchip[data-yt]').forEach(function(ch){
     pl.scrollIntoView({block:'nearest',behavior:RM?'auto':'smooth'});
   });
 });
+/* la hoja de ruta contada por Ari: el vídeo y sus capítulos (cada uno lo arranca en su minuto) */
+var rv=document.querySelector('#rv .clf');
+if(rv){
+  rv.setAttribute('role','button');rv.setAttribute('tabindex','0');rv.setAttribute('aria-label','Ver el vídeo de la hoja de ruta');
+  var abreRV=function(s){ var f=rv.querySelector('iframe'); if(f) rv.removeChild(f); embed(rv,rv.dataset.yt,s,'ruta'); };
+  rv.addEventListener('click',function(){ if(!rv.querySelector('iframe')) abreRV(0); });
+  rv.addEventListener('keydown',function(e){ if((e.key==='Enter'||e.key===' ')&&!rv.querySelector('iframe')){e.preventDefault();abreRV(0);} });
+  document.querySelectorAll('.cap').forEach(function(b){
+    b.addEventListener('click',function(){
+      document.querySelectorAll('.cap').forEach(function(o){o.classList.remove('on')});
+      b.classList.add('on'); abreRV(+b.dataset.start||0);
+      rv.scrollIntoView({block:'center',behavior:RM?'auto':'smooth'});
+    });
+  });
+}
 /* el vídeo del bloque final */
 document.querySelectorAll('.accv .clf').forEach(function(caja){
   caja.setAttribute('role','button');caja.setAttribute('tabindex','0');caja.setAttribute('aria-label','Ver la clase');

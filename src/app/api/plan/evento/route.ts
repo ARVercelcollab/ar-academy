@@ -6,6 +6,7 @@ import { sumarEtiquetas } from "@/lib/plan/ghl";
  * Lo que hace ella dentro de su plan, como etiquetas en GHL (se suman, nunca se quitan):
  *   abierto    → `plan · abierto`        (lo abrió y estuvo al menos 2,5 s)
  *   clase      → `plan · vio clase`      (dio al play en alguna clase)
+ *   ruta       → `plan · vio la hoja de ruta` (dio al play en el vídeo de la hoja de ruta)
  *   acceso     → `plan · pulsó acceso`   (pulsó «Escribir ACCESO por WhatsApp»)
  *   comunidad  → `plan · pulsó comunidad`
  * Lo manda el navegador; los robots que abren el enlace para la vista previa de WhatsApp no
@@ -16,6 +17,7 @@ import { sumarEtiquetas } from "@/lib/plan/ghl";
 const ETIQUETA = new Map<string, string>([
   ["abierto", "plan · abierto"],
   ["clase", "plan · vio clase"],
+  ["ruta", "plan · vio la hoja de ruta"],
   ["acceso", "plan · pulsó acceso"],
   ["comunidad", "plan · pulsó comunidad"],
 ]);

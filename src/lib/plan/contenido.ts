@@ -55,6 +55,9 @@ export type PasoRuta = {
   final?: boolean;
 };
 export type Video = { yt: string; start?: number; titulo: string; etiqueta: string };
+// Un capítulo del vídeo de la hoja de ruta: segundo en el que empieza, y los pasos que cuenta.
+export type Capitulo = { s: number; t: string; pasos?: [number, number] };
+export type VideoRuta = Video & { capitulos: Capitulo[] };
 
 export type PlanArmado = {
   token: string;
@@ -76,6 +79,7 @@ export type PlanArmado = {
   remate: string;
   caso: Caso | null;
   videoAcceso: Video | null; // el vídeo del bloque final (solo en el cierre de formación)
+  videoRuta: VideoRuta | null; // la hoja de ruta contada por Ari, antes de la ruta por escrito
 };
 
 // ── Opciones literales del formulario ─────────────────────────────────────────
@@ -732,11 +736,29 @@ export const CASO_POR_PROBLEMA: Partial<Record<ClaveProblema, Caso>> = {};
 // cuando esté grabado. Mientras, el bloque final va sin vídeo.
 const VIDEO_ACCESO: Video | null = null;
 
+// La hoja de ruta contada por Ari (Carlos, 23-10): va en el bloque 05, antes de la ruta por
+// escrito, y la ven también las menores. Oculto en YouTube, 18:28. Los capítulos salen de su
+// transcripción; cada uno arranca un par de segundos antes de que ella empiece la frase.
+const VIDEO_RUTA: VideoRuta = {
+  yt: "a5wyV3hVgu8",
+  titulo: "LOS PASOS EXACTOS PARA VIVIR DEL MODELAJE EN 2026 / 2027",
+  etiqueta: "Vídeo · 18 min",
+  capitulos: [
+    { s: 0, t: "No fallaste tú: falló el orden" },
+    { s: 103, t: "Por qué casi todas empiezan por el paso 7" },
+    { s: 215, t: "Tramo 1 · La cabeza y la base", pasos: [1, 3] },
+    { s: 449, t: "Tramo 2 · Cómo te ven", pasos: [4, 6] },
+    { s: 704, t: "Tramo 3 · La técnica y el trabajo", pasos: [7, 9] },
+    { s: 966, t: "Paso 10 · La agencia, y quién entra de verdad", pasos: [10, 10] },
+    { s: 1041, t: "Sola o acompañada" },
+  ],
+};
+
 // ── Armar el plan ─────────────────────────────────────────────────────────────
 export function armarPlan(
   f: Ficha,
   token: string,
-  opts: { previa: boolean; cierre: "formacion" | "comunidad" },
+  opts: { previa: boolean; cierre: "formacion" | "comunidad"; ruta?: boolean },
 ): PlanArmado {
   const rp = clave(PROBLEMA, f.dolor, PISTAS_PROBLEMA);
   const ro = clave(OBJETIVO, f.objetivo, PISTAS_OBJETIVO);
@@ -802,6 +824,8 @@ export function armarPlan(
     remate: bp.remate,
     caso: CASO_POR_PROBLEMA[kp] ?? null,
     videoAcceso: menor ? null : VIDEO_ACCESO,
+    // En prueba hasta que Carlos lo apruebe: solo sale con ?prueba=ruta.
+    videoRuta: opts.ruta ? VIDEO_RUTA : null,
   };
 }
 

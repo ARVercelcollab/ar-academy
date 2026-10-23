@@ -7,6 +7,7 @@ import { renderPlan, esc } from "./render";
  * GET /plan/{token}            → el plan con el cierre de la formación (palabra ACCESO)
  * GET /plan/{token}/comunidad  → el mismo plan con el cierre de la Comunidad
  * ?previa=1                    → vista de la setter: no cuenta como abierto ni carga el píxel
+ * ?prueba=ruta                 → con el vídeo de la hoja de ruta en el bloque 05 (en prueba)
  */
 export async function servirPlan(req: Request, token: string, cierre: "formacion" | "comunidad") {
   const cabeceras = {
@@ -34,9 +35,11 @@ export async function servirPlan(req: Request, token: string, cierre: "formacion
   }
   if (!ficha) return new Response(paginaNoEncontrada(), { status: 404, headers: cabeceras });
 
-  const previa = new URL(req.url).searchParams.get("previa") === "1";
+  const sp = new URL(req.url).searchParams;
+  const previa = sp.get("previa") === "1";
+  const ruta = sp.get("prueba") === "ruta";
   try {
-    const html = renderPlan(armarPlan(ficha, token, { previa, cierre }));
+    const html = renderPlan(armarPlan(ficha, token, { previa, cierre, ruta }));
     return new Response(html, { status: 200, headers: cabeceras });
   } catch (e) {
     // Un dato de la ficha que las tablas no esperan no puede dejarla ante una página rota.
