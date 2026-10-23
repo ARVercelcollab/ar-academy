@@ -35,11 +35,8 @@ function mayuscula(s: string): string {
   return s ? s.charAt(0).toUpperCase() + s.slice(1) : s;
 }
 
-// Estilos que la plantilla de /plan/ejemplo no trae: el vídeo del bloque final.
+// Estilos que la plantilla de /plan/ejemplo no trae: la hoja de ruta contada por Ari y el cierre.
 const CSS_EXTRA = `<style>
-.accv{margin:22px 0 0;border:1px solid var(--line)}
-.accv .clf{cursor:pointer}
-.accvt{padding:14px 16px;margin:0 !important;font-size:14.5px}
 /* La hoja de ruta contada por Ari (bloque 05) */
 .rv{margin:26px 0 0;border:1px solid var(--line)}
 /* el play abajo, en la mesa de la miniatura, para que no tape el mapa */
@@ -135,24 +132,12 @@ export function renderPlan(p: PlanArmado): string {
   const n = p.caso ? 7 : 6;
   const pad = (x: number) => (x < 10 ? "0" + x : String(x));
 
-  // El vídeo del bloque final: miniatura y, al pulsar, el reproductor (mismo patrón que las clases).
-  const va = p.videoAcceso;
-  const videoAcceso = va
-    ? `
-    <p>Y si solo te da tiempo a ver una cosa, que sea esta: cómo trabajamos con cada alumna, paso a paso, contado por mí.</p>
-    <div class="accv">
-      <div class="clf" data-yt="${esc(va.yt)}" data-start="${seg(va.start)}"><img src="https://i.ytimg.com/vi/${esc(va.yt)}/maxresdefault.jpg" alt="" loading="lazy" onload="if(this.naturalWidth<200)this.onerror()" onerror="this.onerror=this.onload=null;this.src=this.src.replace('maxresdefault','sddefault')"><div class="play"></div></div>
-      <p class="accvt">${esc(va.titulo)}</p>
-    </div>`
-    : "";
-
   // La hoja de ruta contada por Ari: va antes de la ruta por escrito, con sus capítulos. El tramo
   // en el que empieza su plan lleva la misma marca que el paso en la ruta.
   const vr = p.videoRuta;
   const mmssR = (s: number) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
-  const tramoSuyo = vr?.capitulos.find((c) => c.pasos && p.pasoInicio >= c.pasos[0] && p.pasoInicio <= c.pasos[1]);
-  const introRuta = vr
-    ? `<p>Con ella, Irene ha desfilado en la Paris Fashion Week, Andrea va a trabajar con Mercedes-Benz y con Mattel, Mar ha salido en Vogue e Iliana tiene hoy su propia academia de modelos en México. <b>Antes de que la leas, quiero contártela yo.</b></p>
+  const tramoSuyo = vr.capitulos.find((c) => c.pasos && p.pasoInicio >= c.pasos[0] && p.pasoInicio <= c.pasos[1]);
+  const introRuta = `<p>Con ella, Irene ha desfilado en la Paris Fashion Week, Andrea va a trabajar con Mercedes-Benz y con Mattel, Mar ha salido en Vogue e Iliana tiene hoy su propia academia de modelos en México. <b>Antes de que la leas, quiero contártela yo.</b></p>
     <div class="rv" id="rv">
       <div class="clf" data-yt="${esc(vr.yt)}"><img src="https://i.ytimg.com/vi/${esc(vr.yt)}/maxresdefault.jpg" alt="" loading="lazy" onload="if(this.naturalWidth<200)this.onerror()" onerror="this.onerror=this.onload=null;this.src=this.src.replace('maxresdefault','sddefault')"><div class="play"></div></div>
       <div class="rvt"><small>La hoja de ruta · contada por mí</small><h3>${esc(vr.titulo)}</h3></div>
@@ -168,32 +153,17 @@ export function renderPlan(p: PlanArmado): string {
           .join("\n        ")}
       </ol>
     </div>
-    <p>Y aquí abajo la tienes por escrito, paso a paso. En cada paso te dejo quién lo imparte y, donde la hay, <b>una clase abierta</b>: para que veas un poco de lo que hay dentro de la academia y de lo que trabajamos con nuestras alumnas.</p>`
-    : `<p>En cada paso te dejo quién lo imparte y, donde la hay, <b>una clase abierta</b>: para que veas un poco de lo que hay dentro de la academia y de lo que trabajamos con nuestras alumnas.</p>`;
+    <p>Y aquí abajo la tienes por escrito, paso a paso. En cada paso te dejo quién lo imparte y, donde la hay, <b>una clase abierta</b>: para que veas un poco de lo que hay dentro de la academia y de lo que trabajamos con nuestras alumnas.</p>`;
   // Al final de la ruta, las ganas de hacerla acompañada: lleva a su siguiente paso (#acceso).
-  const ctaRuta = vr
-    ? `
+  const ctaRuta = `
     <div class="rcta">
       <p>Este orden lo puedes seguir sola. Lo que cambia cuando lo haces acompañada es que no vas a ciegas: alguien revisa lo que haces y te dice qué está bien, qué no y por dónde seguir.</p>
       <div class="cta-wrap"><a class="pillbtn big full solid" href="#acceso">Quiero hacer este camino acompañada</a></div>
-    </div>`
-    : "";
+    </div>`;
 
-  // La Comunidad. A una menor se le pide que lo hable antes con sus padres: en la llamada de
-  // bienvenida se les invita a estar (negocio.md §5).
-  const comunidadTexto = p.menor
-    ? `<p>En la <b>Comunidad de AR Academy</b> tienes el entorno correcto para empezar: estás con todas mis alumnas, tienes acceso a todos los eventos y a los directos conmigo, y las bases para empezar a trabajar con tu imagen. A tu ritmo y sin prisa.</p>
-    <p><b>Antes de entrar, háblalo con tus padres.</b> Enséñales este plan y la clase 4, que es para ellos. En la llamada de bienvenida les pedimos que estén contigo: así lo empiezan juntos.</p>`
-    : `<p>En la <b>Comunidad de AR Academy</b> tienes el entorno correcto: estás con todas mis alumnas, tienes acceso a todos los eventos y a los directos conmigo, y las bases para empezar a generar ingresos con tu imagen.</p>`;
-  // El cierre de antes remata con esta frase; el nuevo («si estás lista») no la lleva.
-  const comunidadCola = p.menor
-    ? ""
-    : `
-    <p>Es la forma de hacer tus tres pasos de esta semana con alguien al lado, y cuando estés lista para ir a por todo, ya sabes dónde estoy.</p>`;
-
-  // Los cierres nuevos (Carlos, 23-10), en prueba junto al vídeo de la hoja de ruta: «si estás
-  // lista», sin mandarla fuera del plan (ni canal ni Instagram), y directa a su paso: ACCESO por
-  // WhatsApp, o el formulario de pago de la Comunidad (/comunidad#registro lo abre solo).
+  // Los cierres (Carlos, 23-10): «si estás lista», sin mandarla fuera del plan (ni canal ni
+  // Instagram), y directa a su paso: el mensaje «¡QUIERO ACCEDER!» por WhatsApp, o el formulario
+  // de pago de la Comunidad (/comunidad#registro lo abre solo).
   // El mensaje que le dejamos escrito para Ari (Carlos, 23-10). Empieza por «¡QUIERO ACCEDER!»
   // para que la setter lo reconozca al momento.
   const WA_FRASE = "¡QUIERO ACCEDER!";
@@ -227,7 +197,7 @@ export function renderPlan(p: PlanArmado): string {
     <div class="steps nx">
       ${pasosCom.map(([t, x], k) => `<div class="step"><span class="n">${k + 1}</span><div><h3>${esc(t)}</h3><p>${esc(x)}</p></div></div>`).join("\n      ")}
     </div>`;
-  const cierreNuevo =
+  const cierre =
     p.cierre === "comunidad"
       ? `<section class="top-line" id="acceso">
   <div class="wrap">
@@ -253,40 +223,6 @@ export function renderPlan(p: PlanArmado): string {
     </div>
     <div class="cta-wrap">
       <a class="pillbtn big full btnwa" id="wabtn" href="https://wa.me/34722655343?text=${encodeURIComponent(WA_FRASE + " " + WA_RESTO)}" target="_blank" rel="noopener">Enviar mi mensaje por WhatsApp</a>
-    </div>
-  </div>
-</section>`;
-
-  const cierre = vr
-    ? cierreNuevo
-    : p.cierre === "comunidad"
-      ? `<section class="top-line" id="acceso">
-  <div class="wrap">
-    <span class="lab">${pad(n + 1)} · Tu siguiente paso</span>
-    <h2>Empieza <span class="it">acompañada.</span></h2>
-    ${comunidadTexto}${comunidadCola}
-    <div class="cta-wrap">
-      <a class="pillbtn big full solid" id="combtn" href="${esc(p.urlComunidad)}" target="_blank" rel="noopener">Entrar en la Comunidad de AR Academy</a>
-    </div>
-    <p class="soft">${p.menor ? "Y si tienes cualquier duda, o la tienen tus padres, escríbeme por WhatsApp." : "Y si tienes cualquier duda, contéstame por WhatsApp."} Te leo yo. 🤍</p>
-  </div>
-</section>`
-      : `<section class="top-line" id="acceso">
-  <div class="wrap">
-    <span class="lab">${pad(n + 1)} · Cuando estés lista</span>
-    <h2>Antes de dar el paso, <span class="it">conóceme.</span></h2>
-    <p>Mira el contenido del canal y de mi Instagram. Ahí está gran parte de lo que enseño, gratis y sin pedirte nada. Quiero que sepas cómo trabajo antes de que decidas nada.</p>${videoAcceso}
-    <div class="know">
-      <a class="pillbtn" href="https://www.youtube.com/@Ariannyrivass" target="_blank" rel="noopener">Ver el canal de YouTube</a>
-      <a class="pillbtn" href="https://www.instagram.com/ariaannyrivas" target="_blank" rel="noopener">Ver mi Instagram</a>
-    </div>
-    <p style="margin-top:34px">Y si después de verlo lo tienes claro: cada mes abrimos <b>un número limitado de plazas</b> para trabajar conmigo y con mi equipo, acompañada de principio a fin. No trabajamos con todo el mundo, solo con chicas comprometidas y decididas.</p>
-    <div class="wa">
-      <small>Escríbeme esta palabra por WhatsApp</small>
-      <p><span id="wamsg"></span><span class="caret"></span></p>
-    </div>
-    <div class="cta-wrap">
-      <a class="pillbtn big full btnwa" id="wabtn" href="https://wa.me/34722655343?text=ACCESO" target="_blank" rel="noopener">Escribir ACCESO por WhatsApp</a>
     </div>
   </div>
 </section>`;
@@ -527,13 +463,6 @@ if(rv){
     });
   });
 }
-/* el vídeo del bloque final */
-document.querySelectorAll('.accv .clf').forEach(function(caja){
-  caja.setAttribute('role','button');caja.setAttribute('tabindex','0');caja.setAttribute('aria-label','Ver la clase');
-  function abre(){ embed(caja,caja.dataset.yt,caja.dataset.start); }
-  caja.addEventListener('click',abre);
-  caja.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){e.preventDefault();abre();} });
-});
 var wam=document.getElementById('wamsg'),word=(wam&&wam.getAttribute('data-w'))||'ACCESO',wp=0;
 if(wam){
   if('IntersectionObserver' in window){

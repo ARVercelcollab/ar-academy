@@ -197,6 +197,30 @@ footer .nota{text-transform:none;letter-spacing:0;color:var(--tx-3);font-size:11
   *{transition-duration:.01ms!important;animation:none!important;scroll-behavior:auto!important}
   .ki,.st,.step,.cl{opacity:1!important;transform:none!important;filter:none!important}
 }
+/* La hoja de ruta contada por Ari (bloque 05) */
+.rv{margin:26px 0 0;border:1px solid var(--line)}
+/* el play abajo, en la mesa de la miniatura, para que no tape el mapa */
+.rv .clf{place-items:end center;padding-bottom:12px}
+.rv .clf .play{width:64px;height:64px}
+.rv .clf .play::before{border-left-width:17px;border-top-width:10px;border-bottom-width:10px;margin-left:5px}
+@media (max-width:430px){.rv .clf{padding-bottom:8px}.rv .clf .play{width:48px;height:48px}.rv .clf .play::before{border-left-width:13px;border-top-width:7.5px;border-bottom-width:7.5px;margin-left:4px}}
+.rvt{padding:15px 16px}
+.rvt small{display:block;font-size:9.5px;letter-spacing:.14em;color:var(--vino);font-weight:500;margin-bottom:6px;text-transform:uppercase}
+.rvt h3{margin:0;font-size:15px;font-weight:400;line-height:1.3;letter-spacing:-.01em}
+.caps{margin:20px 0 30px}
+.caps small{display:block;font-size:10.5px;letter-spacing:.16em;color:var(--tx-3);font-weight:500;margin-bottom:8px;text-transform:uppercase}
+.caps ol{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+.cap{all:unset;box-sizing:border-box;display:flex;gap:14px;align-items:baseline;width:100%;padding:12px 2px;border-bottom:1px solid var(--line);cursor:pointer;font-family:var(--sans);color:var(--tx-2);font-size:15px;font-weight:300;line-height:1.35;transition:color .2s}
+.cap:hover,.cap.on{color:var(--tx)}
+.cap:focus-visible{outline:2px solid var(--vino);outline-offset:2px}
+.capt{flex:none;width:44px;font-variant-numeric:tabular-nums;color:var(--vino);font-weight:500;font-size:13px}
+.capn em{font-style:normal;display:inline-block;margin:4px 0 0 8px;font-size:9.5px;letter-spacing:.14em;color:var(--vino);border:1px dashed var(--vino);padding:3px 7px;font-weight:500;text-transform:uppercase;vertical-align:1px}
+.rcta{margin-top:30px}
+/* Los próximos pasos de la Comunidad (cierre nuevo) */
+.nxl{display:block;margin:30px 0 4px;font-size:10.5px;letter-spacing:.16em;color:var(--tx-3);font-weight:500;text-transform:uppercase}
+.nx{margin-bottom:8px}
+/* El mensaje de WhatsApp ya escrito (cierre nuevo): la frase grande y, debajo, el resto */
+.wa p.wa2{margin-top:10px;font-size:16px;line-height:1.45;letter-spacing:0;font-weight:400;font-style:italic;color:var(--tx) !important}
 </style>
 </head>
 <body>
@@ -295,7 +319,24 @@ footer .nota{text-transform:none;letter-spacing:0;color:var(--tx-3);font-size:11
     <span class="lab">05 · El camino completo</span>
     <h2>Esto es lo que hace falta. <span class="it">En este orden.</span></h2>
     <p>No es un temario. Es la hoja de ruta que siguen mis alumnas, la secuencia que llevamos tres años viendo funcionar, y cada paso existe porque el anterior lo hizo posible.</p>
-    <p>En cada paso te dejo quién lo imparte y, donde la hay, <b>una clase abierta</b>: para que veas un poco de lo que hay dentro de la academia y de lo que trabajamos con nuestras alumnas.</p>
+    <p>Con ella, Irene ha desfilado en la Paris Fashion Week, Andrea va a trabajar con Mercedes-Benz y con Mattel, Mar ha salido en Vogue e Iliana tiene hoy su propia academia de modelos en México. <b>Antes de que la leas, quiero contártela yo.</b></p>
+    <div class="rv" id="rv">
+      <div class="clf" data-yt="a5wyV3hVgu8"><img src="https://i.ytimg.com/vi/a5wyV3hVgu8/maxresdefault.jpg" alt="" loading="lazy" onload="if(this.naturalWidth<200)this.onerror()" onerror="this.onerror=this.onload=null;this.src=this.src.replace('maxresdefault','sddefault')"><div class="play"></div></div>
+      <div class="rvt"><small>La hoja de ruta · contada por mí</small><h3>LOS PASOS EXACTOS PARA VIVIR DEL MODELAJE EN 2026 / 2027</h3></div>
+    </div>
+    <div class="caps">
+      <small>Lo que vas a ver</small>
+      <ol>
+        <li><button class="cap" data-start="0"><span class="capt">0:00</span><span class="capn">No fallaste tú: falló el orden</span></button></li>
+        <li><button class="cap" data-start="103"><span class="capt">1:43</span><span class="capn">Por qué casi todas empiezan por el paso 7</span></button></li>
+        <li><button class="cap" data-start="215"><span class="capt">3:35</span><span class="capn">Tramo 1 · La cabeza y la base<em>Por aquí empieza tu plan</em></span></button></li>
+        <li><button class="cap" data-start="449"><span class="capt">7:29</span><span class="capn">Tramo 2 · Cómo te ven</span></button></li>
+        <li><button class="cap" data-start="704"><span class="capt">11:44</span><span class="capn">Tramo 3 · La técnica y el trabajo</span></button></li>
+        <li><button class="cap" data-start="966"><span class="capt">16:06</span><span class="capn">Paso 10 · La agencia, y quién entra de verdad</span></button></li>
+        <li><button class="cap" data-start="1041"><span class="capt">17:21</span><span class="capn">Sola o acompañada</span></button></li>
+      </ol>
+    </div>
+    <p>Y aquí abajo la tienes por escrito, paso a paso. En cada paso te dejo quién lo imparte y, donde la hay, <b>una clase abierta</b>: para que veas un poco de lo que hay dentro de la academia y de lo que trabajamos con nuestras alumnas.</p>
 
     <div class="route" id="route">
       <div class="rline"><i id="rl"></i></div>
@@ -372,6 +413,10 @@ footer .nota{text-transform:none;letter-spacing:0;color:var(--tx-3);font-size:11
     </div>
 
     <p class="kick"><b>Casi todo el mundo empieza por el paso 7.</b> Fotos y técnica antes que cabeza, orden, identidad, marca y voz. Por eso hay tanta chica con un book precioso y ninguna llamada. La técnica no falla: falla lo que tenía que venir antes. Tú ya no tienes ese problema: <span class="it">ya sabes el orden.</span></p>
+    <div class="rcta">
+      <p>Este orden lo puedes seguir sola. Lo que cambia cuando lo haces acompañada es que no vas a ciegas: alguien revisa lo que haces y te dice qué está bien, qué no y por dónde seguir.</p>
+      <div class="cta-wrap"><a class="pillbtn big full solid" href="#acceso">Quiero hacer este camino acompañada</a></div>
+    </div>
   </div>
 </section>
 
@@ -386,21 +431,17 @@ footer .nota{text-transform:none;letter-spacing:0;color:var(--tx-3);font-size:11
 
 <section class="top-line" id="acceso">
   <div class="wrap">
-    <span class="lab">07 · Cuando estés lista</span>
-    <h2>Antes de escribirme, <span class="it">conóceme.</span></h2>
-    <p>Mira el contenido del canal y de mi Instagram. Ahí está gran parte de lo que enseño, gratis y sin pedirte nada. Quiero que sepas cómo trabajo antes de que decidas nada.</p>
-    <div class="know">
-      <a class="pillbtn" href="https://www.youtube.com/@Ariannyrivass" target="_blank" rel="noopener">Ver el canal de YouTube</a>
-      <a class="pillbtn" href="https://www.instagram.com/ariaannyrivas" target="_blank" rel="noopener">Ver mi Instagram</a>
-    </div>
-    <p style="margin-top:34px">Y si después de verlo lo tienes claro: cada mes abrimos <b>un número limitado de plazas</b> para trabajar conmigo y con mi equipo, con una mentora dedicada a ti de principio a fin. No trabajamos con todo el mundo, solo con chicas comprometidas y decididas.</p>
-
+    <span class="lab">07 · Tu siguiente paso</span>
+    <h2>Si estás lista, <span class="it">da el paso.</span></h2>
+    <p>Si has visto todo esto y te hace sentido, ya sabes cómo trabajamos. Con esta hoja de ruta preparamos a cada alumna en todas sus facetas para que sea una profesional excelente, no solo como modelo o creadora, sino en todas las áreas de su vida. Y le abrimos un abanico de oportunidades en marcas, castings, pasarelas y contenido.</p>
+    <p>Si tienes claro que quieres trabajar con nosotros: cada mes abrimos <b>un número limitado de plazas</b> en <b>The Perfect Model</b>, nuestro programa más avanzado, para trabajar conmigo y con mi equipo, acompañada de principio a fin. No trabajamos con todo el mundo, solo con chicas comprometidas y decididas.</p>
     <div class="wa">
-      <small>Escríbeme esta palabra por WhatsApp</small>
-      <p><span id="wamsg"></span><span class="caret"></span></p>
+      <small>Si estás lista para empezar, envíame este mensaje por WhatsApp</small>
+      <p><span id="wamsg" data-w="¡QUIERO ACCEDER!"></span><span class="caret"></span></p>
+      <p class="wa2">Arianny, ya vi mi plan y la hoja de ruta, y estoy comprometida y lista para trabajar de la mano contigo y con tu equipo. ¿Hay una plaza disponible para mí este mes?</p>
     </div>
     <div class="cta-wrap">
-      <a class="pillbtn big full btnwa" id="wabtn" href="https://wa.me/34722655343?text=ACCESO" target="_blank" rel="noopener">Escribir ACCESO por WhatsApp</a>
+      <a class="pillbtn big full btnwa" id="wabtn" href="https://wa.me/34722655343?text=%C2%A1QUIERO%20ACCEDER!%20Arianny%2C%20ya%20vi%20mi%20plan%20y%20la%20hoja%20de%20ruta%2C%20y%20estoy%20comprometida%20y%20lista%20para%20trabajar%20de%20la%20mano%20contigo%20y%20con%20tu%20equipo.%20%C2%BFHay%20una%20plaza%20disponible%20para%20m%C3%AD%20este%20mes%3F" target="_blank" rel="noopener">Enviar mi mensaje por WhatsApp</a>
     </div>
   </div>
 </section>
@@ -513,8 +554,24 @@ document.querySelectorAll('.cchip[data-yt]').forEach(function(ch){
   });
 });
 
-/* ACCESO tecleado */
-var wam=document.getElementById('wamsg'),word='ACCESO',wp=0;
+/* la hoja de ruta contada por Ari: el vídeo y sus capítulos (cada uno lo arranca en su minuto) */
+var rv=document.querySelector('#rv .clf');
+if(rv){
+  rv.setAttribute('role','button');rv.setAttribute('tabindex','0');rv.setAttribute('aria-label','Ver el vídeo de la hoja de ruta');
+  var abreRV=function(s){ var f=rv.querySelector('iframe'); if(f) rv.removeChild(f); embed(rv,rv.dataset.yt,s,'ruta'); };
+  rv.addEventListener('click',function(){ if(!rv.querySelector('iframe')) abreRV(0); });
+  rv.addEventListener('keydown',function(e){ if((e.key==='Enter'||e.key===' ')&&!rv.querySelector('iframe')){e.preventDefault();abreRV(0);} });
+  document.querySelectorAll('.cap').forEach(function(b){
+    b.addEventListener('click',function(){
+      document.querySelectorAll('.cap').forEach(function(o){o.classList.remove('on')});
+      b.classList.add('on'); abreRV(+b.dataset.start||0);
+      rv.scrollIntoView({block:'center',behavior:RM?'auto':'smooth'});
+    });
+  });
+}
+
+/* el mensaje de WhatsApp tecleado */
+var wam=document.getElementById('wamsg'),word=(wam&&wam.getAttribute('data-w'))||'ACCESO',wp=0;
 if('IntersectionObserver' in window){
   var io3=new IntersectionObserver(function(es){es.forEach(function(en){
     if(!en.isIntersecting)return;io3.disconnect();

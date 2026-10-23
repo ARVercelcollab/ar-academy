@@ -78,8 +78,7 @@ export type PlanArmado = {
   ruta: PasoRuta[];
   remate: string;
   caso: Caso | null;
-  videoAcceso: Video | null; // el vídeo del bloque final (solo en el cierre de formación)
-  videoRuta: VideoRuta | null; // la hoja de ruta contada por Ari, antes de la ruta por escrito
+  videoRuta: VideoRuta; // la hoja de ruta contada por Ari, antes de la ruta por escrito
 };
 
 // ── Opciones literales del formulario ─────────────────────────────────────────
@@ -729,15 +728,9 @@ function ruta(inicio: number, kc: ClaveOcupacion | null): PasoRuta[] {
 // ── El caso de alumna con foto (bloque 06; vacío: el caso va en la clase 4) ───
 export const CASO_POR_PROBLEMA: Partial<Record<ClaveProblema, Caso>> = {};
 
-// El vídeo del bloque final de la formación: el plan contado por Ari, que acaba pidiendo ACCESO.
-// El vídeo del bloque final. Hasta el 07-10 era «Los pasos exactos para vivir del modelaje»
-// (xlwRBX-JLBM): contaba la ruta antigua y hablaba de «lista de espera». Carlos lo quitó: va
-// el vídeo nuevo de la oferta (la ruta, cómo se trabaja, las dos modalidades y cómo se paga)
-// cuando esté grabado. Mientras, el bloque final va sin vídeo.
-const VIDEO_ACCESO: Video | null = null;
-
 // La hoja de ruta contada por Ari (Carlos, 23-10): va en el bloque 05, antes de la ruta por
-// escrito, y la ven también las menores. Oculto en YouTube, 18:28. Los capítulos salen de su
+// escrito, en todos los planes (también las menores). El vídeo de la oferta no va en el plan: se
+// manda aparte a quien ya quiere entrar. Oculto en YouTube, 18:28. Los capítulos salen de su
 // transcripción; cada uno arranca un par de segundos antes de que ella empiece la frase.
 const VIDEO_RUTA: VideoRuta = {
   yt: "a5wyV3hVgu8",
@@ -758,7 +751,7 @@ const VIDEO_RUTA: VideoRuta = {
 export function armarPlan(
   f: Ficha,
   token: string,
-  opts: { previa: boolean; cierre: "formacion" | "comunidad"; ruta?: boolean },
+  opts: { previa: boolean; cierre: "formacion" | "comunidad" },
 ): PlanArmado {
   const rp = clave(PROBLEMA, f.dolor, PISTAS_PROBLEMA);
   const ro = clave(OBJETIVO, f.objetivo, PISTAS_OBJETIVO);
@@ -823,9 +816,7 @@ export function armarPlan(
     ruta: ruta(bp.pasoInicio, kc),
     remate: bp.remate,
     caso: CASO_POR_PROBLEMA[kp] ?? null,
-    videoAcceso: menor ? null : VIDEO_ACCESO,
-    // En prueba hasta que Carlos lo apruebe: solo sale con ?prueba=ruta.
-    videoRuta: opts.ruta ? VIDEO_RUTA : null,
+    videoRuta: VIDEO_RUTA,
   };
 }
 
