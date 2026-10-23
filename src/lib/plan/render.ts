@@ -81,7 +81,7 @@ export function renderPlan(p: PlanArmado): string {
   const clases = p.clases
     .map(
       (c, k) => `<article class="cl" data-cl="${k}" data-yt="${esc(c.yt)}" data-start="${seg(c.start)}">
-        <div class="clf"><img src="https://i.ytimg.com/vi/${esc(c.yt)}/maxresdefault.jpg" alt="" loading="lazy" onload="if(this.naturalWidth<200)this.onerror()" onerror="this.onerror=this.onload=null;this.src=this.src.replace('maxresdefault','sddefault')"><div class="play"></div><span class="dur">${esc(c.etiqueta)}</span></div>
+        <div class="clf"><img src="https://i.ytimg.com/vi/${esc(c.yt)}/maxresdefault.jpg" alt="" loading="lazy" onload="if(this.naturalWidth<200)this.onerror()" onerror="this.onerror=this.onload=null;this.src=this.src.replace('maxresdefault','sddefault')"><div class="play"></div></div>
         <div class="clb"><span class="tag2">Clase ${k + 1}</span><h3>${esc(c.titulo)}</h3><button class="vw" aria-label="Marcar como vista">✓</button></div>
         <p class="clwhy"><b>${esc(c.porQueTitulo)}</b> ${esc(c.porQue)}</p>
       </article>`,
@@ -141,7 +141,7 @@ export function renderPlan(p: PlanArmado): string {
     ? `
     <p>Y si solo te da tiempo a ver una cosa, que sea esta: cómo trabajamos con cada alumna, paso a paso, contado por mí.</p>
     <div class="accv">
-      <div class="clf" data-yt="${esc(va.yt)}" data-start="${seg(va.start)}"><img src="https://i.ytimg.com/vi/${esc(va.yt)}/maxresdefault.jpg" alt="" loading="lazy" onload="if(this.naturalWidth<200)this.onerror()" onerror="this.onerror=this.onload=null;this.src=this.src.replace('maxresdefault','sddefault')"><div class="play"></div><span class="dur">${esc(va.etiqueta)}</span></div>
+      <div class="clf" data-yt="${esc(va.yt)}" data-start="${seg(va.start)}"><img src="https://i.ytimg.com/vi/${esc(va.yt)}/maxresdefault.jpg" alt="" loading="lazy" onload="if(this.naturalWidth<200)this.onerror()" onerror="this.onerror=this.onload=null;this.src=this.src.replace('maxresdefault','sddefault')"><div class="play"></div></div>
       <p class="accvt">${esc(va.titulo)}</p>
     </div>`
     : "";
@@ -154,7 +154,7 @@ export function renderPlan(p: PlanArmado): string {
   const introRuta = vr
     ? `<p>Con ella, Irene ha desfilado en la Paris Fashion Week, Andrea va a trabajar con Mercedes-Benz y con Mattel, Mar ha salido en Vogue e Iliana tiene hoy su propia academia de modelos en México. <b>Antes de que la leas, quiero contártela yo.</b></p>
     <div class="rv" id="rv">
-      <div class="clf" data-yt="${esc(vr.yt)}"><img src="https://i.ytimg.com/vi/${esc(vr.yt)}/maxresdefault.jpg" alt="" loading="lazy" onload="if(this.naturalWidth<200)this.onerror()" onerror="this.onerror=this.onload=null;this.src=this.src.replace('maxresdefault','sddefault')"><div class="play"></div><span class="dur">${esc(vr.etiqueta)}</span></div>
+      <div class="clf" data-yt="${esc(vr.yt)}"><img src="https://i.ytimg.com/vi/${esc(vr.yt)}/maxresdefault.jpg" alt="" loading="lazy" onload="if(this.naturalWidth<200)this.onerror()" onerror="this.onerror=this.onload=null;this.src=this.src.replace('maxresdefault','sddefault')"><div class="play"></div></div>
       <div class="rvt"><small>La hoja de ruta · contada por mí</small><h3>${esc(vr.titulo)}</h3></div>
     </div>
     <div class="caps">
