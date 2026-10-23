@@ -62,6 +62,8 @@ const CSS_EXTRA = `<style>
 /* Los próximos pasos de la Comunidad (cierre nuevo) */
 .nxl{display:block;margin:30px 0 4px;font-size:10.5px;letter-spacing:.16em;color:var(--tx-3);font-weight:500;text-transform:uppercase}
 .nx{margin-bottom:8px}
+/* El mensaje de WhatsApp ya escrito (cierre nuevo): la frase grande y, debajo, el resto */
+.wa p.wa2{margin-top:10px;font-size:16px;line-height:1.45;letter-spacing:0;font-weight:400;font-style:italic;color:var(--tx) !important}
 </style>`;
 
 export function renderPlan(p: PlanArmado): string {
@@ -192,7 +194,12 @@ export function renderPlan(p: PlanArmado): string {
   // Los cierres nuevos (Carlos, 23-10), en prueba junto al vídeo de la hoja de ruta: «si estás
   // lista», sin mandarla fuera del plan (ni canal ni Instagram), y directa a su paso: ACCESO por
   // WhatsApp, o el formulario de pago de la Comunidad (/comunidad#registro lo abre solo).
-  const sentido = `<p>Si has visto todo esto y te hace sentido, ya sabes cómo trabajamos. Con esta hoja de ruta preparamos a cada alumna en todas sus facetas para que sea una profesional excelente, no solo en el modelaje, sino en todas las áreas de su vida.`;
+  // El mensaje que le dejamos escrito para Ari (Carlos, 23-10). Empieza por «¡QUIERO ACCEDER!»
+  // para que la setter lo reconozca al momento.
+  const WA_FRASE = "¡QUIERO ACCEDER!";
+  const WA_RESTO =
+    "Arianny, ya vi mi plan y la hoja de ruta, y estoy comprometida y lista para trabajar de la mano contigo y con tu equipo. ¿Hay una plaza disponible para mí este mes?";
+  const sentido = `<p>Si has visto todo esto y te hace sentido, ya sabes cómo trabajamos. Con esta hoja de ruta preparamos a cada alumna en todas sus facetas para que sea una profesional excelente, no solo como modelo o creadora, sino en todas las áreas de su vida.`;
   // Comunidad: qué pasa cuando entra (Carlos, 23-10: la llamada de onboarding y los próximos
   // pasos). Tras pagar, la web le dice que revise el correo para entrar (Skool); la llamada de
   // bienvenida la agenda el equipo por WhatsApp (negocio.md §2; con la menor, con sus padres).
@@ -240,11 +247,12 @@ export function renderPlan(p: PlanArmado): string {
     ${sentido} Y le abrimos un abanico de oportunidades en marcas, castings, pasarelas y contenido.</p>
     <p>Si tienes claro que quieres trabajar con nosotros: cada mes abrimos <b>un número limitado de plazas</b> en <b>The Perfect Model</b>, nuestro programa más avanzado, para trabajar conmigo y con mi equipo, acompañada de principio a fin. No trabajamos con todo el mundo, solo con chicas comprometidas y decididas.</p>
     <div class="wa">
-      <small>Escríbeme esta palabra por WhatsApp</small>
-      <p><span id="wamsg"></span><span class="caret"></span></p>
+      <small>Si estás lista para empezar, envíame este mensaje por WhatsApp</small>
+      <p><span id="wamsg" data-w="${esc(WA_FRASE)}"></span><span class="caret"></span></p>
+      <p class="wa2">${esc(WA_RESTO)}</p>
     </div>
     <div class="cta-wrap">
-      <a class="pillbtn big full btnwa" id="wabtn" href="https://wa.me/34722655343?text=ACCESO" target="_blank" rel="noopener">Escribir ACCESO por WhatsApp</a>
+      <a class="pillbtn big full btnwa" id="wabtn" href="https://wa.me/34722655343?text=${encodeURIComponent(WA_FRASE + " " + WA_RESTO)}" target="_blank" rel="noopener">Enviar mi mensaje por WhatsApp</a>
     </div>
   </div>
 </section>`;
@@ -526,7 +534,7 @@ document.querySelectorAll('.accv .clf').forEach(function(caja){
   caja.addEventListener('click',abre);
   caja.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){e.preventDefault();abre();} });
 });
-var wam=document.getElementById('wamsg'),word='ACCESO',wp=0;
+var wam=document.getElementById('wamsg'),word=(wam&&wam.getAttribute('data-w'))||'ACCESO',wp=0;
 if(wam){
   if('IntersectionObserver' in window){
     var io3=new IntersectionObserver(function(es){es.forEach(function(en){
