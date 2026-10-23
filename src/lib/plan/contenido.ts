@@ -709,9 +709,10 @@ function ruta(inicio: number, kc: ClaveOcupacion | null): PasoRuta[] {
     {
       n: "09",
       nombre: "UGC",
-      porQue: "Otra vía de cobrar de las marcas, cada vez más pedida. Tu mentora vuelve a ser Pierina: la charla del paso 6 cubre también esta parte.",
+      porQue: "Otra vía de cobrar de las marcas, cada vez más pedida. Tu mentora vuelve a ser Pierina.",
       mentora: "Con **Pierina Alves**",
-      clases: [],
+      // Carlos, 23-10: la clase de Pierina sobre por qué las marcas eligen UGC, desde el 8:15.
+      clases: [{ texto: "¿Por que actualmente las marcas usan más a creadoras UGC y no influencers? · desde el 8:15", yt: "7V3QsgfGKV8", start: 495 }],
     },
     {
       n: "10",
