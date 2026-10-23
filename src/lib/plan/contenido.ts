@@ -745,7 +745,7 @@ const VIDEO_RUTA: VideoRuta = {
   etiqueta: "Vídeo · 18 min",
   capitulos: [
     { s: 0, t: "No fallaste tú: falló el orden" },
-    { s: 103, t: "Por qué casi todas empiezan por el paso 7" },
+    { s: 103, t: "Por qué casi todas empiezan por el paso\u00a07" },
     { s: 215, t: "Tramo 1 · La cabeza y la base", pasos: [1, 3] },
     { s: 449, t: "Tramo 2 · Cómo te ven", pasos: [4, 6] },
     { s: 704, t: "Tramo 3 · La técnica y el trabajo", pasos: [7, 9] },
