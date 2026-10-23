@@ -238,7 +238,7 @@ export function renderPlan(p: PlanArmado): string {
     <span class="lab">${pad(n + 1)} · Tu siguiente paso</span>
     <h2>Si estás lista, <span class="it">da el paso.</span></h2>
     ${sentido} Y le abrimos un abanico de oportunidades en marcas, castings, pasarelas y contenido.</p>
-    <p>Si tienes claro que quieres trabajar con nosotros: cada mes abrimos <b>un número limitado de plazas</b> para trabajar conmigo y con mi equipo, acompañada de principio a fin. No trabajamos con todo el mundo, solo con chicas comprometidas y decididas.</p>
+    <p>Si tienes claro que quieres trabajar con nosotros: cada mes abrimos <b>un número limitado de plazas</b> en <b>The Perfect Model</b>, nuestro programa más avanzado, para trabajar conmigo y con mi equipo, acompañada de principio a fin. No trabajamos con todo el mundo, solo con chicas comprometidas y decididas.</p>
     <div class="wa">
       <small>Escríbeme esta palabra por WhatsApp</small>
       <p><span id="wamsg"></span><span class="caret"></span></p>
