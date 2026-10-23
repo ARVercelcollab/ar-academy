@@ -42,8 +42,11 @@ const CSS_EXTRA = `<style>
 .accvt{padding:14px 16px;margin:0 !important;font-size:14.5px}
 /* La hoja de ruta contada por Ari (bloque 05) */
 .rv{margin:26px 0 0;border:1px solid var(--line)}
-.rv .clf .play{width:68px;height:68px}
-.rv .clf .play::before{border-left-width:18px;border-top-width:10px;border-bottom-width:10px;margin-left:5px}
+/* el play abajo, en la mesa de la miniatura, para que no tape el mapa */
+.rv .clf{place-items:end center;padding-bottom:12px}
+.rv .clf .play{width:64px;height:64px}
+.rv .clf .play::before{border-left-width:17px;border-top-width:10px;border-bottom-width:10px;margin-left:5px}
+@media (max-width:430px){.rv .clf{padding-bottom:8px}.rv .clf .play{width:48px;height:48px}.rv .clf .play::before{border-left-width:13px;border-top-width:7.5px;border-bottom-width:7.5px;margin-left:4px}}
 .rvt{padding:15px 16px}
 .rvt small{display:block;font-size:9.5px;letter-spacing:.14em;color:var(--vino);font-weight:500;margin-bottom:6px;text-transform:uppercase}
 .rvt h3{margin:0;font-size:15px;font-weight:400;line-height:1.3;letter-spacing:-.01em}
