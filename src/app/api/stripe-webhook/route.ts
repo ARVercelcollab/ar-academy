@@ -1,5 +1,8 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse, after } from "next/server";
 import { stripe, PAGO_COMUNIDAD } from "@/lib/stripe";
+import { GRUPO, altaEnMailerLite } from "@/lib/mailerlite";
+import { compradoraEnGHL } from "@/lib/compradora";
+import { OFERTA, esDelWorkshop, faseComunidad } from "@/lib/comunidad";
 import Stripe from "stripe";
 
 export async function POST(req: NextRequest) {
@@ -83,6 +86,46 @@ export async function POST(req: NextRequest) {
           { status: 500 }
         );
       }
+
+      // ¿Incluye el workshop del 24-11? Lo dice la factura del formulario de /comunidad; la de
+      // los enlaces de pago no lo lleva y se mira la fecha del pago: en noviembre, toda compra
+      // de la Comunidad trae el workshop (Carlos, 2026-10-24).
+      const pagadaEn = (invoice.status_transitions?.paid_at ?? event.created) * 1000;
+      const oferta = invoice.metadata?.oferta || OFERTA[faseComunidad(pagadaEn)];
+      const workshop = esDelWorkshop(oferta);
+      const anios = Number.parseInt(String(customer.metadata?.edad ?? ""), 10);
+      const edad = Number.isFinite(anios) ? anios : null;
+
+      // En MailerLite pasa a «Alumnas Comunidad»: los segmentos de venta excluyen a las
+      // alumnas, así que deja de recibir ofertas de la Comunidad. Si trae el workshop, entra
+      // también en su grupo: el que arranca la bienvenida con el grupo de WhatsApp y los avisos
+      // del directo. Y en GHL, con su etiqueta, para que las setters la vean. Todo después de
+      // responder a Stripe: si MailerLite o GHL fallan, el pago y el acceso no se enteran.
+      const { email: emailCliente, name: nombreCliente, phone: telCliente } = customer;
+      if (emailCliente) {
+        after(() =>
+          altaEnMailerLite({
+            email: emailCliente,
+            grupo: workshop ? [GRUPO.alumnasComunidad, GRUPO.workshop] : GRUPO.alumnasComunidad,
+            nombre: nombreCliente ?? "",
+            origen: workshop ? "workshop" : undefined,
+            etapa: "comunidad",
+            edad,
+            consentimiento: workshop ? "compra workshop" : "compra comunidad",
+          })
+        );
+      }
+      after(() =>
+        compradoraEnGHL({
+          nombre: nombreCliente ?? "",
+          email: emailCliente ?? "",
+          telefono: telCliente ?? "",
+          edad,
+          euros: invoice.amount_paid / 100,
+          workshop,
+          descripcion: invoice.description || "Comunidad AR Academy",
+        })
+      );
       break;
     }
 
