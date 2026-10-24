@@ -9,6 +9,7 @@ import {
   useElements,
 } from "@stripe/react-stripe-js";
 import styles from "./RegistrationForm.module.scss";
+import { precioComunidad } from "@/lib/comunidad";
 import ArrowIcon from "./ArrowIcon";
 import StripeLogo from "./StripeLogo";
 import { trackEvent } from "@/lib/tracking";
@@ -145,7 +146,7 @@ function PaymentStep({
       const data = await res.json();
 
       if (data.success) {
-        trackEvent("Purchase", { content_name: "AR Academy", currency: "EUR", value: 99 });
+        trackEvent("Purchase", { content_name: "AR Academy", currency: "EUR", value: precioComunidad().euros });
         const params = new URLSearchParams({
           name: userData.name,
           email: userData.email,
@@ -317,8 +318,8 @@ export default function RegistrationForm() {
   const handleContinue = () => {
     if (step === "payment") return;
     if (validate()) {
-      trackEvent("Lead", { content_name: "AR Academy", currency: "EUR", value: 99 });
-      trackEvent("InitiateCheckout", { content_name: "AR Academy", currency: "EUR", value: 99 });
+      trackEvent("Lead", { content_name: "AR Academy", currency: "EUR", value: precioComunidad().euros });
+      trackEvent("InitiateCheckout", { content_name: "AR Academy", currency: "EUR", value: precioComunidad().euros });
       setStep("payment");
       scrollToForm();
     } else {

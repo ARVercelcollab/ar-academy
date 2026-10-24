@@ -18,6 +18,10 @@ import Urgency from "@/components/Urgency";
 import Objections from "@/components/Objections";
 import FinalCta from "@/components/FinalCta";
 import Footer from "@/components/Footer";
+import { precioComunidad } from "@/lib/comunidad";
+
+// Se rehace cada minuto: así el 1-12 pasa sola de 99 € a 199 € (src/lib/comunidad.ts).
+export const revalidate = 60;
 
 // Ya migrado a /comunidad: esta ruta de staging se mantiene viva pero fuera de
 // los buscadores para no competir como contenido duplicado.
@@ -26,10 +30,11 @@ export const metadata: Metadata = {
 };
 
 export default function ComunidadPreviewPage() {
+  const { euros, subio } = precioComunidad();
   return (
     <main>
       <UrgencyToast />
-      <HeroReordered />
+      <HeroReordered euros={euros} subio={subio} />
       <div className={styles.noOverlap}>
         <SuccessCases />
       </div>
@@ -38,11 +43,11 @@ export default function ComunidadPreviewPage() {
       <AboutArianny />
       <Alumnas />
       <WhyAcademy />
-      <Pricing />
-      <Urgency />
-      <Objections />
-      <FinalCta />
-      <Footer />
+      <Pricing euros={euros} />
+      <Urgency subio={subio} />
+      <Objections euros={euros} />
+      <FinalCta euros={euros} subio={subio} />
+      <Footer euros={euros} />
     </main>
   );
 }

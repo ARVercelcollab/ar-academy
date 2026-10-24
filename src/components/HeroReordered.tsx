@@ -12,14 +12,17 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import styles from "./HeroReordered.module.scss";
 import RegistrationForm from "./RegistrationForm";
+import { SUBIDA_COMUNIDAD } from "@/lib/comunidad";
 import { useHls } from "@/hooks/useHls";
 import { hlsUrl } from "@/lib/bunny";
 
-// La subida de la Comunidad (Carlos, 2026-10-24): 99 € hasta Black Friday y 199 € desde el 1-12.
-// La barra se esconde sola desde el 1-12-2026 a las 00:00 de Madrid, para no anunciar algo pasado.
-const SUBIDA_COMUNIDAD = Date.UTC(2026, 10, 30, 23, 0, 0);
-
-export default function HeroReordered() {
+export default function HeroReordered({
+  euros = 99,
+  subio = false,
+}: {
+  euros?: number;
+  subio?: boolean;
+}) {
   const [isMuted, setIsMuted] = useState(true);
   const [isPlaying, setIsPlaying] = useState(true);
   const [progress, setProgress] = useState(0);
@@ -121,7 +124,8 @@ export default function HeroReordered() {
     <section className={styles.hero} id="registro">
       {/* Barra FIJA en el top: la subida de precio, que es real y tiene fecha (Carlos, 2026-10-24).
           Antes decía «[mes] · plazas limitadas». */}
-      {!subidaPasada && (
+      {/* La barra se esconde sola desde el 1-12 a las 00:00 de Madrid (src/lib/comunidad.ts). */}
+      {!subio && !subidaPasada && (
         <div className={styles.scarcityBar}>
           <span className={styles.scarcityDot} aria-hidden="true" />
           <span className={styles.scarcityText}>Sube a 199€ · 1 diciembre</span>
@@ -208,7 +212,7 @@ export default function HeroReordered() {
             </p>
             <button className={styles.priceCta} onClick={handleStart}>
               <span className={styles.priceCtaMain}>
-                Pago único <strong>99€</strong>
+                Pago único <strong>{euros}€</strong>
               </span>
             </button>
             <p className={styles.afterCta}>

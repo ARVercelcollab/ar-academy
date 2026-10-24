@@ -1,7 +1,7 @@
 import styles from "./Pricing.module.scss";
 import ArrowIcon from "./ArrowIcon";
 
-export default function Pricing() {
+export default function Pricing({ euros = 99 }: { euros?: number }) {
   return (
     <section className={styles.section}>
       {/* Wine block — invitation */}
@@ -18,7 +18,7 @@ export default function Pricing() {
           <span className={styles.priceLabel}>por solo</span>
           <div className={styles.priceRow}>
             <span className={styles.price}>
-              <strong>99€</strong>{" "}
+              <strong>{euros}€</strong>{" "}
                 <span className={styles.priceUnit}>pago único</span>
             </span>
           </div>

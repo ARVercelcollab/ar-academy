@@ -10,8 +10,10 @@ import styles from "./Footer.module.scss";
  */
 export default function Footer({
   variante = "suscripcion",
+  euros = 99,
 }: {
   variante?: "suscripcion" | "evento";
+  euros?: number;
 }) {
   const esEvento = variante === "evento";
 
@@ -95,7 +97,7 @@ export default function Footer({
               <p>
                 Los pagos se procesan de forma segura mediante Stripe, Inc. Los
                 datos de tu tarjeta nunca pasan por nuestros servidores. Al
-                contratar haces un pago único de 99 € que te da acceso a la
+                contratar haces un pago único de {euros} € que te da acceso a la
                 Comunidad de AR Academy para siempre, sin cuotas ni permanencia.
                 El contenido de esta página no constituye una
                 garantía de resultados. Los resultados pueden variar según la

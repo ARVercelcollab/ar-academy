@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { stripe, PRECIO_COMUNIDAD, PAGO_COMUNIDAD } from "@/lib/stripe";
+import { stripe, PRECIO_COMUNIDAD, PRECIO_COMUNIDAD_DICIEMBRE, PAGO_COMUNIDAD } from "@/lib/stripe";
+import { SUBIDA_COMUNIDAD, MARGEN_COBRO_MS } from "@/lib/comunidad";
 
 // La Comunidad en un solo pago (Carlos: 99 € hasta Black Friday, 199 € desde el 1-12). Antes era una suscripción
 // de 27 €/mes; la ruta conserva el nombre porque es la que llama el formulario.
@@ -41,7 +42,13 @@ export async function POST(req: NextRequest) {
     await stripe.invoiceItems.create({
       customer: customer.id,
       invoice: factura.id,
-      pricing: { price: PRECIO_COMUNIDAD },
+      // 99 € hasta el 30-11 (con media hora de margen) y 199 € desde el 1-12.
+      pricing: {
+        price:
+          Date.now() < SUBIDA_COMUNIDAD + MARGEN_COBRO_MS
+            ? PRECIO_COMUNIDAD
+            : PRECIO_COMUNIDAD_DICIEMBRE,
+      },
     });
     await stripe.invoices.finalizeInvoice(factura.id);
     const pagada = await stripe.invoices.pay(factura.id, {

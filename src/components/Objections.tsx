@@ -3,7 +3,7 @@ import XIcon from "./XIcon";
 import CheckIcon from "./CheckIcon";
 import ArrowIcon from "./ArrowIcon";
 
-const faqs = [
+const crearFaqs = (euros: number) => [
   {
     question: "No tengo experiencia previa",
     answer:
@@ -23,7 +23,7 @@ const faqs = [
     answer: "",
     answerBold: "",
     answerRest:
-      "No. Es un solo pago de 99 €, sin cuotas ni letra pequeña. ",
+      `No. Es un solo pago de ${euros} €, sin cuotas ni letra pequeña. `,
     answerBold2: "Y el acceso es para siempre.",
   },
   {
@@ -35,7 +35,8 @@ const faqs = [
   },
 ];
 
-export default function Objections() {
+export default function Objections({ euros = 99 }: { euros?: number }) {
+  const faqs = crearFaqs(euros);
   return (
     <section className={styles.section}>
       <div className={styles.container}>

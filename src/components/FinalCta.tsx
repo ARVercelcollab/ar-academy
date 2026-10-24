@@ -1,7 +1,13 @@
 import styles from "./FinalCta.module.scss";
 import RegistrationForm from "./RegistrationForm";
 
-export default function FinalCta() {
+export default function FinalCta({
+  euros = 99,
+  subio = false,
+}: {
+  euros?: number;
+  subio?: boolean;
+}) {
   return (
     <section className={styles.section}>
       <div className={styles.container}>
@@ -24,7 +30,7 @@ export default function FinalCta() {
             <span className={styles.priceLabel}>Únete hoy</span>
             <div className={styles.priceRow}>
               <span className={styles.price}>
-                <strong>99€</strong>{" "}
+                <strong>{euros}€</strong>{" "}
                 <span className={styles.priceUnit}>pago único</span>
               </span>
             </div>
@@ -34,7 +40,7 @@ export default function FinalCta() {
             </p>
           </div>
           <div className={styles.accessBadge}>
-            SUBE A 199€ · 1 DICIEMBRE
+            {subio ? "UN SOLO PAGO · ACCESO PARA SIEMPRE" : "SUBE A 199€ · 1 DICIEMBRE"}
           </div>
           <p className={styles.accessInfo}>
             Entra hoy, la comunidad te espera desde el primer minuto.
