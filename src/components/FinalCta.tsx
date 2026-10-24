@@ -24,7 +24,8 @@ export default function FinalCta() {
             <span className={styles.priceLabel}>Únete hoy</span>
             <div className={styles.priceRow}>
               <span className={styles.price}>
-                <strong>99€</strong> pago único
+                <strong>99€</strong>{" "}
+                <span className={styles.priceUnit}>pago único</span>
               </span>
             </div>
             <p className={styles.priceSubtext}>
@@ -33,7 +34,7 @@ export default function FinalCta() {
             </p>
           </div>
           <div className={styles.accessBadge}>
-            ACCESO ABIERTO POR TIEMPO LIMITADO
+            SUBE A 199€ · 1 DICIEMBRE
           </div>
           <p className={styles.accessInfo}>
             Entra hoy, la comunidad te espera desde el primer minuto.

@@ -169,3 +169,18 @@
   margin-bottom: 20px;
   text-transform: none;
 }
+
+// «pago único» al lado del precio, en pequeño: a 48 px no cabía en el móvil (Carlos, 2026-10-24)
+.priceUnit {
+  display: inline-block;
+  margin-left: 6px;
+  font-size: 20px;
+  line-height: 24px;
+  letter-spacing: -0.2px;
+  font-weight: 400;
+
+  @media (max-width: $breakpoint-tablet) {
+    font-size: 16px;
+    line-height: 20px;
+  }
+}
