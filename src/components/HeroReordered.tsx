@@ -15,6 +15,10 @@ import RegistrationForm from "./RegistrationForm";
 import { useHls } from "@/hooks/useHls";
 import { hlsUrl } from "@/lib/bunny";
 
+// La subida de la Comunidad (Carlos, 2026-10-24): 99 € hasta Black Friday y 199 € desde el 1-12.
+// La barra se esconde sola desde el 1-12-2026 a las 00:00 de Madrid, para no anunciar algo pasado.
+const SUBIDA_COMUNIDAD = Date.UTC(2026, 10, 30, 23, 0, 0);
+
 export default function HeroReordered() {
   const [isMuted, setIsMuted] = useState(true);
   const [isPlaying, setIsPlaying] = useState(true);
@@ -24,6 +28,11 @@ export default function HeroReordered() {
   const progressRef = useRef<HTMLDivElement>(null);
   const formRef = useRef<HTMLDivElement>(null);
   const [dragging, setDragging] = useState(false);
+  const [subidaPasada, setSubidaPasada] = useState(false);
+
+  useEffect(() => {
+    setSubidaPasada(Date.now() >= SUBIDA_COMUNIDAD);
+  }, []);
 
   // HLS adaptativo desde Bunny (ver nota en Hero.tsx: ya no hace falta el truco
   // de precargar el corto y swapear al largo).
@@ -110,8 +119,15 @@ export default function HeroReordered() {
 
   return (
     <section className={styles.hero} id="registro">
-      {/* Fuera la barra de «plazas limitadas» (Carlos, 2026-10-24). El espaciador se queda como
-          margen de arriba, para que el hero no cambie de sitio. */}
+      {/* Barra FIJA en el top: la subida de precio, que es real y tiene fecha (Carlos, 2026-10-24).
+          Antes decía «[mes] · plazas limitadas». */}
+      {!subidaPasada && (
+        <div className={styles.scarcityBar}>
+          <span className={styles.scarcityDot} aria-hidden="true" />
+          <span className={styles.scarcityText}>Sube a 199€ · 1 diciembre</span>
+        </div>
+      )}
+      {/* Espaciador en el flujo: la barra fija no ocupa espacio propio */}
       <div className={styles.scarcitySpacer} aria-hidden="true" />
 
       <div className={styles.container}>
@@ -192,7 +208,7 @@ export default function HeroReordered() {
             </p>
             <button className={styles.priceCta} onClick={handleStart}>
               <span className={styles.priceCtaMain}>
-                <strong>199€</strong> pago único
+                Pago único <strong>99€</strong>
               </span>
             </button>
             <p className={styles.afterCta}>

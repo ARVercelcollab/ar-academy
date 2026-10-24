@@ -24,7 +24,7 @@ export default function FinalCta() {
             <span className={styles.priceLabel}>Únete hoy</span>
             <div className={styles.priceRow}>
               <span className={styles.price}>
-                <strong>199€</strong> pago único
+                <strong>99€</strong> pago único
               </span>
             </div>
             <p className={styles.priceSubtext}>

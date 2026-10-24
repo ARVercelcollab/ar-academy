@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { stripe, PRECIO_COMUNIDAD, PAGO_COMUNIDAD } from "@/lib/stripe";
 
-// La Comunidad en un solo pago (Carlos: 99 € el 23-10, 199 € desde el 24-10). Antes era una suscripción
+// La Comunidad en un solo pago (Carlos: 99 € hasta Black Friday, 199 € desde el 1-12). Antes era una suscripción
 // de 27 €/mes; la ruta conserva el nombre porque es la que llama el formulario.
 // Se cobra con una factura, no con un pago suelto, para que el aviso a Make (el correo con el
 // acceso a Skool) siga saliendo de /api/stripe-webhook con invoice.payment_succeeded, y Stripe

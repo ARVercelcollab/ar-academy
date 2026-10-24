@@ -23,7 +23,7 @@ const faqs = [
     answer: "",
     answerBold: "",
     answerRest:
-      "No. Es un solo pago de 199 €, sin cuotas ni letra pequeña. ",
+      "No. Es un solo pago de 99 €, sin cuotas ni letra pequeña. ",
     answerBold2: "Y el acceso es para siempre.",
   },
   {
