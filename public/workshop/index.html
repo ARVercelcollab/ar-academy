@@ -752,6 +752,18 @@ h1 .it{color:#831A36}
 .escalera .ahora{background:#831A36;color:#fff}
 .escalera .paso{text-decoration:line-through;opacity:.6}
 
+/* Debajo de las fotos, como en la Comunidad (Carlos, 24-10): la caja dorada con el pago único,
+   las dos frases y el botón. Después, las alumnas y el formulario. */
+.pagounico{max-width:34rem;margin:26px auto 0;text-align:center}
+.pagounico .caja{display:block;background:#E2B061;color:#161616;text-decoration:none;text-transform:uppercase;
+  font-size:clamp(22px,6.4vw,30px);font-weight:300;letter-spacing:-.02em;padding:20px 16px}
+.pagounico .caja b{font-weight:600}
+.pagounico p{margin:18px auto 0 !important;max-width:30rem !important;font-size:14.5px !important;line-height:1.55;text-transform:uppercase;color:#161616 !important}
+.pagounico p b{display:block;font-weight:500}
+.pagounico p i{display:block;font-weight:300;color:rgba(22,22,22,.78)}
+.pagounico .pillbtn{margin-top:20px}
+@media (min-width:900px){.pagounico p{font-size:16px !important}}
+
 /* El formulario, arriba, bajo «+400 alumnas en 19 países» (Carlos, 24-10), como en /comunidad. */
 .pago{margin:26px auto 0;border:1px solid var(--line-2);padding:22px 20px 22px;background:#fff;text-align:left;max-width:34rem;scroll-margin-top:64px}
 .pago .entra{margin:0 0 18px !important;font-size:14.5px !important;line-height:1.5;color:var(--tx-2) !important;max-width:none !important;text-align:left}
@@ -815,6 +827,11 @@ h1 .it{color:#831A36}
         <figure><img src="/workshop/ari-4.jpg" alt="Ari en una sesión de ropa deportiva" width="631" height="820" loading="lazy"></figure>
         <figure><img src="/workshop/ari-5.jpg" alt="Ari en el backstage de un desfile" width="519" height="820" loading="lazy"></figure>
         <figure><img src="/workshop/ari-6.jpg" alt="Ari en una editorial en blanco y negro" width="615" height="820" loading="lazy"></figure>
+      </div>
+      <div class="pagounico">
+        <a class="caja" href="#registro">Pago único <b><span data-euros>99</span>€</b></a>
+        <p><b>Un solo pago, acceso para siempre.</b><i>Saldrás siendo otra mujer: más segura, más auténtica, más profesional.</i></p>
+        <a class="pillbtn solid big" href="#registro">Quiero aprender a posar</a>
       </div>
       <div class="vslcta">
         <div class="rate">
