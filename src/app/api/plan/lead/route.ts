@@ -3,6 +3,7 @@ import { createHash } from "node:crypto";
 import { urlDePlan, URL_BASE } from "@/lib/plan/token";
 import { cierreRecomendado } from "@/lib/plan/contenido";
 import { type Candidata, elegirFicha, normalizaHandle } from "@/lib/plan/instagram";
+import { GRUPO, altaEnMailerLite, regionDe } from "@/lib/mailerlite";
 
 /**
  * Formulario del plan personalizado (/plan) → GHL (y Meta, si está configurado).
@@ -39,6 +40,8 @@ import { type Candidata, elegirFicha, normalizaHandle } from "@/lib/plan/instagr
  *        · `plan_url` y la nota con sus respuestas, su origen y los enlaces de su plan.
  *        · la Conversions API de Meta (`SubmitApplication`), con el mismo event_id que
  *          el píxel de /plan/gracias para que Meta no la cuente dos veces.
+ *        · el alta en MailerLite, en el grupo «Plan personalizado», que es lo que arranca
+ *          su secuencia de emails (src/lib/mailerlite.ts).
  *      Las etiquetas, `plan_url` y la nota van una detrás de otra (las tres tocan el
  *      contacto); la tarjeta y Meta, en paralelo.
  *
@@ -55,6 +58,8 @@ import { type Candidata, elegirFicha, normalizaHandle } from "@/lib/plan/instagr
  *   META_CAPI_SOLO_CON_CONSENTIMIENTO  → "1" para mandar a Meta solo si aceptó las
  *                      cookies (versión B de la decisión D6, pendiente de Carlos). Sin
  *                      ella se manda siempre, como hace la masterclass.
+ *   MAILERLITE_TOKEN → la clave de la API de MailerLite. Sin ella no se da de alta en la
+ *                      lista de email y no se rompe nada.
  *
  * Historia: vivió como función serverless en plan.ariannyrivasacademy.com (repo de
  * operaciones, 03-embudo/landing/api/lead.js) hasta el 2026-09-17, cuando la landing
@@ -750,6 +755,33 @@ export async function POST(req: Request) {
       if (!nota.ok) console.error("plan/lead: nota falló", nota.status, corto(nota));
     };
 
+    // En MailerLite, en «Plan personalizado»: entrar en ese grupo arranca su secuencia. El
+    // enlace de su plan se guarda para los emails de después; no se le manda al llegar.
+    const altaLista = () => {
+      let planUrl = "";
+      try {
+        planUrl = urlDePlan(contactId, cierreRecomendado({ edad: Number.isFinite(edad) ? edad : null }));
+      } catch {
+        // sin PLAN_TOKEN_SECRET: entra sin el enlace
+      }
+      return altaEnMailerLite({
+        email,
+        grupo: GRUPO.plan,
+        nombre,
+        origen: "plan",
+        etapa: "lead",
+        edad: Number.isFinite(edad) ? edad : null,
+        pais: paisNombre === "Otro país" ? "" : paisNombre,
+        region: regionDe(pais),
+        ocupacion,
+        dolorPlan: limpiar(b.dolor_principal, 900),
+        planUrl,
+        consentimiento: "formulario plan",
+        ghlId: contactId,
+        ip: datosMeta.ip,
+      });
+    };
+
     // Si el plan no quedó en su ficha de Instagram, después de la nota (lo nuevo se añade al
     // final de ella) se pide al backend que busque sus otras fichas por el nombre.
     const enSuInstagram = !!deInstagram && deInstagram.id === contactId;
@@ -757,6 +789,7 @@ export async function POST(req: Request) {
       contacto().then(() => (enSuInstagram ? undefined : revisarOtrasFichas(contactId))),
       ponerTarjeta(contactId, nombre), // secundaria: si falla, la lead ya está guardada
       mandarAMeta ? enviarMeta(datosMeta) : Promise.resolve(),
+      altaLista(),
     ]);
     for (const x of r) if (x.status === "rejected") console.error("plan/lead: después de responder", String(x.reason).slice(0, 200));
   });

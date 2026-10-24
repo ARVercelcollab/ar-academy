@@ -1,5 +1,6 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse, after } from "next/server";
 import { stripe, PAGO_COMUNIDAD } from "@/lib/stripe";
+import { GRUPO, altaEnMailerLite } from "@/lib/mailerlite";
 import Stripe from "stripe";
 
 export async function POST(req: NextRequest) {
@@ -81,6 +82,23 @@ export async function POST(req: NextRequest) {
         return NextResponse.json(
           { error: `Make webhook returned ${res.status}` },
           { status: 500 }
+        );
+      }
+
+      // En MailerLite pasa a «Alumnas Comunidad»: los segmentos de venta excluyen a las
+      // alumnas, así que deja de recibir ofertas de la Comunidad, y ese grupo es el que
+      // arranca su secuencia de alumna. Después de responder a Stripe: si MailerLite falla,
+      // el pago y el acceso no se enteran.
+      const { email: emailCliente, name: nombreCliente } = customer;
+      if (emailCliente) {
+        after(() =>
+          altaEnMailerLite({
+            email: emailCliente,
+            grupo: GRUPO.alumnasComunidad,
+            nombre: nombreCliente ?? "",
+            etapa: "comunidad",
+            consentimiento: "compra comunidad",
+          })
         );
       }
       break;
