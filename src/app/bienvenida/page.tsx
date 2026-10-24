@@ -58,8 +58,8 @@ function BienvenidaContent() {
         <p className={styles.support}>
           Si tienes algún problema o no recibes el email, contacta con nosotros
           en{" "}
-          <a href="mailto:ariannyrivasacademy@gmail.com">
-            ariannyrivasacademy@gmail.com
+          <a href="mailto:admin@ariannyrivasacademy.com">
+            admin@ariannyrivasacademy.com
           </a>
         </p>
 
