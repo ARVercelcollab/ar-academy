@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ya estás dentro · Workshop Posa para marcas · AR Academy</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#831A36">
+<link rel="icon" href="/plan/icono-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="/plan/icono-180.png">
+<link rel="stylesheet" href="https://use.typekit.net/cbv1cvv.css">
+<style>
+/* Después de pagar el workshop (y adonde vuelven los enlaces de pago de Stripe, por
+   /bienvenida). Misma casa que /plan/gracias: blanco, aktiv-grotesk 300 en mayúsculas,
+   vino solo en detalles, sin esquinas. Lo primero, el grupo de WhatsApp (Carlos,
+   2026-10-24: «un grupo de WhatsApp sí o sí»); después, el correo de Skool y la fecha. */
+*{box-sizing:border-box;border-radius:0 !important}
+:root{--bg:#FFFFFF;--tx:#161616;--tx-2:rgba(22,22,22,.62);--tx-3:rgba(22,22,22,.42);--line:rgba(22,22,22,.12);--vino:#831A36;--wa:#25D366;
+  --sans:"aktiv-grotesk","Inter Tight",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif}
+html,body{margin:0;background:var(--bg);color:var(--tx);font-family:var(--sans);font-weight:300;-webkit-font-smoothing:antialiased}
+body{font-size:17px;line-height:1.55;min-height:100vh;min-height:100dvh;display:flex;flex-direction:column}
+.bar{background:var(--vino);color:#fff;text-align:center;padding:9px 14px;font-size:16px;letter-spacing:-.01em;text-transform:uppercase;display:flex;align-items:center;justify-content:center;gap:10px}
+.bar i{display:inline-block;width:8px;height:8px;background:#fff;border-radius:50% !important}
+@media(max-width:640px){.bar{font-size:13px;padding:8px 10px}}
+main{flex:1;width:100%;max-width:720px;margin:0 auto;padding:44px 22px 40px;text-align:center}
+h1{font-size:clamp(28px,7.4vw,48px);line-height:1.05;letter-spacing:-.035em;font-weight:300;text-transform:uppercase;margin:0 0 18px}
+h1 mark{background:#161616;color:#fff;padding:0 .18em;margin-right:.12em;display:inline-block;line-height:1.1}
+.sub{font-size:16px;color:var(--tx-2);margin:0 auto 30px;max-width:34rem}
+.btn{display:flex;align-items:center;justify-content:center;gap:12px;width:100%;max-width:440px;margin:0 auto;background:var(--wa);color:#04240F;text-decoration:none;font-size:16.5px;font-weight:500;padding:17px 28px;text-transform:uppercase;letter-spacing:-.01em;transition:transform .25s cubic-bezier(.34,1.56,.64,1),filter .2s}
+.btn:hover{filter:brightness(1.04);transform:translateY(-1px)}
+.btn svg{width:22px;height:22px;flex:0 0 auto}
+@media(max-width:420px){.btn{font-size:14.5px;padding:16px 14px;gap:10px}.btn svg{width:20px;height:20px}}
+.msg{margin:14px auto 0;font-size:13px;color:var(--tx-3);max-width:34rem}
+.pasos{list-style:none;margin:44px auto 0;padding:0;max-width:34rem;text-align:left;border-top:1px solid var(--line)}
+.pasos li{display:grid;grid-template-columns:40px 1fr;gap:4px 12px;padding:20px 0;border-bottom:1px solid var(--line)}
+.pasos .n{font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:12px;letter-spacing:.1em;color:var(--vino);padding-top:4px}
+.pasos b{font-weight:500;text-transform:uppercase;letter-spacing:-.01em;font-size:16px}
+.pasos p{grid-column:2;margin:0;font-size:15px;color:var(--tx-2)}
+.pasos a{color:var(--tx);text-decoration:underline;text-underline-offset:3px}
+footer{border-top:1px solid var(--line);padding:26px 22px 34px;text-align:center;font-size:11.5px;color:var(--tx-3);line-height:1.8}
+footer a{color:inherit;text-decoration:none}
+footer a:hover{text-decoration:underline}
+@media(prefers-reduced-motion:reduce){.btn{transition:none}}
+</style>
+</head>
+<body>
+<div class="bar"><i></i><span>Ya estás dentro · únete al grupo del workshop</span></div>
+
+<main>
+  <h1><mark>¡Ya estás dentro!</mark> <span id="titular">Nos vemos el martes 24</span></h1>
+  <p class="sub" id="sub">Lo primero, entra en el grupo de WhatsApp del workshop: ahí te aviso de todo, el enlace del directo, los recordatorios y lo que tienes que preparar.</p>
+
+  <!-- El enlace del grupo NO va escrito aquí: el repositorio es público y el grupo no. Llega
+       solo después de pagar, desde /api/create-subscription (WORKSHOP_WHATSAPP_URL en Vercel).
+       Sin él (las que pagan por un enlace de pago, o si aún no está puesto), el botón abre un
+       WhatsApp a AR Academy para pedirlo: así además la setter la tiene en GHL. -->
+  <a class="btn" id="wabtn" href="https://wa.me/34722655343?text=Hola%20Ari%2C%20acabo%20de%20comprar%20el%20workshop.%20%C2%BFMe%20pasas%20el%20enlace%20del%20grupo%3F" target="_blank" rel="noopener">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 1.8a8.2 8.2 0 0 1 0 16.4c-1.5 0-2.9-.4-4.1-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 0 1 12 3.8zm-3.3 4.4c-.2 0-.5 0-.7.3-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.1 4.9 4.3 2.4 1 2.9.8 3.4.7.5 0 1.7-.7 1.9-1.4.2-.7.2-1.2.2-1.4-.1-.1-.3-.2-.6-.3l-2-1c-.3-.1-.5-.1-.7.1l-.9 1.1c-.2.2-.3.2-.6.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.4.1-.2 0-.4 0-.5L10 8.6c-.2-.4-.4-.4-.6-.4h-.7z"/></svg>
+    <span id="watxt">Pedir el enlace del grupo</span>
+  </a>
+  <p class="msg" id="msg">Te contestamos por WhatsApp con el enlace del grupo.</p>
+
+  <ol class="pasos">
+    <li><span class="n">01</span><b>Revisa tu correo</b><p id="correo">Te acaba de llegar un correo con tu acceso a la Comunidad. Si no lo ves, mira en promociones o en spam.</p></li>
+    <li id="pasofecha"><span class="n">02</span><b>Apunta la fecha</b><p><span id="cuando">Martes 24 de noviembre, a las 20:00 de España.</span> <a id="cal" href="https://calendar.google.com/calendar/render?action=TEMPLATE&amp;text=Workshop%20Posa%20para%20marcas%20%C2%B7%20AR%20Academy&amp;dates=20261124T190000Z%2F20261124T210000Z&amp;details=El%20enlace%20del%20directo%20llega%20al%20grupo%20de%20WhatsApp%20del%20workshop%20y%20por%20correo." target="_blank" rel="noopener">Añádelo a tu calendario</a>.</p></li>
+    <li><span class="n">03</span><b>¿Algún problema?</b><p>Escríbenos a ariannyrivasacademy@gmail.com y lo vemos.</p></li>
+  </ol>
+</main>
+
+<footer>
+  Los resultados pueden variar según la dedicación y el esfuerzo de cada alumna.<br>
+  © 2026 AR Academy — Arianny Rivas · <a href="/comunidad#legal">Privacidad</a> · <a href="/comunidad#legal">Aviso legal</a> · <a href="/comunidad#legal">Cookies</a>
+</footer>
+
+<script>
+(function(){
+var WA_NUM='34722655343';   // +34 722 65 53 43 — número de AR Academy en GHL
+var DIRECTO=Date.UTC(2026,10,24,19,0,0);   // martes 24-11-2026, 20:00 de Madrid
+var FIN_DIRECTO=Date.UTC(2026,10,24,23,0,0);
+
+/* Lo que dejó la página del workshop al pagar (esta pestaña, nada en la URL). Si llega
+   desde un enlace de pago de Stripe (por /bienvenida) no hay nada y vale lo de por defecto. */
+var compra=null;
+try{compra=JSON.parse(sessionStorage.getItem('workshop_compra')||'null')}catch(e){}
+function guardar(){try{sessionStorage.setItem('workshop_compra',JSON.stringify(compra))}catch(e){}}
+
+var nombre=(compra&&compra.nombre||'').replace(/\s+/g,' ').trim().slice(0,80);
+var wb=document.getElementById('wabtn'), msg=document.getElementById('msg');
+if(compra&&compra.grupo){
+  wb.href=compra.grupo;
+  document.getElementById('watxt').textContent='Entrar al grupo de WhatsApp';
+  msg.textContent='Entra con el mismo número que pusiste al comprar.';
+}else{
+  var texto='Hola Ari, '+(nombre?'soy '+nombre+', ':'')+'acabo de comprar el workshop. ¿Me pasas el enlace del grupo?';
+  wb.href='https://wa.me/'+WA_NUM+'?text='+encodeURIComponent(texto);
+}
+if(compra&&compra.email){
+  document.getElementById('correo').textContent='Te acaba de llegar a '+compra.email+' un correo con tu acceso a la Comunidad. Si no lo ves, mira en promociones o en spam.';
+}
+
+/* Después del directo, la que compra se lleva la grabación: sin fecha que apuntar. */
+if(Date.now()>=FIN_DIRECTO){
+  document.getElementById('titular').textContent='La grabación te espera';
+  document.getElementById('sub').textContent='Lo primero, entra en el grupo de WhatsApp del workshop: ahí tienes el enlace de la grabación y te aviso de todo.';
+  document.getElementById('pasofecha').hidden=true;
+  document.querySelector('.pasos li:last-child .n').textContent='02';
+}else{
+  try{
+    var tz=Intl.DateTimeFormat().resolvedOptions().timeZone||'';
+    if(tz && tz!=='Europe/Madrid'){
+      var t=new Intl.DateTimeFormat('es',{weekday:'long',day:'numeric',month:'long',hour:'2-digit',minute:'2-digit',timeZone:tz}).format(new Date(DIRECTO));
+      document.getElementById('cuando').textContent='Martes 24 de noviembre, a las 20:00 de España (en tu zona horaria: '+t+').';
+    }
+  }catch(e){}
+}
+
+/* Píxel de Meta, con el mismo consentimiento que el resto de la web. La compra se cuenta
+   aquí, una sola vez aunque recargue. */
+function leerConsent(){var m=document.cookie.match(/(?:^|; )cookie_consent=([^;]*)/);return m?decodeURIComponent(m[1]):null}
+if(leerConsent()==='accepted'){
+  !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+  n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+  document,'script','https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init','1613484133037939'); fbq('track','PageView');
+  if(compra&&!compra.px){
+    fbq('track','Purchase',{content_name:'Workshop 24-11',currency:'EUR',value:compra.euros||99},
+      compra.factura?{eventID:compra.factura}:undefined);
+    compra.px=1; guardar();
+  }
+}
+})();
+</script>
+</body>
+</html>

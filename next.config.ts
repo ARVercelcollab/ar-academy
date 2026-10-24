@@ -43,6 +43,9 @@ const nextConfig: NextConfig = {
       { source: "/plan/gracias", destination: "/plan/gracias/index.html" },
       // La plantilla del plan personalizado, rellena con un perfil de ejemplo.
       { source: "/plan/ejemplo", destination: "/plan/ejemplo/index.html" },
+      // La de después de pagar el workshop (el grupo de WhatsApp). /comunidad y /workshop
+      // los decide src/proxy.ts, porque cambian el 1-12.
+      { source: "/workshop/gracias", destination: "/workshop/gracias/index.html" },
     ];
   },
 };

@@ -33,6 +33,7 @@ export const GRUPO = {
   plan: "201685594213975647", // «Plan personalizado»
   masterclass: "201685595088487481", // «Masterclass sep 2026»
   alumnasComunidad: "201685612201248062", // «Alumnas Comunidad»
+  workshop: "202226448988112797", // «Workshop 24-11 · compradoras» (el grupo de WhatsApp y los avisos del directo)
 } as const;
 
 // Las etapas, de menos a más. Una chica nunca baja de etapa por volver a entrar.
@@ -41,7 +42,7 @@ type Etapa = (typeof ETAPAS)[number];
 
 export type Alta = {
   email: string;
-  grupo: string;
+  grupo: string | string[]; // uno o varios: se suman a los que ya tenía
   nombre?: string; // el nombre completo: se parte en nombre y apellido
   origen?: string; // plan · masterclass · workshop
   etapa?: Etapa;
@@ -194,7 +195,8 @@ export async function altaEnMailerLite(a: Alta): Promise<void> {
       poner("fecha_alta", new Date().toLocaleDateString("sv-SE", { timeZone: "Europe/Madrid" }));
     }
 
-    const cuerpo: Record<string, unknown> = { email, fields: campos, groups: [a.grupo] };
+    const grupos = Array.isArray(a.grupo) ? a.grupo : [a.grupo];
+    const cuerpo: Record<string, unknown> = { email, fields: campos, groups: grupos };
     // La prueba del alta (dónde y cuándo dejó el email), solo la primera vez.
     if (nueva) {
       cuerpo.opted_in_at = ahoraUTC();
