@@ -95,6 +95,7 @@ export async function POST(req: NextRequest) {
       const workshop = esDelWorkshop(oferta);
       const anios = Number.parseInt(String(customer.metadata?.edad ?? ""), 10);
       const edad = Number.isFinite(anios) ? anios : null;
+      const instagram = String(customer.metadata?.instagram ?? "");
 
       // En MailerLite pasa a «Alumnas Comunidad»: los segmentos de venta excluyen a las
       // alumnas, así que deja de recibir ofertas de la Comunidad. Si trae el workshop, entra
@@ -121,6 +122,7 @@ export async function POST(req: NextRequest) {
           email: emailCliente ?? "",
           telefono: telCliente ?? "",
           edad,
+          instagram,
           euros: invoice.amount_paid / 100,
           workshop,
           descripcion: invoice.description || "Comunidad AR Academy",

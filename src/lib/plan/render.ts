@@ -213,7 +213,7 @@ export function renderPlan(p: PlanArmado): string {
   const comunidadWorkshop = `<p>Este mes, la puerta de entrada es mi workshop <b>«Posa para marcas»</b>: ${
     fase === "workshop" ? "el martes 24 de noviembre te enseño en directo" : "en la grabación del directo del 24 de noviembre te enseño"
   } a posar para que las marcas te contraten como modelo. Posar con ropa y con producto, la cara y las manos en una campaña, y un casting en directo con qué fotos mandarle a una marca.</p>
-    <p>Y con tu entrada te quedas en la <b>Comunidad de AR Academy para siempre</b>: todas mis alumnas y las mentoras, los eventos, los directos conmigo, el acceso a AR Xperience París 2027 (el viaje y la experiencia se pagan aparte) y el grupo de WhatsApp del workshop.</p>
+    <p>Y con tu entrada te quedas en la <b>Comunidad de AR Academy para siempre</b>: todas mis alumnas y las mentoras, los eventos, los directos conmigo, la oportunidad de participar en AR Xperience París 2027, 4 días conmigo y mi equipo en la semana de la moda (el viaje y la experiencia se pagan aparte) y el grupo de WhatsApp del workshop.</p>
     <p>${precioWorkshop}</p>${
     p.menor
       ? `

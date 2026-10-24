@@ -7,6 +7,7 @@ import {
   PAGO_COMUNIDAD,
 } from "@/lib/stripe";
 import { cobroComunidad, OFERTA, esDelWorkshop, type Fase } from "@/lib/comunidad";
+import { normalizaHandle } from "@/lib/plan/instagram";
 
 // La Comunidad en un solo pago. En noviembre va con el workshop del 24-11 (99 € hasta el 16-11, 149 €
 // hasta el 30-11) y desde el 1-12 se vende sola a 199 € (src/lib/comunidad.ts). Antes era una
@@ -17,7 +18,7 @@ import { cobroComunidad, OFERTA, esDelWorkshop, type Fase } from "@/lib/comunida
 export async function POST(req: NextRequest) {
   let facturaId: string | null = null;
   try {
-    const { name, email, phone, paymentMethodId, edad, origen } = await req.json();
+    const { name, email, phone, paymentMethodId, instagram, origen } = await req.json();
 
     if (!name || !email || !phone || !paymentMethodId) {
       return NextResponse.json(
@@ -29,15 +30,16 @@ export async function POST(req: NextRequest) {
     // El precio y la oferta, con la fecha de ahora (y media hora de margen).
     const { euros, fase } = cobroComunidad();
     const oferta = OFERTA[fase];
-    const anios = Number.parseInt(String(edad ?? ""), 10);
+    const ig = normalizaHandle(instagram).slice(0, 30);
 
     const customer = await stripe.customers.create({
       name,
       email,
       phone,
-      // La edad la piden la página del workshop (para las menores) y la ficha de GHL; el origen
-      // (utm_*), para saber si vende el email, el anuncio o la bio.
-      metadata: { oferta, ...(Number.isFinite(anios) ? { edad: String(anios) } : {}), ...utms(origen) },
+      // Su @ de Instagram lo pide la página del workshop (Carlos, 2026-10-24, en lugar de la edad):
+      // con él se encuentra su ficha de Instagram en GHL. El origen (utm_*), para saber si vende
+      // el email, el anuncio o la bio.
+      metadata: { oferta, ...(ig ? { instagram: ig } : {}), ...utms(origen) },
       payment_method: paymentMethodId,
       invoice_settings: {
         default_payment_method: paymentMethodId,
