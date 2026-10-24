@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Posa para marcas · Workshop en directo con Ari · AR Academy</title>
-<meta name="description" content="Workshop en directo el martes 24 de noviembre: aprende a posar con ropa y con producto como se posa en una campaña. Con la Comunidad de AR Academy para siempre. +400 alumnas en 19 países.">
+<meta name="description" content="Workshop en directo el martes 24 de noviembre: aprende a posar para que las marcas te contraten como modelo. Con acceso a AR Academy para siempre. +400 alumnas en 19 países.">
 <meta name="theme-color" content="#831A36">
 <link rel="canonical" href="https://www.ariannyrivasacademy.com/comunidad">
 <link rel="icon" href="/plan/icono-32.png" sizes="32x32">
@@ -15,13 +15,13 @@
 <meta property="og:locale" content="es_ES">
 <meta property="og:url" content="https://www.ariannyrivasacademy.com/comunidad">
 <meta property="og:title" content="Posa para marcas · Workshop en directo con Ari">
-<meta property="og:description" content="Workshop en directo el martes 24 de noviembre: aprende a posar con ropa y con producto como se posa en una campaña. Con la Comunidad de AR Academy para siempre. +400 alumnas en 19 países.">
+<meta property="og:description" content="Workshop en directo el martes 24 de noviembre: aprende a posar para que las marcas te contraten como modelo. Con acceso a AR Academy para siempre. +400 alumnas en 19 países.">
 <meta property="og:image" content="https://www.ariannyrivasacademy.com/workshop/og-workshop.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Posa para marcas · Workshop en directo con Ari">
-<meta name="twitter:description" content="Workshop en directo el martes 24 de noviembre: aprende a posar con ropa y con producto como se posa en una campaña. Con la Comunidad de AR Academy para siempre. +400 alumnas en 19 países.">
+<meta name="twitter:description" content="Workshop en directo el martes 24 de noviembre: aprende a posar para que las marcas te contraten como modelo. Con acceso a AR Academy para siempre. +400 alumnas en 19 países.">
 <meta name="twitter:image" content="https://www.ariannyrivasacademy.com/workshop/og-workshop.jpg">
 </head>
 <body>
@@ -689,16 +689,49 @@ h1 .it{color:#831A36}
 .casos .tiratrack:hover,.casos .marqtrack:hover{animation-play-state:paused}
 @media(prefers-reduced-motion:reduce){.marqtrack,.tiratrack{animation:none}}
 
+
 /* ══ Workshop «Posa para marcas» (2026-10-24) ══════════════════════════════
    La página del plan, con el cuestionario cambiado por el pago. Lo de abajo es solo
-   lo nuevo: las tres fotos de arriba, las tres partes, la hora del directo, la
-   escalera de precio y el formulario de pago. */
-.subida{margin:6px 0 0;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:#831A36;font-weight:500}
-@media (min-width:900px){.subida{font-size:14px}}
-.poses{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;aspect-ratio:auto;background:transparent;border:0;cursor:default;margin-top:18px}
+   lo nuevo: la línea del acceso bajo el precio, las seis fotos de Ari, lo que te
+   llevas (como los pasos del plan, con París en grande), las tres partes, la hora
+   del directo, el precio con su escalera y el formulario de pago. */
+[hidden]{display:none !important}
+.acceso{margin:8px 0 0;font-size:15px;letter-spacing:.06em;text-transform:uppercase;font-weight:500;color:#831A36}
+.lede.destaca{color:#161616;font-weight:500;font-size:15px;margin-top:16px}
+@media (min-width:900px){.acceso{font-size:17px}.lede.destaca{font-size:17px}}
+
+.poses{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;aspect-ratio:auto;background:transparent;border:0;cursor:default;margin-top:20px}
 .poses::before,.poses::after{display:none}
-.poses figure{margin:0;position:relative;aspect-ratio:3/4;overflow:hidden;background:#EEEEEE}
+.poses figure{margin:0;position:relative;aspect-ratio:10/11;overflow:hidden;background:#EEEEEE}
+@media (min-width:560px){.poses figure{aspect-ratio:3/4}}
 .poses img{width:100%;height:100%;object-fit:cover;display:block}
+.poses figcaption{position:absolute;left:0;bottom:0;padding:4px 7px;background:rgba(22,22,22,.62);color:#fff;
+  font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase}
+
+/* Lo que te llevas: numerado como los pasos del plan, y París en grande. */
+.stack{list-style:none;margin:34px 0 0;padding:0;border-top:1px solid var(--line)}
+.stack>li{display:grid;grid-template-columns:44px 1fr;gap:14px;padding:24px 0;border-bottom:1px solid var(--line)}
+.stack .n{font-family:var(--mono);font-size:12px;color:var(--acc-r);letter-spacing:.1em;padding-top:5px}
+.stack h3{margin:0;font-size:clamp(18px,4.8vw,24px);font-weight:400;letter-spacing:-.02em;line-height:1.15;text-transform:uppercase;color:#161616}
+.stack p{margin:8px 0 0 !important;font-size:15.5px;max-width:none}
+.tag{display:inline-block;margin-top:12px;padding:5px 9px;border:1px solid rgba(131,26,54,.35);color:#831A36;
+  font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:500}
+.stack>li.paris{display:block;padding:0;margin:24px 0;border:0;background:#161616;position:relative;overflow:hidden}
+.stack>li.paris img{display:block;width:100%;height:auto;max-height:520px;object-fit:cover;object-position:center 30%}
+.paristx{padding:24px 22px 28px;color:#fff}
+.paristx .n{display:block;color:#E3B25E;margin-bottom:10px}
+.paristx h3{color:#fff;font-size:clamp(22px,6vw,32px)}
+.paristx p{color:rgba(255,255,255,.78) !important}
+.paristx .tag{border-color:rgba(255,255,255,.4);color:#fff}
+
+.precio{margin-top:40px;text-align:center}
+.hoy{display:flex;align-items:baseline;justify-content:center;gap:12px;flex-wrap:wrap}
+.hoy small{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--tx-3)}
+.hoy b{font-size:clamp(52px,15vw,84px);font-weight:300;letter-spacing:-.04em;line-height:1;color:#161616}
+.hoy>span{font-size:14px;color:var(--tx-2)}
+.subida{margin:10px 0 0 !important;font-size:13px !important;letter-spacing:.08em;text-transform:uppercase;color:#831A36 !important;font-weight:500;max-width:none !important}
+.precio .midcta{margin-top:26px}
+
 .partes{margin-top:34px;border-top:1px solid var(--line)}
 .parte{display:grid;grid-template-columns:44px 1fr;gap:8px 14px;padding:24px 0;border-bottom:1px solid var(--line)}
 .parte .n{font-family:var(--mono);font-size:12px;color:var(--acc-r);letter-spacing:.1em;padding-top:5px}
@@ -708,13 +741,16 @@ h1 .it{color:#831A36}
 .cuando b{display:block;font-size:clamp(18px,4.8vw,26px);font-weight:300;text-transform:uppercase;letter-spacing:-.02em;color:#fff}
 .cuando span{display:block;margin-top:10px;font-size:14px;line-height:1.5;color:rgba(255,255,255,.72)}
 .cuando span b{display:inline;font-size:inherit;font-weight:500;text-transform:none;letter-spacing:0;color:#fff}
-.escalera{margin:34px 0 0;border:1px solid var(--line)}
-.escalera div{display:flex;justify-content:space-between;align-items:baseline;gap:14px;padding:13px 16px;font-size:14.5px;line-height:1.35;color:var(--tx-3);border-bottom:1px solid var(--line)}
+
+.escalera{margin:22px auto 0;border:1px solid var(--line);text-align:left;max-width:30rem}
+.escalera div{display:flex;justify-content:space-between;align-items:baseline;gap:14px;padding:12px 16px;font-size:14px;line-height:1.35;color:var(--tx-3);border-bottom:1px solid var(--line)}
 .escalera div:last-child{border-bottom:0}
 .escalera b{font-weight:500;white-space:nowrap}
 .escalera i{font-style:normal;text-transform:uppercase;letter-spacing:.08em;font-size:11px}
 .escalera .ahora{background:#831A36;color:#fff}
 .escalera .paso{text-decoration:line-through;opacity:.6}
+
+.entra{text-align:center}
 .pago{margin-top:30px;border:1px solid var(--line-2);padding:26px 20px 22px;background:#fff}
 .pago h3{font-size:12px;letter-spacing:.16em;text-transform:uppercase;font-weight:500;margin:0 0 18px;color:var(--acc-r)}
 .pago .fld input{background:#EEEEEE}
@@ -726,9 +762,17 @@ h1 .it{color:#831A36}
 .err{color:#D9436B !important;font-size:13px !important;margin:12px 0 0 !important;text-align:center}
 .seguro{font-size:12px !important;color:var(--tx-3) !important;text-align:center;margin:18px 0 0 !important;line-height:1.5}
 .volver{display:block;margin:14px auto 0;background:none;border:0;color:var(--tx-3);font-family:var(--sans);font-size:12.5px;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+
+/* Sin el bloque negro de debajo, la tira de las alumnas no necesita el hueco que le dejaba. */
+.casos{margin-bottom:0}
+.casos+.wrap .midcta{margin-top:40px}
+
 @media (min-width:900px){
-  .poses{max-width:840px;margin-left:auto;margin-right:auto;gap:10px}
-  .partes,.cuando,.escalera,.pago,#registro .bull{max-width:38rem;margin-left:auto;margin-right:auto}
+  .poses{grid-template-columns:repeat(6,1fr);max-width:1020px;margin-left:auto;margin-right:auto;gap:8px}
+  .stack,.partes,.cuando,.pago,.precio{max-width:44rem;margin-left:auto;margin-right:auto}
+  .stack>li.paris{display:grid;grid-template-columns:1fr 1fr;align-items:stretch}
+  .stack>li.paris img{height:100%;max-height:none}
+  .paristx{padding:34px 32px;align-self:center}
   .pago{padding:32px 30px 26px}
 }
 </style>
@@ -740,14 +784,18 @@ h1 .it{color:#831A36}
   <div class="wrap">
     <h1 id="h1">Aprende a posar para que las marcas te contraten como modelo. <span class="it" id="h1it">En directo, conmigo.</span></h1>
     <div class="free" id="freeln">Ahora mismo, <span data-euros>99</span> €.</div>
-    <div class="subida" id="subida">Sube a 149 € el 17 de noviembre</div>
-    <p class="lede" data-fase="workshop">La misma clase de posado que doy en nuestra formación de más de 2.000 €, en directo el martes 24 de noviembre y con la Comunidad para siempre. Para que sepas qué hacer con el cuerpo, las manos y la cara cuando una marca te pone delante de la cámara.</p>
-    <p class="lede" data-fase="grabacion" hidden>La misma clase de posado que doy en nuestra formación de más de 2.000 €, grabada en directo el martes 24 de noviembre y con la Comunidad para siempre. Para que sepas qué hacer con el cuerpo, las manos y la cara cuando una marca te pone delante de la cámara.</p>
+    <div class="acceso">Con acceso a AR Academy para siempre</div>
+    <p class="lede destaca">Podrás acceder a AR Xperience París 2027 y a todos los eventos de la Comunidad.</p>
+    <p class="lede" data-fase="workshop">La misma clase que les doy a mis alumnas del programa personalizado, en directo el martes 24 de noviembre. Para que sepas qué hacer con el cuerpo, las manos y la cara cuando una marca te pone delante de la cámara.</p>
+    <p class="lede" data-fase="grabacion" hidden>La misma clase que les doy a mis alumnas del programa personalizado, grabada en directo el martes 24 de noviembre. Para que sepas qué hacer con el cuerpo, las manos y la cara cuando una marca te pone delante de la cámara.</p>
     <div class="vsl">
       <div class="poses frame" id="vslframe">
-        <figure><img src="/workshop/pose-1.jpg" alt="Ari posando en estudio con un vestido marrón" width="639" height="900"></figure>
-        <figure><img src="/workshop/pose-2.jpg" alt="Ari posando en una sesión sobre fondo rojo" width="675" height="900"></figure>
-        <figure><img src="/workshop/pose-3.jpg" alt="Ari posando con chaqueta negra y gafas de sol" width="675" height="900"></figure>
+        <figure><img src="/workshop/ari-1.jpg" alt="Ari posando en estudio con un vestido marrón" width="582" height="820"><figcaption>Estudio</figcaption></figure>
+        <figure><img src="/workshop/ari-2.jpg" alt="Ari en el photocall de la Paris Fashion Week" width="615" height="820"><figcaption>Paris Fashion Week</figcaption></figure>
+        <figure><img src="/workshop/ari-3.jpg" alt="Ari posando en una sesión sobre fondo rojo" width="615" height="820"><figcaption>Sesión</figcaption></figure>
+        <figure><img src="/workshop/ari-4.jpg" alt="Ari en una sesión de ropa deportiva" width="631" height="820" loading="lazy"><figcaption>Deporte</figcaption></figure>
+        <figure><img src="/workshop/ari-5.jpg" alt="Ari en el backstage de un desfile" width="519" height="820" loading="lazy"><figcaption>Backstage</figcaption></figure>
+        <figure><img src="/workshop/ari-6.jpg" alt="Ari en una editorial en blanco y negro" width="615" height="820" loading="lazy"><figcaption>Editorial</figcaption></figure>
       </div>
       <div class="vslcta">
         <a class="pillbtn solid big" href="#registro">Quiero aprender a posar</a>
@@ -761,39 +809,64 @@ h1 .it{color:#831A36}
   </div>
 </header>
 
-<section class="top-line">
+<section class="top-line" id="incluye">
   <div class="wrap">
-    <span class="lab">Castings</span>
-    <h2>Esto paga una marca por una jornada. <span class="it">Y lo que hace la modelo ese día es posar.</span></h2>
-    <p>Te enseño documentos de castings de verdad: las tarifas y los anuncios que mandan las productoras y las marcas cuando buscan gente. Así nos llegan a nuestra agencia, sin retocar nada.</p>
-    <div class="docs">
-      <article>
-        <div class="sheet" data-par><b>TALENT DAY FEES — SPAIN:</b><br><b>OCP ROLE</b><br>8H+1H // <mark>719,48€ +20%</mark> — BASIS FEE (this is the minimum)<br>9H+1H // 809,42€ +20%<br>10H+1H // 899,35€ +20%<br>Includes: 1h Make up / 1,5h Travel to set</div>
-        <p class="cap">Una jornada de trabajo en España: 719,48 €, más un 20 % para la agencia. Presta atención porque ahí dice «el mínimo».</p>
-      </article>
-      <article>
-        <div class="sheet" data-par>Derechos Principales / Buyouts main characters<br><mark><b>2.700€ + 20% agencia</b></mark><br><br>Derechos Secundarios / Buyouts secondaries<br><b>1.700€ + 20% agencia</b></div>
-        <p class="cap">Los derechos de imagen se cobran aparte de la jornada, y casi ninguna chica lo sabe, por eso casi ninguna los cobra.</p>
-      </article>
-      <article>
-        <div class="sheet" data-par>BUSCAMOS PERSONAS DE ENTRE 30-70 AÑOS,<br>RESIDENTES EN VALENCIA.<br><br><b>Hablamos de personas de playa con ese estilo<br>tan particular, <mark>no modelos</mark>.</b><br><br>TARIFAS:<br><b>Protagonistas</b> — 600€ jornada + 550 derechos<br><b>Figu especial</b> — 200€ jornada + 150€ derechos</div>
-        <p class="cap">Piden «personas de playa, no el estereotipo de modelo», de 30 a 70 años, y lo dicen ellos, no yo.</p>
-      </article>
-      <article>
-        <div class="sheet" data-par>PERFILES QUE BUSCAMOS:<br><br>BUSCAMOS <b>MUJERES DE ENTRE 30 Y 65 AÑOS DE<br><mark>CUALQUIER ETNIA</mark>.</b> PAREJAS O MADRES<br>DE FAMILIA<br><br>LUGAR: MALLORCA · JORNADA: 9+1H<br>De <b>450€ a 500€</b> por integrante</div>
-        <p class="cap">Mujeres de 30 a 65 años, de cualquier etnia y madres de familia, así que ni la edad ni el origen eran el filtro.</p>
-      </article>
+    <span class="lab">Lo que te llevas</span>
+    <h2>Todo esto, <span class="it">por <span data-euros>99</span> €.</span></h2>
+    <ol class="stack">
+      <li>
+        <span class="n">01</span>
+        <div><h3>El workshop «Posa para marcas», en directo conmigo</h3>
+        <p>Lo que te pide un cliente cuando te contrata para una campaña, y un casting en directo en el que corrijo a varias.</p>
+        <span class="tag" data-fase="workshop">Martes 24 de noviembre · 20:00 de España</span><span class="tag" data-fase="grabacion" hidden>La grabación del directo del 24 de noviembre</span></div>
+      </li>
+      <li>
+        <span class="n">02</span>
+        <div><h3>La grabación</h3>
+        <p>Para verla las veces que quieras, aunque ese día no puedas conectarte.</p>
+        <span class="tag">Para siempre</span></div>
+      </li>
+      <li>
+        <span class="n">03</span>
+        <div><h3>La Comunidad de AR Academy, para siempre</h3>
+        <p>Las bases empezando por la mentalidad, todos los eventos de la Comunidad y los directos conmigo. Entras una vez y te quedas: sin cuotas.</p>
+        <span class="tag">Acceso para siempre</span></div>
+      </li>
+      <li>
+        <span class="n">04</span>
+        <div><h3>Las mentoras de AR Academy y las alumnas avanzadas</h3>
+        <p>Dentro de Skool estás con las mentoras de AR Academy y con todas mis alumnas, también las más avanzadas. Rodéate de chicas que van a por lo mismo que tú.</p>
+        <span class="tag">Dentro de Skool</span></div>
+      </li>
+      <li class="paris">
+        <img src="/workshop/paris.jpg" alt="Ari en la semana de la moda de París" width="900" height="1200" loading="lazy">
+        <div class="paristx">
+          <span class="n">05</span>
+          <h3>AR Xperience París 2027 · Paris Fashion Week</h3>
+          <p>Una semana conmigo y con mis modelos en las mejores pasarelas de París, en la semana de la moda.</p>
+          <span class="tag">Tienes el acceso · el viaje y la experiencia se pagan aparte</span>
+        </div>
+      </li>
+      <li>
+        <span class="n">06</span>
+        <div><h3>El grupo de WhatsApp del workshop</h3>
+        <p>Todas las chicas del workshop y yo. Ahí te aviso de todo: el enlace del directo, los recordatorios y lo que tienes que preparar.</p>
+        <span class="tag">Al momento de entrar</span></div>
+      </li>
+    </ol>
+    <div class="precio">
+      <div class="hoy"><small>Hoy</small><b><span data-euros>99</span> €</b><span>pago único</span></div>
+      <p class="subida" id="subida">Sube a 149 € el 17 de noviembre</p>
+      <div class="escalera" id="escalera" aria-label="Precio según la fecha"></div>
+      <div class="midcta"><a class="pillbtn solid big" href="#registro">Quiero aprender a posar</a><small>Pago único · Online desde cualquier país · Queda grabado · Acceso a AR Academy para siempre</small></div>
     </div>
-    <p class="kick">Ninguno de estos castings pide 1,75 ni talla 36. Piden a alguien que sepa posar con la ropa y con el producto, que entienda lo que le pide el cliente y que no se ponga rígida con un equipo mirándola. <span class="it">Y eso se aprende.</span></p>
-    <div class="midcta"><a class="pillbtn solid big" href="#registro">Quiero aprender a posar</a><small>Pago único · Online desde cualquier país · Queda grabado · Acceso a AR Academy para siempre</small></div>
   </div>
 </section>
 
 <section class="top-line">
   <div class="wrap">
     <span class="lab">El workshop</span>
-    <h2>Tres cosas que vas a saber hacer <span class="it">cuando termine el directo.</span></h2>
-    <p>No es una clase de poses bonitas para Instagram. Es lo que te pide un cliente cuando te contrata para una campaña, y casi nadie lo enseña.</p>
+    <h2>Tres cosas que vas a hacer <span class="it">en el workshop.</span></h2>
     <div class="partes">
       <div class="parte"><span class="n">01</span><h3>Posar con ropa y con producto</h3><p>Cómo se coloca una prenda para que se vea, cómo sostienes un producto sin que parezca que te estorba y por qué en publicidad casi nunca se posa como en una foto para tus redes.</p></div>
       <div class="parte"><span class="n">02</span><h3>La cara y las manos en una campaña</h3><p>Las expresiones que se piden en una campaña, cómo dejar de salir siempre con la misma cara y qué hacer con las manos para que no se vean congeladas.</p></div>
@@ -813,15 +886,8 @@ h1 .it{color:#831A36}
 <section class="top-line" id="registro">
   <div class="wrap">
     <span class="lab">Entra</span>
-    <h2>Lo que te llevas <span class="it">por <span data-euros>99</span> €.</span></h2>
-    <ul class="bull">
-      <li data-fase="workshop">El workshop en directo conmigo, el martes 24 de noviembre</li>
-      <li>La grabación, para verla las veces que quieras</li>
-      <li>La Comunidad de AR Academy para siempre: las bases empezando por la mentalidad, todas mis alumnas, los eventos y los directos conmigo</li>
-      <li>El grupo de WhatsApp del workshop, donde te aviso de todo</li>
-    </ul>
-    <div class="escalera" id="escalera" aria-label="Precio según la fecha"></div>
-
+    <h2>Tu entrada <span class="it">al workshop.</span></h2>
+    <p class="entra">Pagas <b><span data-euros>99</span> €</b> una sola vez y entras al momento: el workshop, la grabación y la Comunidad de AR Academy para siempre.</p>
     <div class="pago" id="pago">
       <div id="paso1">
         <h3>Tus datos</h3>
@@ -856,10 +922,9 @@ h1 .it{color:#831A36}
   <div class="casos">
     <div class="marq" aria-hidden="true"><div class="marqtrack"><span>Sin medir 1,75</span><span>Sin agencias detrás</span><span>Sin experiencia previa</span><span>Vive de tu imagen</span><span>Monetiza tu contenido</span><span>+600 campañas</span><span>Sin medir 1,75</span><span>Sin agencias detrás</span><span>Sin experiencia previa</span><span>Vive de tu imagen</span><span>Monetiza tu contenido</span><span>+600 campañas</span></div></div>
     <div class="tira" aria-label="Casos de alumnas"><div class="tiratrack"><img src="/img/carrusel-1.jpg" alt="Alumna de AR Academy y sus mensajes" loading="lazy" width="1118" height="591"><img src="/img/carrusel-2.jpg" alt="Alumna de AR Academy y sus mensajes" loading="lazy" width="1118" height="591"><img src="/img/carrusel-3.jpg" alt="Alumna de AR Academy y sus mensajes" loading="lazy" width="1118" height="591"><img src="/img/carrusel-4.jpg" alt="Alumna de AR Academy y sus mensajes" loading="lazy" width="1118" height="591"><img src="/img/carrusel-5.jpg" alt="Alumna de AR Academy y sus mensajes" loading="lazy" width="1118" height="591"><img src="/img/carrusel-1.jpg" alt="Alumna de AR Academy y sus mensajes" loading="lazy" width="1118" height="591"><img src="/img/carrusel-2.jpg" alt="Alumna de AR Academy y sus mensajes" loading="lazy" width="1118" height="591"><img src="/img/carrusel-3.jpg" alt="Alumna de AR Academy y sus mensajes" loading="lazy" width="1118" height="591"><img src="/img/carrusel-4.jpg" alt="Alumna de AR Academy y sus mensajes" loading="lazy" width="1118" height="591"><img src="/img/carrusel-5.jpg" alt="Alumna de AR Academy y sus mensajes" loading="lazy" width="1118" height="591"></div></div>
-    <div class="casososcuro">
-      <a class="casoscta" href="#registro">Quiero aprender a posar <span aria-hidden="true">&darr;</span></a>
-      <ul class="sinlist"><li>Sin experiencia.</li><li>Sin agencia.</li><li>Sin importar tu ciudad.</li><li>Sin cuerpo perfecto.</li></ul>
-    </div>
+  </div>
+  <div class="wrap">
+    <div class="midcta"><a class="pillbtn solid big" href="#registro">Quiero aprender a posar</a><small>Pago único · Online desde cualquier país · Queda grabado · Acceso a AR Academy para siempre</small></div>
   </div>
 </section>
 
@@ -867,31 +932,18 @@ h1 .it{color:#831A36}
   <div class="wrap">
     <span class="lab">Preguntas</span>
     <h2>Lo que <span class="it">me suelen preguntar.</span></h2>
-    <details><summary>No mido 1,75 y no uso una 36. ¿Esto es para mí?</summary>
-      <p>Sí. En publicidad no te miden ni te pesan: te contratan porque sabes posar con lo que venden. Tengo alumnas en Vogue, en Fashion Weeks, en Netflix y trabajando con marcas como Casio o MediaMarkt, de diferentes etnias y medidas. Como has visto en los castings de arriba, hay hueco para todas.</p></details>
-    <details><summary>Nunca he posado delante de una cámara de verdad.</summary>
-      <p>Mejor, así no tienes vicios que quitar. El workshop empieza desde cero y la parte del casting la haces con tu móvil, desde tu casa.</p></details>
-    <details><summary>Me da vergüenza posar con otras mirando.</summary>
-      <p>Te entiendo, me lo dicen muchísimo. En el casting puedes tener la cámara apagada y ver cómo corrijo a otras chicas: viendo se aprende muchísimo. Y cuando te animes, la enciendes.</p></details>
+    <details><summary>No mido 1,75 ni uso una 36. ¿Es para mí?</summary>
+      <p>Sí. En publicidad no te miden ni te pesan: te contratan porque sabes posar con lo que venden.</p></details>
+    <details><summary>Nunca he posado delante de una cámara.</summary>
+      <p>Mejor, así no tienes vicios que quitar. Empezamos desde cero.</p></details>
     <details><summary>No puedo el martes 24 a las 20:00.</summary>
-      <p>No pasa nada. Queda grabado y lo tienes dentro de la Comunidad para verlo cuando puedas.</p></details>
+      <p>No pasa nada: queda grabado y lo tienes dentro para siempre.</p></details>
     <details><summary>Vivo fuera de España. ¿Me sirve?</summary>
-      <p>Sí. Es online y ahora mismo hay alumnas en 19 países. Más arriba tienes la hora del directo en tu país.</p></details>
-    <details><summary>¿Qué es la Comunidad y qué pasa después del workshop?</summary>
-      <p>La Comunidad es donde están todas mis alumnas: las bases empezando por la mentalidad, los eventos y los directos conmigo. Entras con el workshop y te quedas para siempre, sin pagar nada más. Desde el 1 de diciembre, la Comunidad sola cuesta 199 €.</p></details>
+      <p>Sí. Es online, y hay alumnas en 19 países.</p></details>
+    <details><summary>¿AR Xperience París 2027 está incluido?</summary>
+      <p>Tienes el acceso para apuntarte. El viaje, el alojamiento y la experiencia se pagan aparte, y te cuento el programa entero en cuanto esté cerrado.</p></details>
     <details><summary>¿Cómo entro después de pagar?</summary>
-      <p>Al momento te llega un correo con tu acceso a la Comunidad. Y en la página siguiente tienes el enlace del grupo de WhatsApp del workshop, donde te aviso de todo.</p></details>
-    <details><summary>¿Es un pago único?</summary>
-      <p>Sí. Pagas una vez y ya está: sin cuotas y sin permanencia.</p></details>
-  </div>
-</section>
-
-<section class="top-line end">
-  <div class="wrap">
-    <span class="lab">Empieza aquí</span>
-    <h2>Lo que te falta no es físico. <span class="it">Es saber posar.</span></h2>
-    <p>Y eso se entrena. El martes 24 de noviembre lo hacemos juntas: tú desde tu casa, con tu móvil, y yo corrigiendo en directo.</p>
-    <div class="midcta" style="margin-top:32px"><a class="pillbtn solid big" href="#registro">Quiero aprender a posar</a><small>Pago único · Online desde cualquier país · Queda grabado · Acceso a AR Academy para siempre</small></div>
+      <p>Al momento te llega el acceso por correo y el enlace del grupo de WhatsApp. Es un pago único: sin cuotas y sin permanencia.</p></details>
   </div>
 </section>
 
@@ -900,7 +952,7 @@ h1 .it{color:#831A36}
   <div class="legalpie" id="legal">
     <p><b>Arianny Rivas — AR Model Agency</b> · NIF: Y4869806F · Calle San Vicente Mártir 338, Valencia (España) · info@ariannyrivasagency.com · +34 661 855 612</p>
     <p>Los datos personales recogidos a través de este formulario serán tratados por Arianny Rivas — AR Model Agency como responsable del tratamiento, con la finalidad de gestionar tu compra del workshop y tu acceso a la Comunidad de AR Academy, procesar el pago, darte acceso a la plataforma y al grupo de WhatsApp del workshop, contactarte por WhatsApp y por email, y mantenerte informada sobre la formación de AR Academy. La base legal es la ejecución del contrato (Art. 6.1.b RGPD) y tu consentimiento explícito (Art. 6.1.a RGPD), que puedes retirar en cualquier momento. Tus datos se conservarán mientras no solicites su supresión y, después, durante los plazos legales exigidos. No se realizan transferencias internacionales fuera del EEE sin garantías adecuadas. Puedes ejercer tus derechos de acceso, rectificación, supresión, oposición, limitación y portabilidad escribiendo a info@ariannyrivasagency.com con el asunto &laquo;Derechos RGPD&raquo;. Si consideras que tus derechos no han sido atendidos, puedes presentar una reclamación ante la Agencia Española de Protección de Datos (<a href="https://www.aepd.es" target="_blank" rel="noopener">www.aepd.es</a>).</p>
-    <p>Los pagos se procesan de forma segura mediante Stripe, Inc. Los datos de tu tarjeta nunca pasan por nuestros servidores. Al comprar haces un pago único de <span data-euros>99</span> € que incluye el workshop del 24 de noviembre de 2026 (en directo y grabado) y el acceso a la Comunidad de AR Academy para siempre, sin cuotas ni permanencia. En el grupo de WhatsApp del workshop las demás participantes pueden ver tu número. <b>El contenido de esta página no constituye una garantía de resultados. Los resultados pueden variar según la dedicación y el esfuerzo de cada alumna.</b></p>
+    <p>Los pagos se procesan de forma segura mediante Stripe, Inc. Los datos de tu tarjeta nunca pasan por nuestros servidores. Al comprar haces un pago único de <span data-euros>99</span> € que incluye el workshop del 24 de noviembre de 2026 (en directo y grabado) y el acceso a la Comunidad de AR Academy para siempre, sin cuotas ni permanencia. AR Xperience París 2027 no está incluido en el precio: el acceso te permite apuntarte, y el viaje, el alojamiento y la experiencia se pagan aparte. En el grupo de WhatsApp del workshop las demás participantes pueden ver tu número. <b>El contenido de esta página no constituye una garantía de resultados. Los resultados pueden variar según la dedicación y el esfuerzo de cada alumna.</b></p>
   </div>
   <a href="#legal">Privacidad</a> · <a href="#legal">Aviso legal</a> · <a href="#legal">Cookies</a>
 </footer>
@@ -908,7 +960,7 @@ h1 .it{color:#831A36}
 
 <div class="sticky" id="sticky">
   <a class="pillbtn solid" href="#registro">Quiero aprender a posar</a>
-  <small>Ahora mismo, <span data-euros>99</span> € · Martes 24 de noviembre</small>
+  <small>Ahora mismo, <span data-euros>99</span> € · Acceso a AR Academy para siempre</small>
 </div>
 
 <div class="cookie" id="ck">
