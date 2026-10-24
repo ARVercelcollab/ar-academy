@@ -805,7 +805,7 @@ h1 .it{color:#831A36}
         <small class="ctanote">Pago único · Online desde cualquier país · Queda grabado · Acceso a AR Academy para siempre</small>
         <div class="rate">
           <div class="avs"><img class="avsimg" src="/img/usuarios.png" alt="" width="219" height="48" loading="lazy"></div>
-          <div class="rtx"><b>+400 alumnas en 19 países</b><small>Soy Ari, modelo y fundadora de AR Agency</small></div>
+          <div class="rtx"><b>+400 alumnas en 19 países</b><small>Soy Ari, fundadora de AR Agency · Mis alumnas, en Vogue, Netflix y Casio</small></div>
         </div>
       </div>
     </div>
@@ -899,12 +899,12 @@ h1 .it{color:#831A36}
   <div class="wrap">
     <span class="lab">Entra</span>
     <h2>Tu entrada <span class="it">al workshop.</span></h2>
-    <p class="entra">Pagas <b><span data-euros>99</span> €</b> una vez y entras al momento.</p>
+    <p class="entra">Pagas <b><span data-euros>99</span> €</b> una vez y entras al momento: el workshop, la grabación y la Comunidad para siempre. <span id="subida2">Sube a 149 € el 17 de noviembre.</span></p>
     <div class="pago" id="pago">
       <div id="paso1">
         <h3>Tus datos</h3>
         <div class="fld"><label for="nm">Nombre completo</label><input id="nm" name="name" autocomplete="name" autocapitalize="words" placeholder="Nombre y apellidos"></div>
-        <div class="fld"><label for="ed">Edad</label><input id="ed" name="edad" type="number" inputmode="numeric" min="14" max="99" autocomplete="off" placeholder="27"></div>
+        <div class="fld"><label for="ed">Edad <span class="acl">(para conocerte, no para filtrarte)</span></label><input id="ed" name="edad" type="number" inputmode="numeric" min="14" max="99" autocomplete="off" placeholder="27"></div>
         <div class="fld"><label for="em">Correo electrónico <span class="acl">(ahí te llega el acceso)</span></label><input id="em" name="email" type="email" inputmode="email" autocomplete="email" autocapitalize="none" spellcheck="false" placeholder="tu@email.com"></div>
         <div class="fld"><label for="wp">WhatsApp <span class="acl">(con este número entras al grupo)</span></label><div class="tel"><select id="pf" aria-label="País"></select><input id="wp" name="tel" type="tel" inputmode="tel" autocomplete="tel"></div></div>
         <label class="chk"><input type="checkbox" id="tc"><span>Acepto los <a href="#legal">términos y condiciones</a></span></label>
@@ -1030,9 +1030,11 @@ var OF={fase:'workshop',euros:99,directo:Date.UTC(2026,10,24,19,0,0),pk:''};
 var DIA_SUBIDA='16 de noviembre';
 function pintarOferta(){
   document.querySelectorAll('[data-euros]').forEach(function(el){el.textContent=OF.euros});
-  var sb=document.getElementById('subida');
-  if(sb) sb.textContent = OF.euros===99 ? 'Sube a 149 € el 17 de noviembre'
+  var sb=document.getElementById('subida'), sb2=document.getElementById('subida2');
+  var subeTxt = OF.euros===99 ? 'Sube a 149 € el 17 de noviembre'
     : OF.fase==='workshop' ? 'Hasta el directo del martes 24 de noviembre' : 'Hasta el 30 de noviembre';
+  if(sb) sb.textContent = subeTxt;
+  if(sb2) sb2.textContent = subeTxt + '.';
   document.querySelectorAll('[data-fase]').forEach(function(el){el.hidden=el.getAttribute('data-fase')!==OF.fase});
   var tick=document.getElementById('tick');
   if(tick && OF.fase==='grabacion') tick.innerHTML='<span><i class="dot" aria-hidden="true"></i>La grabación del workshop · hasta el 30 de noviembre</span>';
