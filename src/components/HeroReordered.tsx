@@ -24,31 +24,10 @@ export default function HeroReordered() {
   const progressRef = useRef<HTMLDivElement>(null);
   const formRef = useRef<HTMLDivElement>(null);
   const [dragging, setDragging] = useState(false);
-  const [currentMonth, setCurrentMonth] = useState("");
 
   // HLS adaptativo desde Bunny (ver nota en Hero.tsx: ya no hace falta el truco
   // de precargar el corto y swapear al largo).
   useHls(videoRef, hlsUrl("heroLargo"));
-
-  // El mes se calcula en cliente para evitar mismatch de hidratación y para que
-  // el badge "Plazas limitadas en [mes]" se mantenga solo con el paso del tiempo.
-  useEffect(() => {
-    const meses = [
-      "enero",
-      "febrero",
-      "marzo",
-      "abril",
-      "mayo",
-      "junio",
-      "julio",
-      "agosto",
-      "septiembre",
-      "octubre",
-      "noviembre",
-      "diciembre",
-    ];
-    setCurrentMonth(meses[new Date().getMonth()]);
-  }, []);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -131,14 +110,8 @@ export default function HeroReordered() {
 
   return (
     <section className={styles.hero} id="registro">
-      {/* Barra de escasez FIJA en el top (sigue al hacer scroll) */}
-      <div className={styles.scarcityBar}>
-        <span className={styles.scarcityDot} aria-hidden="true" />
-        <span className={styles.scarcityText}>
-          {currentMonth ? `${currentMonth} · ` : ""}plazas limitadas
-        </span>
-      </div>
-      {/* Espaciador en el flujo: la barra fija no ocupa espacio propio */}
+      {/* Fuera la barra de «plazas limitadas» (Carlos, 2026-10-24). El espaciador se queda como
+          margen de arriba, para que el hero no cambie de sitio. */}
       <div className={styles.scarcitySpacer} aria-hidden="true" />
 
       <div className={styles.container}>
@@ -215,18 +188,15 @@ export default function HeroReordered() {
         {!showForm ? (
           <>
             <p className={styles.ctaHint}>
-              Da clic en el botón amarillo para acceder
+              Haz clic en el botón amarillo para acceder
             </p>
             <button className={styles.priceCta} onClick={handleStart}>
               <span className={styles.priceCtaMain}>
-                Reserva tu plaza · <strong>99€</strong> pago único
-              </span>
-              <span className={styles.priceCtaSub}>
-                Acceso para siempre · sin cuotas cada mes
+                <strong>199€</strong> pago único
               </span>
             </button>
             <p className={styles.afterCta}>
-              <strong>Un solo pago, y es para siempre.</strong>
+              <strong>Un solo pago, acceso para siempre.</strong>
               <br />
               <em>
                 Saldrás siendo otra mujer: más segura, más auténtica, más

@@ -3,8 +3,8 @@ import styles from "./Footer.module.scss";
 
 /**
  * `variante` cambia SOLO el texto legal.
- *  - "suscripcion" (por defecto): la Comunidad. Desde el 2026-10-23 es un pago único de 99 €
- *    (antes, 27 €/mes); el nombre de la variante se queda para no tocar las páginas que la usan.
+ *  - "suscripcion" (por defecto): la Comunidad. Pago único: 199 € desde el 2026-10-24 (del 23
+ *    al 24, 99 €; antes, 27 €/mes); el nombre de la variante se queda para no tocar las páginas que la usan.
  *  - "evento": registro gratuito a una clase en directo. Sin pago, sin Stripe, sin suscripción
  *    — decirlo ahí sería falso y la finalidad del tratamiento es otra.
  */
@@ -95,7 +95,7 @@ export default function Footer({
               <p>
                 Los pagos se procesan de forma segura mediante Stripe, Inc. Los
                 datos de tu tarjeta nunca pasan por nuestros servidores. Al
-                contratar haces un pago único de 99 € que te da acceso a la
+                contratar haces un pago único de 199 € que te da acceso a la
                 Comunidad de AR Academy para siempre, sin cuotas ni permanencia.
                 El contenido de esta página no constituye una
                 garantía de resultados. Los resultados pueden variar según la

@@ -18,7 +18,7 @@ export default function Pricing() {
           <span className={styles.priceLabel}>por solo</span>
           <div className={styles.priceRow}>
             <span className={styles.price}>
-              <strong>99€</strong> pago único
+              <strong>199€</strong> pago único
             </span>
           </div>
           <p className={styles.priceOld}>(acceso para siempre)</p>

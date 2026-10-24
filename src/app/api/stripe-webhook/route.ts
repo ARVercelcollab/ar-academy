@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
       const invoice = event.data.object;
 
       // Se avisa a Make en el primer cobro de una suscripción (la Comunidad a 27 €/mes, hasta el
-      // 23-10), nunca en las renovaciones, y en el pago único de la Comunidad (99 €): el del
+      // 23-10), nunca en las renovaciones, y en el pago único de la Comunidad (199 €, o 99 €): el del
       // formulario de la web y el del enlace de pago, que crea la factura con la misma marca.
       const pagoUnico = invoice.metadata?.producto === PAGO_COMUNIDAD;
       if (invoice.billing_reason !== "subscription_create" && !pagoUnico) {
