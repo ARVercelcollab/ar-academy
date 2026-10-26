@@ -81,8 +81,8 @@ export async function POST(req: NextRequest) {
         euros,
         oferta,
         // El enlace del grupo de WhatsApp del workshop solo se da después de pagar: el repo es
-        // público y el grupo no. Vive en Vercel (WORKSHOP_WHATSAPP_URL).
-        grupoWhatsApp: esDelWorkshop(oferta) ? process.env.WORKSHOP_WHATSAPP_URL || "" : "",
+        // público y el grupo no (ver grupoDelWorkshop).
+        grupoWhatsApp: esDelWorkshop(oferta) ? await grupoDelWorkshop() : "",
       });
     }
 
@@ -119,6 +119,19 @@ const DESCRIPCION: Record<Fase, string> = {
   grabacion: "Grabación del workshop «Posa para marcas» + Comunidad AR Academy · pago único",
   comunidad: "Comunidad AR Academy · pago único",
 };
+
+// El enlace del grupo: WORKSHOP_WHATSAPP_URL en Vercel y, si no está, el metadato
+// `grupo_whatsapp` del producto de la Comunidad en Stripe (puesto el 26-10, porque desde aquí no
+// se llega a las variables de Vercel). Para cambiar el grupo basta con cambiar ese metadato.
+async function grupoDelWorkshop(): Promise<string> {
+  if (process.env.WORKSHOP_WHATSAPP_URL) return process.env.WORKSHOP_WHATSAPP_URL;
+  try {
+    const p = await stripe.products.retrieve(PRODUCTO_COMUNIDAD);
+    return p.metadata?.grupo_whatsapp || "";
+  } catch {
+    return "";
+  }
+}
 
 async function anular(id: string | null) {
   if (!id) return;
