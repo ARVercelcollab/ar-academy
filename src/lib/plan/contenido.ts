@@ -763,10 +763,11 @@ export function armarPlan(
 }
 
 // ── Qué cierre lleva su plan ──────────────────────────────────────────────────
-// Todas, formación (mensaje «¡QUIERO ACCEDER!») por defecto, también las menores (Carlos,
-// 2026-10-30: «quita la regla de las menores… de igual si es menor»). Si al hablar con ella la
-// setter ve que encaja mejor la Comunidad, manda el otro enlace de la nota. La regla de los
-// 24 años del SOP no se aplica al plan.
-export function cierreRecomendado(): "formacion" | "comunidad" {
-  return "formacion";
+// Las que ingresan menos de 750 € al mes (o «todavía nada»), la Comunidad, que mientras dure el
+// workshop lo lleva dentro: su plan es un embudo hacia ahí (Carlos, 2026-10-30). El resto,
+// formación (mensaje «¡QUIERO ACCEDER!»), también las menores (Carlos, 2026-10-30: «de igual
+// si es menor»); la setter manda el enlace de la Comunidad salvo a la muy, muy calificada.
+// La regla de los 24 años del SOP no se aplica al plan.
+export function cierreRecomendado(menosDe750 = false): "formacion" | "comunidad" {
+  return menosDe750 ? "comunidad" : "formacion";
 }

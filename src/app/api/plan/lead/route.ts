@@ -615,10 +615,8 @@ export async function POST(req: Request) {
   if (ocupacion === OCUPA_ESTUDIANTE) tags.push(TAG_ESTUDIANTE);
   const tramo = deTabla(TAG_INGRESOS, limpiar(b.ingresos_actuales, 60));
   if (tramo) tags.push(tramo);
-  const etapa =
-    tramo === TAG_INGRESOS["Menos de 750 €"] || tramo === TAG_INGRESOS["Todavía nada"]
-      ? ETAPA_COMUNIDAD
-      : ETAPA_SOLICITA_PLAN;
+  const menosDe750 = tramo === TAG_INGRESOS["Menos de 750 €"] || tramo === TAG_INGRESOS["Todavía nada"];
+  const etapa = menosDe750 ? ETAPA_COMUNIDAD : ETAPA_SOLICITA_PLAN;
   if (PAIS_HT_OK.includes(pais)) tags.push(TAG_HT_PAIS_OK);
   const tp = tagPais(pais, paisNombre);
   if (tp) tags.push(tp);
@@ -723,18 +721,26 @@ export async function POST(req: Request) {
       // de SU plan, que se genera solo con estas respuestas (src/lib/plan). La setter los
       // copia de aquí cuando decide mandarlo.
       let enlaces = "";
-      // Todas con los dos enlaces, también las menores (Carlos, 2026-10-30: sin reglas por
-      // edad). El plan se manda después de hablar con ella, nunca al llegar.
-      const cierre = cierreRecomendado();
+      // Las de menos de 750 €, solo el de la Comunidad (Carlos, 2026-10-30); el resto, los dos,
+      // también las menores. El plan se manda después de hablar con ella, nunca al llegar.
+      const cierre = cierreRecomendado(menosDe750);
       try {
         const recomendado = urlDePlan(contactId, cierre);
-        enlaces = [
-          "",
-          "Su plan personalizado (formación, mensaje «¡QUIERO ACCEDER!»). Se manda después de hablar con ella:",
-          recomendado,
-          "Si al hablar con ella encaja mejor la Comunidad, el mismo plan con ese cierre:",
-          urlDePlan(contactId, "comunidad"),
-        ]
+        enlaces = (
+          menosDe750
+            ? [
+                "",
+                "Su plan, con el cierre de la Comunidad (y el workshop, mientras dure). Se manda después de hablar con ella:",
+                recomendado,
+              ]
+            : [
+                "",
+                "Su plan con el cierre de la formación (mensaje «¡QUIERO ACCEDER!»), para la muy, muy calificada:",
+                recomendado,
+                "El mismo plan con el cierre de la Comunidad (y el workshop, mientras dure), el de casi todas:",
+                urlDePlan(contactId, "comunidad"),
+              ]
+        )
           .concat(["Para revisarlo sin que cuente como abierto:", recomendado + "?previa=1"])
           .join("\n");
       } catch (e) {
@@ -757,7 +763,7 @@ export async function POST(req: Request) {
     const altaLista = () => {
       let planUrl = "";
       try {
-        planUrl = urlDePlan(contactId, cierreRecomendado());
+        planUrl = urlDePlan(contactId, cierreRecomendado(menosDe750));
       } catch {
         // sin PLAN_TOKEN_SECRET: entra sin el enlace
       }
