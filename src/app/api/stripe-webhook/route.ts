@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse, after } from "next/server";
-import { stripe, PAGO_COMUNIDAD } from "@/lib/stripe";
+import { stripe, PAGO_COMUNIDAD, PRODUCTO_TPM_MENSUAL } from "@/lib/stripe";
 import { GRUPO, altaEnMailerLite } from "@/lib/mailerlite";
 import { compradoraEnGHL } from "@/lib/compradora";
 import { OFERTA, esDelWorkshop, faseComunidad } from "@/lib/comunidad";
@@ -87,12 +87,25 @@ export async function POST(req: NextRequest) {
         );
       }
 
-      // ¿Incluye el workshop del 24-11? Lo dice la factura del formulario de /comunidad; la de
-      // los enlaces de pago no lo lleva y se mira la fecha del pago: en noviembre, toda compra
-      // de la Comunidad trae el workshop (Carlos, 2026-10-24).
+      // ¿Es la mensualidad de The Perfect Model (47 €/mes)? La pagan las alumnas que terminan la
+      // formación: ni es la Comunidad ni trae el workshop.
+      const tpm =
+        !pagoUnico &&
+        invoice.lines.data.some((l) => {
+          const linea = l as unknown as {
+            pricing?: { price_details?: { product?: string } | null } | null;
+          };
+          return linea.pricing?.price_details?.product === PRODUCTO_TPM_MENSUAL;
+        });
+
+      // ¿Incluye el workshop del 24-11? Solo el pago único de la Comunidad: lo dice la factura
+      // del formulario de /comunidad; la de los enlaces de pago no lo lleva y se mira la fecha del
+      // pago: en noviembre, toda compra de la Comunidad trae el workshop (Carlos, 2026-10-24).
+      // Una suscripción nunca: el 29-10 una alumna de TPM pagó su mensualidad y entró en el
+      // pipeline «Workshop» (Carlos, 2026-10-30).
       const pagadaEn = (invoice.status_transitions?.paid_at ?? event.created) * 1000;
       const oferta = invoice.metadata?.oferta || OFERTA[faseComunidad(pagadaEn)];
-      const workshop = esDelWorkshop(oferta);
+      const workshop = pagoUnico && esDelWorkshop(oferta);
       const anios = Number.parseInt(String(customer.metadata?.edad ?? ""), 10);
       const edad = Number.isFinite(anios) ? anios : null;
       const instagram = String(customer.metadata?.instagram ?? "");
@@ -102,32 +115,47 @@ export async function POST(req: NextRequest) {
       // también en su grupo: el que arranca la bienvenida con el grupo de WhatsApp y los avisos
       // del directo. Y en GHL, con su etiqueta, para que las setters la vean. Todo después de
       // responder a Stripe: si MailerLite o GHL fallan, el pago y el acceso no se enteran.
+      // La de TPM va solo a «Alumnas TPM» (entrar en «Alumnas Comunidad» le mandaría la
+      // bienvenida del workshop) y no va a GHL: no hay nada que venderle.
       const { email: emailCliente, name: nombreCliente, phone: telCliente } = customer;
       if (emailCliente) {
         after(() =>
-          altaEnMailerLite({
-            email: emailCliente,
-            grupo: workshop ? [GRUPO.alumnasComunidad, GRUPO.workshop] : GRUPO.alumnasComunidad,
+          altaEnMailerLite(
+            tpm
+              ? {
+                  email: emailCliente,
+                  grupo: GRUPO.alumnasTPM,
+                  nombre: nombreCliente ?? "",
+                  etapa: "tpm",
+                  edad,
+                  consentimiento: "compra mensualidad tpm",
+                }
+              : {
+                  email: emailCliente,
+                  grupo: workshop ? [GRUPO.alumnasComunidad, GRUPO.workshop] : GRUPO.alumnasComunidad,
+                  nombre: nombreCliente ?? "",
+                  origen: workshop ? "workshop" : undefined,
+                  etapa: "comunidad",
+                  edad,
+                  consentimiento: workshop ? "compra workshop" : "compra comunidad",
+                }
+          )
+        );
+      }
+      if (!tpm) {
+        after(() =>
+          compradoraEnGHL({
             nombre: nombreCliente ?? "",
-            origen: workshop ? "workshop" : undefined,
-            etapa: "comunidad",
+            email: emailCliente ?? "",
+            telefono: telCliente ?? "",
             edad,
-            consentimiento: workshop ? "compra workshop" : "compra comunidad",
+            instagram,
+            euros: invoice.amount_paid / 100,
+            workshop,
+            descripcion: invoice.description || "Comunidad AR Academy",
           })
         );
       }
-      after(() =>
-        compradoraEnGHL({
-          nombre: nombreCliente ?? "",
-          email: emailCliente ?? "",
-          telefono: telCliente ?? "",
-          edad,
-          instagram,
-          euros: invoice.amount_paid / 100,
-          workshop,
-          descripcion: invoice.description || "Comunidad AR Academy",
-        })
-      );
       break;
     }
 

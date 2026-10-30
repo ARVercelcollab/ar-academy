@@ -33,6 +33,7 @@ export const GRUPO = {
   plan: "201685594213975647", // «Plan personalizado»
   masterclass: "201685595088487481", // «Masterclass sep 2026»
   alumnasComunidad: "201685612201248062", // «Alumnas Comunidad»
+  alumnasTPM: "201685612911134088", // «Alumnas TPM» (la mensualidad de 47 €; no arranca ninguna secuencia)
   workshop: "202226448988112797", // «Workshop 24-11 · compradoras» (el grupo de WhatsApp y los avisos del directo)
 } as const;
 

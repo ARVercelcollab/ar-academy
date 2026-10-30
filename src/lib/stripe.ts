@@ -18,3 +18,7 @@ export const PRODUCTO_COMUNIDAD = "prod_VUhH56N09ViI78";
 // La marca que llevan las facturas del pago único, tanto las del formulario de la web como las
 // del enlace de pago (plink_1UThsuCi8AFxi9rHPbK1fegY): es la que mira /api/stripe-webhook.
 export const PAGO_COMUNIDAD = "comunidad_pago_unico";
+// La mensualidad de The Perfect Model, 47 €/mes: la de las alumnas que terminan la formación y
+// siguen en Skool. También es una suscripción, pero no es la Comunidad ni trae el workshop
+// (Carlos, 2026-10-30, tras ver a una alumna de TPM en el pipeline «Workshop»).
+export const PRODUCTO_TPM_MENSUAL = "prod_TsIxqvDBicCoZt";
