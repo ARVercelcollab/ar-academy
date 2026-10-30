@@ -718,26 +718,18 @@ export async function POST(req: Request) {
       // de SU plan, que se genera solo con estas respuestas (src/lib/plan). La setter los
       // copia de aquí cuando decide mandarlo.
       let enlaces = "";
-      // Las menores, directas a la Comunidad: su nota no lleva el enlace de la formación
-      // (Carlos, 2026-10-07). El plan se manda después de prospectarla, nunca al llegar.
-      const cierre = cierreRecomendado({ edad: Number.isFinite(edad) ? edad : null });
+      // Todas con los dos enlaces, también las menores (Carlos, 2026-10-30: sin reglas por
+      // edad). El plan se manda después de hablar con ella, nunca al llegar.
+      const cierre = cierreRecomendado();
       try {
         const recomendado = urlDePlan(contactId, cierre);
-        enlaces = (
-          cierre === "comunidad"
-            ? [
-                "",
-                "Menor de edad: su plan va con el cierre de la Comunidad. Se manda después de prospectarla:",
-                recomendado,
-              ]
-            : [
-                "",
-                "Su plan personalizado (formación, mensaje «¡QUIERO ACCEDER!»). Se manda después de prospectarla:",
-                recomendado,
-                "Si al hablar con ella encaja mejor la Comunidad, el mismo plan con ese cierre:",
-                urlDePlan(contactId, "comunidad"),
-              ]
-        )
+        enlaces = [
+          "",
+          "Su plan personalizado (formación, mensaje «¡QUIERO ACCEDER!»). Se manda después de hablar con ella:",
+          recomendado,
+          "Si al hablar con ella encaja mejor la Comunidad, el mismo plan con ese cierre:",
+          urlDePlan(contactId, "comunidad"),
+        ]
           .concat(["Para revisarlo sin que cuente como abierto:", recomendado + "?previa=1"])
           .join("\n");
       } catch (e) {
@@ -760,7 +752,7 @@ export async function POST(req: Request) {
     const altaLista = () => {
       let planUrl = "";
       try {
-        planUrl = urlDePlan(contactId, cierreRecomendado({ edad: Number.isFinite(edad) ? edad : null }));
+        planUrl = urlDePlan(contactId, cierreRecomendado());
       } catch {
         // sin PLAN_TOKEN_SECRET: entra sin el enlace
       }

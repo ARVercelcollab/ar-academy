@@ -16,8 +16,7 @@ import type { Ficha } from "./ghl";
  *   3 · mentalidad (fija) · 4 · una chica que empezó donde ella, elegida por parecido.
  * Un vídeo no se repite dentro del mismo plan.
  *
- * Menor de edad (edad < 18): sin cifras de ingresos, «a dónde vas» va de formarse con calma
- * y con su familia, la clase 4 es el vídeo para sus padres y el cierre es la Comunidad.
+ * Sin reglas por edad (Carlos, 2026-10-30): una menor recibe el mismo plan que cualquier otra.
  *
  * Las opciones se comparan con el texto literal de public/plan/index.html (`var S`). Si una
  * pregunta cambia allí, cambia aquí. Si el problema no se reconoce se usa el contenido de
@@ -63,7 +62,6 @@ export type PlanArmado = {
   token: string;
   previa: boolean;
   cierre: "formacion" | "comunidad";
-  menor: boolean;
   urlComunidad: string;
   nombre: string;
   h1: [string, string];
@@ -248,7 +246,7 @@ const CASOS: Record<ClaveCaso, ClaseBase & { semana: string }> = {
     etiqueta: "Su historia · 17 min",
     semana: "Laura lo compagina con su trabajo. Escúchala en la clase 4 y apunta qué hizo primero.",
   },
-  // Lo mismo que hace Sofi desde el 21-08 con las menores: el vídeo para que lo vean con sus padres.
+  // El vídeo para padres. Desde el 30-10 ya no sale solo por ser menor; se queda por si la setter lo usa.
   padres: {
     yt: YT.padres,
     titulo: "¿Tu hija quiere ser MODELO o CREADORA DE CONTENIDO? Te cuento TODO sobre la industria",
@@ -271,14 +269,7 @@ function elegirCaso(
   ko: ClaveObjetivo | null,
   kc: ClaveOcupacion | null,
   edad: number | null,
-  menor: boolean,
 ): CasoElegido {
-  if (menor)
-    return caso(
-      "padres",
-      "como eres menor, este es para tus padres. Les cuento cómo funciona esto hoy, qué dudas suelen tener y qué aprenderías desde el primer día. Véanlo juntos.",
-      "Por qué este:",
-    );
   if (edad !== null && edad >= 35)
     return caso(
       "monica",
@@ -336,22 +327,9 @@ function claseObjetivo(ko: ClaveObjetivo | null): Clase {
   return { ...cuantoGana(START_OBJETIVO[ko]), porQueTitulo: "Por qué:", porQue: porQue[ko] };
 }
 
-// Para una menor, la clase 2 no habla de cuánto se gana: es el mapa, o la marca personal si
-// el mapa ya es su clase 1.
-const MENOR_MAPA: Clase = {
-  ...C.mapa,
-  porQueTitulo: "Por qué:",
-  porQue: "es el mapa: cómo funciona el modelaje hoy, de principio a fin. Para formarte con calma, sabiendo a dónde vas.",
-};
-const MENOR_MARCA: Clase = {
-  ...C.marcaCorta,
-  porQueTitulo: "Por qué:",
-  porQue: "antes que el book, tu marca personal: cómo quieres que te vean. Se construye con calma, y cuanto antes la entiendas, mejor.",
-};
-
 // ── Por PROBLEMA ──────────────────────────────────────────────────────────────
 // dijo: si sabemos qué problema marcó (si no, el contenido es el de «empezar», sin darlo por dicho).
-type Ctx = { menor: boolean; dijo: boolean; ko: ClaveObjetivo | null; caso: CasoElegido };
+type Ctx = { dijo: boolean; ko: ClaveObjetivo | null; caso: CasoElegido };
 
 type BloqueProblema = {
   h1: [string, string];
@@ -366,13 +344,8 @@ type BloqueProblema = {
 
 const NIVEL = (ko: ClaveObjetivo | null) => (ko ? "en el nivel al que quieres llegar" : "en cada nivel");
 
-// El paso de la semana que lleva a la clase 4. Para una menor, el vídeo de sus padres.
+// El paso de la semana que lleva a la clase 4.
 function pasoCaso(ctx: Ctx): Paso {
-  if (ctx.menor)
-    return {
-      t: "Ve la clase 4 con tus padres",
-      p: "Es un vídeo para ellos: les cuento cómo funciona esto por dentro y cómo trabajamos. Véanlo juntos, y desde hoy, cualquier propuesta que te llegue la ven ellos antes de que contestes.",
-    };
   return { t: "Escucha a alguien que empezó donde tú", p: CASOS[ctx.caso.k].semana };
 }
 
@@ -397,7 +370,7 @@ const POR_PROBLEMA: Record<ClaveProblema, BloqueProblema> = {
           ? "me pediste una guía paso a paso, y esto es el mapa: cómo funciona el modelaje hoy, de principio a fin."
           : "es el mapa: cómo funciona el modelaje hoy, de principio a fin. Por aquí se empieza.",
       },
-      ctx.menor ? MENOR_MARCA : claseObjetivo(ctx.ko),
+      claseObjetivo(ctx.ko),
     ],
     pasos: (ctx) => [
       {
@@ -406,9 +379,7 @@ const POR_PROBLEMA: Record<ClaveProblema, BloqueProblema> = {
       },
       {
         t: "Mira el mapa antes de moverte",
-        p: ctx.menor
-          ? "La clase 1 te enseña cómo funciona esto hoy, de principio a fin, y la 2, por qué tu marca personal va antes que el book. Así sabes a qué vas antes de gastar un euro en fotos."
-          : `La clase 1 te enseña cómo funciona esto hoy, de principio a fin, y la 2, cuánto se paga ${NIVEL(ctx.ko)}. Así sabes a qué vas antes de gastar un euro en fotos.`,
+        p: `La clase 1 te enseña cómo funciona esto hoy, de principio a fin, y la 2, cuánto se paga ${NIVEL(ctx.ko)}. Así sabes a qué vas antes de gastar un euro en fotos.`,
       },
       pasoCaso(ctx),
     ],
@@ -433,7 +404,7 @@ const POR_PROBLEMA: Record<ClaveProblema, BloqueProblema> = {
         porQueTitulo: "Por qué la primera:",
         porQue: "es tu pregunta: qué es la marca personal, por qué hoy pesa más que la foto y cinco pasos para construirla. Y en el paso 4 del camino tienes la clase en la que Carlos, el mentor de ese paso, y yo construimos mi perfil.",
       },
-      ctx.menor ? MENOR_MAPA : claseObjetivo(ctx.ko),
+      claseObjetivo(ctx.ko),
     ],
     pasos: (ctx) => [
       {
@@ -444,9 +415,7 @@ const POR_PROBLEMA: Record<ClaveProblema, BloqueProblema> = {
         t: "Ordena tu perfil para que cuente lo mismo",
         p: "Biografía, destacadas y tus primeras fotos, contando esas tres palabras. Si una marca entra y en diez segundos no entiende quién eres, se va.",
       },
-      ctx.menor
-        ? pasoCaso(ctx)
-        : {
+      {
             t: "Pon tu precio con argumentos",
             p: `Una tarifa base escrita, y de ahí no se baja. La clase 2 te cuenta cuánto se paga ${NIVEL(ctx.ko)}, para que tu precio no salga de la nada.`,
           },
@@ -472,24 +441,18 @@ const POR_PROBLEMA: Record<ClaveProblema, BloqueProblema> = {
         porQueTitulo: "Por qué la primera:",
         porQue: "es tu pregunta. Te la dejo en el minuto en que explico qué es una jornada, qué son los derechos de imagen y qué tienes que preguntar antes de aceptar un trabajo.",
       },
-      ctx.menor ? MENOR_MAPA : claseObjetivo(ctx.ko),
+      claseObjetivo(ctx.ko),
     ],
     pasos: (ctx) => [
       {
         t: "Ten tu tarifa escrita antes de la próxima propuesta",
-        p: ctx.menor
-          ? "Una cifra por foto, otra por vídeo y otra por jornada, y aparte los derechos de uso, pensada con tus padres. Si la improvisas en el chat, pierdes."
-          : `Una cifra por foto, otra por vídeo y otra por jornada, y aparte los derechos de uso. Si la improvisas en el chat, pierdes. La clase 2 te dice cuánto se paga ${NIVEL(ctx.ko)}.`,
+        p: `Una cifra por foto, otra por vídeo y otra por jornada, y aparte los derechos de uso. Si la improvisas en el chat, pierdes. La clase 2 te dice cuánto se paga ${NIVEL(ctx.ko)}.`,
       },
       {
         t: "Pregunta antes de contestar",
-        p: ctx.menor
-          ? "Qué uso le van a dar, durante cuánto tiempo, en qué países, si piden exclusividad y qué gastos van incluidos. Y que tus padres vean cada propuesta antes de que contestes. La clase 1 te da la lista entera."
-          : "Qué uso le van a dar, durante cuánto tiempo, en qué países, si piden exclusividad y qué gastos van incluidos. Con esas respuestas, el precio sale solo. La clase 1 te da la lista entera.",
+        p: "Qué uso le van a dar, durante cuánto tiempo, en qué países, si piden exclusividad y qué gastos van incluidos. Con esas respuestas, el precio sale solo. La clase 1 te da la lista entera.",
       },
-      ctx.menor
-        ? pasoCaso(ctx)
-        : {
+      {
             t: "Si usan tu imagen en anuncios, se paga",
             p: "Un canje puede tener sentido para empezar. Unos derechos de uso, nunca gratis. La clase 1 te explica por qué la publicidad es el trabajo mejor pagado.",
           },
@@ -512,9 +475,7 @@ const POR_PROBLEMA: Record<ClaveProblema, BloqueProblema> = {
     // Aquí la clase de «cuánto gana» es la 1, en el capítulo de versatilidad, y la 2 es la de
     // marca personal: un vídeo no se repite.
     clases: (ctx) => [
-      ctx.menor
-        ? MENOR_MAPA
-        : {
+      {
             ...cuantoGana(START_VERSATILIDAD),
             porQueTitulo: "Por qué la primera:",
             porQue: ctx.ko
@@ -530,17 +491,13 @@ const POR_PROBLEMA: Record<ClaveProblema, BloqueProblema> = {
     pasos: (ctx) => [
       {
         t: "No dependas de una sola vía",
-        p: ctx.menor
-          ? "E-commerce, UGC, publicidad: hay muchas formas de trabajar con marcas, y conviene conocerlas todas antes de elegir. La clase 1 te enseña el mapa entero."
-          : "E-commerce, UGC, publicidad: cuantas más formas de trabajar con marcas tengas, menos depende cada mes de la suerte. La clase 1 empieza justo ahí.",
+        p: "E-commerce, UGC, publicidad: cuantas más formas de trabajar con marcas tengas, menos depende cada mes de la suerte. La clase 1 empieza justo ahí.",
       },
       {
         t: "Publica pensando en las marcas",
         p: "Cada publicación tiene que enseñar algo que una marca pueda comprar: cómo luces su producto, cómo lo cuentas. Tu perfil es tu portafolio, y la clase 2 te explica por qué tu marca personal va antes que todo esto.",
       },
-      ctx.menor
-        ? pasoCaso(ctx)
-        : {
+      {
             t: "Escribe a 50 marcas esta semana",
             p: "No esperes a que te encuentren. Mínimo 50 marcas, y si llegas a 100, mejor: cuantas más escribas, más te contestan. Un mensaje corto y tu perfil ordenado. Las primeras dan vergüenza; a la décima ya no. Y es la mejor prueba de que vas en serio.",
           },
@@ -593,18 +550,6 @@ const SIN_OBJETIVO: BloqueObjetivo = {
     "Lo que sí te digo es que el camino tiene salida: **AR Agency, nuestra agencia internacional,** que representa a las alumnas cuando están preparadas. Todo lo que tienes debajo es lo que te lleva hasta ahí.",
   ],
 };
-
-// Menor de edad: nada de ingresos. Formarse con calma, y con su familia.
-function adondeMenor(edad: number | null): BloqueObjetivo {
-  return {
-    chip: "",
-    titulo: ["Fórmate con calma,", "y en familia."],
-    parrafos: [
-      `${edad !== null ? `Tienes ${edad} años, y aquí` : "Aquí"} nadie te va a meter prisa. Ahora toca **formarte con calma:** tu cabeza, tu imagen, cómo te presentas. Lo demás llega después, y llega mejor cuando esto está hecho. Al final del camino, cuando estés preparada, está **AR Agency, nuestra agencia internacional.**`,
-      "Y esto se hace **con tu familia, no a escondidas.** Enséñales este plan a tus padres y vean juntos la clase 4, que es para ellos. Que sepan qué vas a hacer y con quién.",
-    ],
-  };
-}
 
 // ── Por OCUPACIÓN ─────────────────────────────────────────────────────────────
 const POR_OCUPACION: Record<ClaveOcupacion, { chip: string; linea: string; organiza: string }> = {
@@ -730,7 +675,7 @@ function ruta(inicio: number, kc: ClaveOcupacion | null): PasoRuta[] {
 export const CASO_POR_PROBLEMA: Partial<Record<ClaveProblema, Caso>> = {};
 
 // La hoja de ruta contada por Ari (Carlos, 23-10): va en el bloque 05, antes de la ruta por
-// escrito, en todos los planes (también las menores). El vídeo de la oferta no va en el plan: se
+// escrito, en todos los planes. El vídeo de la oferta no va en el plan: se
 // manda aparte a quien ya quiere entrar. Oculto en YouTube, 18:28. Los capítulos salen de su
 // transcripción; cada uno arranca un par de segundos antes de que ella empiece la frase.
 const VIDEO_RUTA: VideoRuta = {
@@ -760,20 +705,17 @@ export function armarPlan(
   const kp: ClaveProblema = rp?.k ?? "empezar";
   const kc = rc?.k ?? null;
   const edad = typeof f.edad === "number" && Number.isFinite(f.edad) ? Math.round(f.edad) : null;
-  // Menor de edad: sin cifras de ingresos y con el cierre de la Comunidad (negocio.md §5:
-  // a la menor se le vende la Comunidad, con sus padres en la llamada de bienvenida).
-  // Si la edad no está en la ficha, vale la etiqueta `menor de edad` (la pone el formulario o Sofi).
-  const menor =
-    edad !== null ? edad < 18 : f.tags.some((t) => t.trim().toLowerCase() === "menor de edad");
-  const ko = menor ? null : (ro?.k ?? null);
+  // Sin reglas por edad (Carlos, 2026-10-30): una menor recibe el mismo plan que las demás, con
+  // su objetivo de ingresos y el cierre de la formación. La edad solo elige el caso de la clase 4.
+  const ko = ro?.k ?? null;
   const bp = POR_PROBLEMA[kp];
 
-  const ctx: Ctx = { menor, dijo: !!rp, ko, caso: elegirCaso(kp, ko, kc, edad, menor) };
+  const ctx: Ctx = { dijo: !!rp, ko, caso: elegirCaso(kp, ko, kc, edad) };
   const clases: Clase[] = [...bp.clases(ctx), MENTE, ctx.caso.clase];
 
-  const bo = menor ? adondeMenor(edad) : ko ? POR_OBJETIVO[ko] : SIN_OBJETIVO;
+  const bo = ko ? POR_OBJETIVO[ko] : SIN_OBJETIVO;
   const cn = clases.findIndex((c) => c.yt === YT.cuantoGana) + 1;
-  // Si esa clase no está en su plan (no debería pasar fuera de las menores), la frase se cae.
+  // Si esa clase no está en su plan, la frase se cae.
   const conClase = (s: string) =>
     cn
       ? s.replace(/\{cn\}/g, String(cn))
@@ -801,8 +743,7 @@ export function armarPlan(
   return {
     token,
     previa: opts.previa,
-    cierre: menor ? "comunidad" : opts.cierre,
-    menor,
+    cierre: opts.cierre,
     urlComunidad: "https://www.ariannyrivasacademy.com/comunidad",
     nombre: f.nombre || "",
     h1: bp.h1,
@@ -822,11 +763,10 @@ export function armarPlan(
 }
 
 // ── Qué cierre lleva su plan ──────────────────────────────────────────────────
-// Carlos, 2026-10-07: las menores de 18 van directas a la Comunidad. El resto, formación
-// (mensaje «¡QUIERO ACCEDER!») por defecto; si al prospectarla la setter ve que encaja mejor la
-// Comunidad, manda el otro enlace de la nota. Sin reglas por dinero ni por país: «el
-// dinero no califica ni descalifica» (criterio de Carlos). La regla de los 24 años del
-// SOP no se aplica al plan.
-export function cierreRecomendado(d: { edad: number | null }): "formacion" | "comunidad" {
-  return d.edad !== null && d.edad < 18 ? "comunidad" : "formacion";
+// Todas, formación (mensaje «¡QUIERO ACCEDER!») por defecto, también las menores (Carlos,
+// 2026-10-30: «quita la regla de las menores… de igual si es menor»). Si al hablar con ella la
+// setter ve que encaja mejor la Comunidad, manda el otro enlace de la nota. La regla de los
+// 24 años del SOP no se aplica al plan.
+export function cierreRecomendado(): "formacion" | "comunidad" {
+  return "formacion";
 }

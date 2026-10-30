@@ -173,37 +173,31 @@ export function renderPlan(p: PlanArmado): string {
   const sentido = `<p>Si has visto todo esto y te hace sentido, ya sabes cómo trabajamos. Con esta hoja de ruta preparamos a cada alumna en todas sus facetas para que sea una profesional excelente, no solo como modelo o creadora, sino en todas las áreas de su vida.`;
   // Comunidad: qué pasa cuando entra (Carlos, 23-10: la llamada de onboarding y los próximos
   // pasos). Tras pagar, la web le dice que revise el correo para entrar (Skool); la llamada de
-  // bienvenida la agenda el equipo por WhatsApp (negocio.md §2; con la menor, con sus padres).
+  // bienvenida la agenda el equipo por WhatsApp (negocio.md §2).
   // En noviembre la Comunidad se vende con el workshop «Posa para marcas» del 24-11, sin llamada de
   // bienvenida y con el grupo de WhatsApp (Carlos, 24-10); el botón lleva a la página del workshop,
-  // que es /comunidad. A la menor se le mantiene la llamada con sus padres (hasta que Carlos diga).
+  // que es /comunidad. Sin reglas por edad desde el 30-10 (Carlos).
   // Desde el 1-12, el cierre de siempre. Lo decide la fecha (src/lib/comunidad.ts).
   const { euros, fase } = precioComunidad();
   const conWorkshop = fase !== "comunidad";
   const pasosWorkshop: [string, string][] = [
-    ["Rellenas tus datos y haces el pago", p.menor ? "Desde el botón de abajo, con tus padres al lado." : "Desde el botón de abajo. Te lleva directa."],
+    ["Rellenas tus datos y haces el pago", "Desde el botón de abajo. Te lleva directa."],
     ["Entras en el grupo de WhatsApp del workshop", "Te lo damos al momento. Ahí estamos todas y te aviso de todo."],
     ["Te llega un correo con tu acceso", "Con él entras a la Comunidad, donde están todas mis alumnas y las mentoras."],
-    ...(p.menor
-      ? ([["Hablamos con tus padres", "Te escribimos por WhatsApp para una llamada corta con una persona de mi equipo y con tus padres: les explicamos cómo funciona todo."]] as [string, string][])
-      : []),
     fase === "workshop"
       ? ["Nos vemos el martes 24 a las 20:00", "En directo, y si no puedes, queda grabado. Dentro, empiezas por la mentalidad: el paso 1 de tu hoja de ruta."]
       : ["Ves la grabación del workshop", "Cuando quieras, las veces que quieras. Y dentro, empiezas por la mentalidad: el paso 1 de tu hoja de ruta."],
   ];
   const pasosCom: [string, string][] = conWorkshop ? pasosWorkshop : [
-    ["Rellenas tus datos y haces el pago", p.menor ? "Desde el botón de abajo, con tus padres al lado." : "Desde el botón de abajo. Te lleva directa."],
+    ["Rellenas tus datos y haces el pago", "Desde el botón de abajo. Te lleva directa."],
     ["Te llega un correo con tu acceso", "Con él entras a la Comunidad, donde están todas mis alumnas."],
     [
       "Agendamos tu llamada de bienvenida",
-      p.menor
-        ? "Te escribimos por WhatsApp para buscar el día. Es con una persona de mi equipo y con tus padres: les explicamos cómo funciona todo y por dónde vas a empezar."
-        : "Te escribimos por WhatsApp para buscar el día. Una persona de mi equipo te enseña exactamente cómo funciona la Comunidad y por dónde empezar con tu plan.",
+      "Te escribimos por WhatsApp para buscar el día. Una persona de mi equipo te enseña exactamente cómo funciona la Comunidad y por dónde empezar con tu plan.",
     ],
     ["Empiezas por la mentalidad", "Es el paso 1 de la hoja de ruta y el primer módulo que te espera dentro. A tu ritmo."],
   ];
-  // Lo que tiene en la Comunidad, con la llamada de bienvenida como un «además». A la menor se le
-  // pide que lo hable con sus padres; que estén en la llamada lo dice el paso 3.
+  // Lo que tiene en la Comunidad, con la llamada de bienvenida como un «además».
   const precioWorkshop =
     euros === 99
       ? `<b>Ahora mismo, 99 €</b>, un solo pago. El 17 de noviembre sube a 149 €.`
@@ -214,18 +208,8 @@ export function renderPlan(p: PlanArmado): string {
     fase === "workshop" ? "el martes 24 de noviembre te enseño en directo" : "en la grabación del directo del 24 de noviembre te enseño"
   } a posar para que las marcas te contraten como modelo. Posar con ropa y con producto, la cara y las manos en una campaña, y un casting en directo con qué fotos mandarle a una marca.</p>
     <p>Y con tu entrada te quedas en la <b>Comunidad de AR Academy para siempre</b>: todas mis alumnas y las mentoras, los eventos, los directos conmigo, la oportunidad de participar en AR Xperience París 2027, 4 días conmigo y mi equipo en la semana de la moda (el viaje y la experiencia se pagan aparte) y el grupo de WhatsApp del workshop.</p>
-    <p>${precioWorkshop}</p>${
-    p.menor
-      ? `
-    <p><b>Antes de entrar, háblalo con tus padres.</b> Enséñales este plan y la clase 4, que es para ellos.</p>`
-      : ""
-  }`;
-  const comunidadNuevo = conWorkshop ? comunidadWorkshop : `<p>En la <b>Comunidad de AR Academy</b> tienes el entorno correcto${p.menor ? " para empezar" : ""}: estás con todas mis alumnas, tienes acceso a todos los eventos y a los directos conmigo, y las bases para empezar a ${p.menor ? "trabajar con tu imagen, a tu ritmo y sin prisa" : "generar ingresos con tu imagen"}. <b>Y además, una llamada de bienvenida</b> con una persona de mi equipo, para que conozcas exactamente cómo funciona la Comunidad y cuáles son tus próximos pasos.</p>${
-    p.menor
-      ? `
-    <p><b>Antes de entrar, háblalo con tus padres.</b> Enséñales este plan y la clase 4, que es para ellos.</p>`
-      : ""
-  }`;
+    <p>${precioWorkshop}</p>`;
+  const comunidadNuevo = conWorkshop ? comunidadWorkshop : `<p>En la <b>Comunidad de AR Academy</b> tienes el entorno correcto: estás con todas mis alumnas, tienes acceso a todos los eventos y a los directos conmigo, y las bases para empezar a generar ingresos con tu imagen. <b>Y además, una llamada de bienvenida</b> con una persona de mi equipo, para que conozcas exactamente cómo funciona la Comunidad y cuáles son tus próximos pasos.</p>`;
   const proximosCom = `
     <small class="nxl">Así entras</small>
     <div class="steps nx">
