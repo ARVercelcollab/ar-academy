@@ -87,8 +87,9 @@ export async function POST(req: NextRequest) {
         );
       }
 
-      // ¿Es la mensualidad de The Perfect Model (47 €/mes)? La pagan las alumnas que terminan la
-      // formación: ni es la Comunidad ni trae el workshop.
+      // ¿Es la mensualidad de The Perfect Model (47 €/mes)? La renuevan las alumnas que terminan
+      // la formación: ni es la Comunidad ni trae el workshop, y no se la lleva a ningún sitio, ni
+      // a MailerLite ni a GHL (Carlos, 2026-10-30).
       const tpm =
         !pagoUnico &&
         invoice.lines.data.some((l) => {
@@ -97,6 +98,7 @@ export async function POST(req: NextRequest) {
           };
           return linea.pricing?.price_details?.product === PRODUCTO_TPM_MENSUAL;
         });
+      if (tpm) break;
 
       // ¿Incluye el workshop del 24-11? Solo el pago único de la Comunidad: lo dice la factura
       // del formulario de /comunidad; la de los enlaces de pago no lo lleva y se mira la fecha del
@@ -115,47 +117,32 @@ export async function POST(req: NextRequest) {
       // también en su grupo: el que arranca la bienvenida con el grupo de WhatsApp y los avisos
       // del directo. Y en GHL, con su etiqueta, para que las setters la vean. Todo después de
       // responder a Stripe: si MailerLite o GHL fallan, el pago y el acceso no se enteran.
-      // La de TPM va solo a «Alumnas TPM» (entrar en «Alumnas Comunidad» le mandaría la
-      // bienvenida del workshop) y no va a GHL: no hay nada que venderle.
       const { email: emailCliente, name: nombreCliente, phone: telCliente } = customer;
       if (emailCliente) {
         after(() =>
-          altaEnMailerLite(
-            tpm
-              ? {
-                  email: emailCliente,
-                  grupo: GRUPO.alumnasTPM,
-                  nombre: nombreCliente ?? "",
-                  etapa: "tpm",
-                  edad,
-                  consentimiento: "compra mensualidad tpm",
-                }
-              : {
-                  email: emailCliente,
-                  grupo: workshop ? [GRUPO.alumnasComunidad, GRUPO.workshop] : GRUPO.alumnasComunidad,
-                  nombre: nombreCliente ?? "",
-                  origen: workshop ? "workshop" : undefined,
-                  etapa: "comunidad",
-                  edad,
-                  consentimiento: workshop ? "compra workshop" : "compra comunidad",
-                }
-          )
-        );
-      }
-      if (!tpm) {
-        after(() =>
-          compradoraEnGHL({
+          altaEnMailerLite({
+            email: emailCliente,
+            grupo: workshop ? [GRUPO.alumnasComunidad, GRUPO.workshop] : GRUPO.alumnasComunidad,
             nombre: nombreCliente ?? "",
-            email: emailCliente ?? "",
-            telefono: telCliente ?? "",
+            origen: workshop ? "workshop" : undefined,
+            etapa: "comunidad",
             edad,
-            instagram,
-            euros: invoice.amount_paid / 100,
-            workshop,
-            descripcion: invoice.description || "Comunidad AR Academy",
+            consentimiento: workshop ? "compra workshop" : "compra comunidad",
           })
         );
       }
+      after(() =>
+        compradoraEnGHL({
+          nombre: nombreCliente ?? "",
+          email: emailCliente ?? "",
+          telefono: telCliente ?? "",
+          edad,
+          instagram,
+          euros: invoice.amount_paid / 100,
+          workshop,
+          descripcion: invoice.description || "Comunidad AR Academy",
+        })
+      );
       break;
     }
 
