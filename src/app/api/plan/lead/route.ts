@@ -71,11 +71,12 @@ const API = "https://services.leadconnectorhq.com";
 // ── Pipelines ─────────────────────────────────────────────────────────────────
 // «Plan personalizado», creado por API el 2026-09-17.
 const PIPELINE_PLAN = "fBlrzlgSgTbZ5mlA9lh8";
-// La 1 («Formulario recibido») es donde entran todas (Carlos, 2026-10-13). Hasta ese día
-// el clic en WhatsApp de /plan/gracias las pasaba a una etapa «2 · WhatsApp iniciado» y la
-// 1 se quedaba vacía; esa etapa ya no existe. De la 2 («En prospección») en adelante las
-// mueve la setter a mano. Desde aquí no se tocan.
-const ETAPA_FORMULARIO_RECIBIDO = "e8d262bf-006e-4e59-93b9-3457d406b8d3";
+// Seis etapas desde el 2026-10-30 (Carlos). Todas entran en la 1 («Solicita plan»), salvo las
+// que marcan menos de 750 € al mes, que entran directamente en la 6 («Comunidad»): también
+// reciben su plan, pero la setter les manda el audio PL-2 en vez de la llamada de 5 minutos.
+// De ahí en adelante las mueve la setter a mano. Desde aquí no se tocan.
+const ETAPA_SOLICITA_PLAN = "e8d262bf-006e-4e59-93b9-3457d406b8d3";
+const ETAPA_COMUNIDAD = "4984b37b-2c14-40da-8502-72199e22a6f4";
 
 // «Captación», el de Sofi.
 const PIPELINE_CAPTACION = "lPD7Qhnb1Ak8Vlexzml8";
@@ -520,12 +521,12 @@ async function revisarOtrasFichas(contactId: string) {
 }
 
 // La tarjeta. Si ya tiene una abierta en Captación (la de Sofi) se mueve; si no, nueva.
-async function ponerTarjeta(contactId: string, nombre: string) {
+async function ponerTarjeta(contactId: string, nombre: string, etapa: string) {
   const enCaptacion = await oportunidadAbierta(contactId, PIPELINE_CAPTACION);
   if (enCaptacion) {
     const mv = await ghl("PUT", `/opportunities/${enCaptacion.id}`, {
       pipelineId: PIPELINE_PLAN,
-      pipelineStageId: ETAPA_FORMULARIO_RECIBIDO,
+      pipelineStageId: etapa,
     });
     if (!mv.ok) console.error("plan/lead: mover tarjeta falló", mv.status, corto(mv));
     return;
@@ -534,7 +535,7 @@ async function ponerTarjeta(contactId: string, nombre: string) {
   const opp = await ghl("POST", "/opportunities/", {
     pipelineId: PIPELINE_PLAN,
     locationId: process.env.GHL_LOCATION_ID,
-    pipelineStageId: ETAPA_FORMULARIO_RECIBIDO,
+    pipelineStageId: etapa,
     contactId,
     name: nombre,
     status: "open",
@@ -614,6 +615,10 @@ export async function POST(req: Request) {
   if (ocupacion === OCUPA_ESTUDIANTE) tags.push(TAG_ESTUDIANTE);
   const tramo = deTabla(TAG_INGRESOS, limpiar(b.ingresos_actuales, 60));
   if (tramo) tags.push(tramo);
+  const etapa =
+    tramo === TAG_INGRESOS["Menos de 750 €"] || tramo === TAG_INGRESOS["Todavía nada"]
+      ? ETAPA_COMUNIDAD
+      : ETAPA_SOLICITA_PLAN;
   if (PAIS_HT_OK.includes(pais)) tags.push(TAG_HT_PAIS_OK);
   const tp = tagPais(pais, paisNombre);
   if (tp) tags.push(tp);
@@ -779,7 +784,7 @@ export async function POST(req: Request) {
     const enSuInstagram = !!deInstagram && deInstagram.id === contactId;
     const r = await Promise.allSettled([
       contacto().then(() => (enSuInstagram ? undefined : revisarOtrasFichas(contactId))),
-      ponerTarjeta(contactId, nombre), // secundaria: si falla, la lead ya está guardada
+      ponerTarjeta(contactId, nombre, etapa), // secundaria: si falla, la lead ya está guardada
       mandarAMeta ? enviarMeta(datosMeta) : Promise.resolve(),
       altaLista(),
     ]);
