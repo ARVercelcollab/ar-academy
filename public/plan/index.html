@@ -901,10 +901,15 @@ setTimeout(function(){
 }, 2200);
 setTimeout(function(){kinetic(document.getElementById('freeln'))},450);
 
+/* La franja de arriba dice lo que es verdad: el plan es gratis hasta el viernes 6-11 y pasa a ser
+   de pago el sábado 7 (Carlos, 2026-11-01). Antes decía «[mes] · plazas limitadas», y el plan no
+   tiene plazas. Desde el 7-11 a las 00:00 de Madrid la franja se esconde sola. */
 var tick=document.getElementById('tick');
-var MESES=['enero','febrero','marzo','abril','mayo','junio','julio','agosto',
-           'septiembre','octubre','noviembre','diciembre'];
-tick.innerHTML='<span><i class="dot" aria-hidden="true"></i>'+MESES[new Date().getMonth()]+' · plazas limitadas</span>';
+if(Date.now()<Date.parse('2026-11-07T00:00:00+01:00')){
+  tick.innerHTML='<span><i class="dot" aria-hidden="true"></i>Gratis hasta el 6 de noviembre</span>';
+}else{
+  tick.parentNode.style.display='none';
+}
 
 /* PRODUCCIÓN: pon el ID del Short de YouTube en yt y la tarjeta se vuelve reproductor.
    Ej: {n:'Alba', l:'...', yt:'AbCdEfGhIjK'}  */
