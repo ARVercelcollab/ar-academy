@@ -1,4 +1,5 @@
 import type { Ficha } from "./ghl";
+import { SUBIDA_COMUNIDAD } from "@/lib/comunidad";
 
 /**
  * El contenido del plan, según lo que contestó cada chica en /plan.
@@ -763,11 +764,17 @@ export function armarPlan(
 }
 
 // ── Qué cierre lleva su plan ──────────────────────────────────────────────────
-// Las que ingresan menos de 750 € al mes (o «todavía nada»), la Comunidad, que mientras dure el
-// workshop lo lleva dentro: su plan es un embudo hacia ahí (Carlos, 2026-10-30). El resto,
-// formación (mensaje «¡QUIERO ACCEDER!»), también las menores (Carlos, 2026-10-30: «de igual
-// si es menor»); la setter manda el enlace de la Comunidad salvo a la muy, muy calificada.
+// Hasta el 30-11, el lanzamiento del workshop: a todas la Comunidad, que lleva el workshop
+// dentro, ganen lo que ganen (Carlos, 2026-11-03: «se envía a todas el workshop»). A la muy
+// calificada la setter le ofrece además la formación 1 a 1 en la conversación; el enlace no
+// cambia. Desde el 1-12, la regla de antes: las que ingresan menos de 750 € al mes (o «todavía
+// nada»), la Comunidad (Carlos, 2026-10-30); el resto, formación (mensaje «¡QUIERO ACCEDER!»),
+// también las menores (Carlos, 2026-10-30: «de igual si es menor»).
 // La regla de los 24 años del SOP no se aplica al plan.
-export function cierreRecomendado(menosDe750 = false): "formacion" | "comunidad" {
+export function cierreRecomendado(
+  menosDe750 = false,
+  ahora: number = Date.now(),
+): "formacion" | "comunidad" {
+  if (ahora < SUBIDA_COMUNIDAD) return "comunidad";
   return menosDe750 ? "comunidad" : "formacion";
 }

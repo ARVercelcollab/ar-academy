@@ -722,7 +722,8 @@ export async function POST(req: Request) {
       // copia de aquí cuando decide mandarlo.
       let enlaces = "";
       // Las de menos de 750 €, solo el de la Comunidad (Carlos, 2026-10-30); el resto, los dos,
-      // también las menores. El plan se manda después de hablar con ella, nunca al llegar.
+      // también las menores. Hasta el 30-11, el de todas es el del workshop y la Comunidad
+      // (Carlos, 2026-11-03). El plan se manda después de hablar con ella, nunca al llegar.
       const cierre = cierreRecomendado(menosDe750);
       try {
         const recomendado = urlDePlan(contactId, cierre);
@@ -732,6 +733,14 @@ export async function POST(req: Request) {
                 "",
                 "Su plan, con el cierre de la Comunidad (y el workshop, mientras dure). Se manda después de hablar con ella:",
                 recomendado,
+              ]
+            : cierre === "comunidad"
+            ? [
+                "",
+                "Su plan, con el cierre del workshop y la Comunidad: hasta el 30-11, el de todas (el fragmento ya lo pega). Se manda después de hablar con ella:",
+                recomendado,
+                "El mismo plan con el cierre de la formación. No hace falta: a la muy calificada se le ofrece la formación 1 a 1 en la conversación:",
+                urlDePlan(contactId, "formacion"),
               ]
             : [
                 "",
