@@ -2,9 +2,17 @@ import { contactoDeToken } from "./token";
 import { leerFicha } from "./ghl";
 import { armarPlan } from "./contenido";
 import { renderPlan, esc } from "./render";
+import { SUBIDA_COMUNIDAD } from "@/lib/comunidad";
+
+// Hasta el 30-11, la que lleva esta etiqueta ve el cierre del workshop y la Comunidad aunque abra
+// el enlace de la formación (Carlos, 2026-11-03: a las del plan personalizado que ya lo tenían,
+// «cámbiaselo», salvo a la muy calificada y a las que ya pulsaron para entrar en la formación).
+// Quitarle la etiqueta lo deshace. Desde el 1-12 no cuenta: vuelve el cierre de su enlace.
+export const TAG_CIERRE_WORKSHOP = "plan · cierre workshop";
 
 /**
- * GET /plan/{token}            → el plan con el cierre de la formación («¡QUIERO ACCEDER!»)
+ * GET /plan/{token}            → el plan con el cierre de la formación («¡QUIERO ACCEDER!»), o
+ *                                el de la Comunidad si lleva TAG_CIERRE_WORKSHOP (hasta el 30-11)
  * GET /plan/{token}/comunidad  → el mismo plan con el cierre de la Comunidad
  * ?previa=1                    → vista de la setter: no cuenta como abierto ni carga el píxel
  */
@@ -35,6 +43,9 @@ export async function servirPlan(req: Request, token: string, cierre: "formacion
   if (!ficha) return new Response(paginaNoEncontrada(), { status: 404, headers: cabeceras });
 
   const previa = new URL(req.url).searchParams.get("previa") === "1";
+  if (cierre === "formacion" && Date.now() < SUBIDA_COMUNIDAD && ficha.tags.includes(TAG_CIERRE_WORKSHOP)) {
+    cierre = "comunidad";
+  }
   try {
     const html = renderPlan(armarPlan(ficha, token, { previa, cierre }));
     return new Response(html, { status: 200, headers: cabeceras });
