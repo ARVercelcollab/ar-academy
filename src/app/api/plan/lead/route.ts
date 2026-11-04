@@ -2,6 +2,7 @@ import { NextResponse, after } from "next/server";
 import { createHash } from "node:crypto";
 import { urlDePlan, URL_BASE } from "@/lib/plan/token";
 import { cierreRecomendado } from "@/lib/plan/contenido";
+import { faseComunidad } from "@/lib/comunidad";
 import { type Candidata, elegirFicha, normalizaHandle } from "@/lib/plan/instagram";
 import { GRUPO, altaEnMailerLite, regionDe } from "@/lib/mailerlite";
 
@@ -721,26 +722,18 @@ export async function POST(req: Request) {
       // de SU plan, que se genera solo con estas respuestas (src/lib/plan). La setter los
       // copia de aquí cuando decide mandarlo.
       let enlaces = "";
-      // Las de menos de 750 €, solo el de la Comunidad (Carlos, 2026-10-30); el resto, los dos,
-      // también las menores. Hasta el 30-11, el de todas es el del workshop y la Comunidad
-      // (Carlos, 2026-11-03). El plan se manda después de hablar con ella, nunca al llegar.
+      // Hasta el 30-11, solo el plan con el cierre del workshop y la Comunidad: el de la formación
+      // ni aparece en la nota (Carlos, 2026-11-04). Desde el 1-12, a las de 750 € o más, los dos.
+      // El plan se manda después de hablar con ella, nunca al llegar.
       const cierre = cierreRecomendado(menosDe750);
       try {
         const recomendado = urlDePlan(contactId, cierre);
         enlaces = (
-          menosDe750
+          cierre === "comunidad"
             ? [
                 "",
-                "Su plan, con el cierre de la Comunidad (y el workshop, mientras dure). Se manda después de hablar con ella:",
+                `Su plan, con el cierre ${faseComunidad() === "comunidad" ? "de la Comunidad" : "del workshop y la Comunidad"}. El fragmento ya lo pega. Se manda después de hablar con ella:`,
                 recomendado,
-              ]
-            : cierre === "comunidad"
-            ? [
-                "",
-                "Su plan, con el cierre del workshop y la Comunidad: hasta el 30-11, el de todas (el fragmento ya lo pega). Se manda después de hablar con ella:",
-                recomendado,
-                "El mismo plan con el cierre de la formación. No hace falta: a la muy calificada se le ofrece la formación 1 a 1 en la conversación:",
-                urlDePlan(contactId, "formacion"),
               ]
             : [
                 "",
