@@ -99,7 +99,11 @@ export type Compra = {
   cuando?: number;
 };
 
-export function cuerpoCompra(c: Compra) {
+/**
+ * `codigoPrueba`: el código de «Probar eventos» de Events Manager (TEST…). Con él, Meta enseña el
+ * evento en esa pestaña y NO lo cuenta en los anuncios. Lo usa /api/meta/prueba.
+ */
+export function cuerpoCompra(c: Compra, codigoPrueba?: string) {
   const [nom = "", ...resto] = c.nombre.trim().split(/\s+/);
   const fn = normTexto(nom);
   const ln = normTexto(resto.join(" "));
@@ -135,12 +139,13 @@ export function cuerpoCompra(c: Compra) {
     },
   };
   const cuerpo: Record<string, unknown> = { data: [evento] };
-  if (process.env.META_CAPI_TEST_CODE) cuerpo.test_event_code = process.env.META_CAPI_TEST_CODE;
+  const prueba = codigoPrueba || process.env.META_CAPI_TEST_CODE;
+  if (prueba) cuerpo.test_event_code = prueba;
   return cuerpo;
 }
 
 /** Manda la compra. Nunca lanza: devuelve si Meta la aceptó. */
-export async function compraEnMeta(c: Compra): Promise<boolean> {
+export async function compraEnMeta(c: Compra, codigoPrueba?: string): Promise<boolean> {
   const pixel = process.env.META_PIXEL_ID;
   const token = process.env.META_CAPI_TOKEN;
   if (!pixel || !token) return false; // sin configurar: todo sigue como estaba
@@ -151,7 +156,7 @@ export async function compraEnMeta(c: Compra): Promise<boolean> {
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(cuerpoCompra(c)),
+        body: JSON.stringify(cuerpoCompra(c, codigoPrueba)),
         signal: AbortSignal.timeout(6000),
         cache: "no-store",
       },
