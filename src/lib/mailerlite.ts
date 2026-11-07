@@ -34,7 +34,7 @@ export const GRUPO = {
   masterclass: "201685595088487481", // «Masterclass sep 2026»
   alumnasComunidad: "201685612201248062", // «Alumnas Comunidad»
   workshop: "202226448988112797", // «Workshop 24-11 · compradoras» (el grupo de WhatsApp y los avisos del directo)
-  // «Plan · sin pagar» (7-11): las que rellenan /plan y no pagan los 9 €. Sin automatización:
+  // «Plan · sin pagar» (7-11): las que rellenan /plan y no pagan los 10 €. Sin automatización:
   // siguen en la lista (cartas y campañas) pero no reciben la secuencia con el enlace de su plan.
   planSinPagar: "203477501003957487",
 } as const;

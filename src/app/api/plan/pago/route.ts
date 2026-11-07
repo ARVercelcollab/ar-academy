@@ -8,7 +8,7 @@ import { cierreRecomendado } from "@/lib/plan/contenido";
 import { mensajeDeError } from "@/lib/stripe-errores";
 
 /**
- * El pago del plan personalizado: 9 € en un solo pago, desde el 7-11-2026 (Carlos).
+ * El pago del plan personalizado: 10 € en un solo pago, desde el 7-11-2026 (Carlos).
  *
  * Ella rellena /plan entero (eso ya crea su ficha en GHL con `plan · sin pagar`, ver
  * /api/plan/lead) y al final paga aquí, sin salir de la página. La tarjeta se valida con un
@@ -19,7 +19,7 @@ import { mensajeDeError } from "@/lib/stripe-errores";
  *     «Plan personalizado» (src/lib/plan/pagado.ts);
  *   · MailerLite: el grupo «Plan personalizado», que arranca su secuencia (las que no pagan no
  *     reciben los emails con su plan);
- *   · Meta: SubmitApplication con 9 € de valor, con el mismo event_id que el píxel de /plan/gracias.
+ *   · Meta: SubmitApplication con 10 € de valor, con el mismo event_id que el píxel de /plan/gracias.
  *
  * La factura lleva `producto: plan_personalizado`: /api/stripe-webhook no avisa a Make (no da Skool)
  * ni la cuenta como compra del workshop.

@@ -1,5 +1,5 @@
 /**
- * La chica ya ha pagado su plan (9 €): GHL lo sabe (Carlos, 2026-11-07: «en caso de que no hayan
+ * La chica ya ha pagado su plan (10 €): GHL lo sabe (Carlos, 2026-11-07: «en caso de que no hayan
  * pagado, en GHL debe estar marcado»).
  *
  * Al rellenar /plan (src/app/api/plan/lead), su ficha queda con `plan · sin pagar` y su tarjeta en
