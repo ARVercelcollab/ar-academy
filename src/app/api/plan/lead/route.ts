@@ -1,13 +1,19 @@
 import { NextResponse, after } from "next/server";
-import { createHash } from "node:crypto";
-import { urlDePlan, URL_BASE } from "@/lib/plan/token";
+import { urlDePlan } from "@/lib/plan/token";
 import { cierreRecomendado } from "@/lib/plan/contenido";
 import { faseComunidad } from "@/lib/comunidad";
 import { type Candidata, elegirFicha, normalizaHandle } from "@/lib/plan/instagram";
+import { TAG_PLAN_PAGADO, TAG_PLAN_SIN_PAGAR, tarjetaSinPagar, tienePlanPagado } from "@/lib/plan/pagado";
 import { GRUPO, altaEnMailerLite, regionDe } from "@/lib/mailerlite";
 
 /**
- * Formulario del plan personalizado (/plan) → GHL (y Meta, si está configurado).
+ * Formulario del plan personalizado (/plan) → GHL.
+ *
+ * DESDE EL 7-11-2026 EL PLAN ES DE PAGO (9 €, Carlos). Esta ruta guarda la ficha al rellenar el
+ * formulario, marcada `plan · sin pagar` y con su tarjeta en «Plan personalizado · 0 · Sin pagar».
+ * Al PAGAR, en /api/plan/pago (src/lib/plan/pagado.ts), la tarjeta pasa a la 1 (o a la 6), llegan
+ * `revisar humano`, MailerLite y el evento de Meta. Una chica que no paga queda en la columna «Sin
+ * pagar», sin la secuencia de emails y sin contar como solicitud en Meta.
  *
  * POR QUÉ AQUÍ Y NO DESDE LA PÁGINA: el token de GHL da acceso de escritura a toda la
  * cuenta. Desde el navegador lo vería cualquiera que abra el código. Aquí vive en el
@@ -29,22 +35,12 @@ import { GRUPO, altaEnMailerLite, regionDe } from "@/lib/mailerlite";
  *   2. RESPONDE YA, con el id del contacto. La página espera como mucho 4 s antes de
  *      pasar a /plan/gracias; antes se hacían 6-7 llamadas en serie y, si GHL iba lento,
  *      se iba sin el id. Lo demás va en `after()` (sigue corriendo tras responder):
- *        · la tarjeta: si ya tiene una abierta en Captación (la de Sofi), se le MUEVE a
- *          «Plan personalizado». Si no tiene ninguna, tarjeta nueva en «Plan
- *          personalizado» · etapa 1. Una sola tarjeta siempre.
- *        · las etiquetas, con el endpoint que SUMA (`POST /contacts/{id}/tags`). Entre
- *          ellas SIEMPRE `revisar humano` y `bot en pausa`: todas las del plan las llevan
- *          las setters (Carlos, 2026-09-18). Las dos están en la lista de exclusión de
- *          Sofi, así que aunque la chica escriba por Instagram, Sofi calla. (Por WhatsApp
- *          Sofi no contesta nunca: `es_canal_ajeno` en el backend.) Y la de origen:
+ *        · las etiquetas, con el endpoint que SUMA (`POST /contacts/{id}/tags`): `plan · sin
+ *          pagar` y `bot en pausa` (en la lista de exclusión de Sofi, así que aunque la chica
+ *          escriba por Instagram, Sofi calla), y la de origen:
  *          `origen · youtube|anuncio|instagram|directo|otro`.
  *        · `plan_url` y la nota con sus respuestas, su origen y los enlaces de su plan.
- *        · la Conversions API de Meta (`SubmitApplication`), con el mismo event_id que
- *          el píxel de /plan/gracias para que Meta no la cuente dos veces.
- *        · el alta en MailerLite, en el grupo «Plan personalizado», que es lo que arranca
- *          su secuencia de emails (src/lib/mailerlite.ts).
- *      Las etiquetas, `plan_url` y la nota van una detrás de otra (las tres tocan el
- *      contacto); la tarjeta y Meta, en paralelo.
+ *      Las tres tocan el contacto y van una detrás de otra.
  *
  * El formulario solo escribe evidencia. El nivel de la lead y `menor de 24` los
  * reconcilia el backend de Sofi: jamás se ponen desde aquí.
@@ -68,18 +64,8 @@ import { GRUPO, altaEnMailerLite, regionDe } from "@/lib/mailerlite";
 
 const API = "https://services.leadconnectorhq.com";
 
-// ── Pipelines ─────────────────────────────────────────────────────────────────
-// «Plan personalizado», creado por API el 2026-09-17.
-const PIPELINE_PLAN = "fBlrzlgSgTbZ5mlA9lh8";
-// Seis etapas desde el 2026-10-30 (Carlos). Todas entran en la 1 («Solicita plan»), salvo las
-// que marcan menos de 750 € al mes, que entran directamente en la 6 («Comunidad»): también
-// reciben su plan, pero la setter les manda el audio PL-2 en vez de la llamada de 5 minutos.
-// De ahí en adelante las mueve la setter a mano. Desde aquí no se tocan.
-const ETAPA_SOLICITA_PLAN = "e8d262bf-006e-4e59-93b9-3457d406b8d3";
-const ETAPA_COMUNIDAD = "4984b37b-2c14-40da-8502-72199e22a6f4";
-
-// «Captación», el de Sofi.
-const PIPELINE_CAPTACION = "lPD7Qhnb1Ak8Vlexzml8";
+// La tarjeta: «0 · Sin pagar» al rellenar; al pagar, 1 · Solicita plan, o 6 · Comunidad si marca
+// menos de 750 € (src/lib/plan/pagado.ts).
 
 // ── Campos personalizados (IDs reales de la location) ─────────────────────────
 // Las preguntas tal cual las ve ella en /plan (public/plan/index.html, `var S`).
@@ -138,7 +124,9 @@ const TAG_MAYOR_EDAD = "mayor de edad";
 const TAG_MENOR_EDAD = "menor de edad";
 const TAG_PUEDE_PAGAR = "puede pagar";
 const TAG_HT_PAIS_OK = "ht-pais-ok";
-const TAG_REVISAR_HUMANO = "revisar humano"; // en TAGS_EXCLUSION del backend: Sofi calla
+// Desde el 7-11 el plan es de pago (9 €): `revisar humano` (el panel de las setters) y la tarjeta
+// llegan al pagar (src/lib/plan/pagado.ts). Hasta entonces la ficha queda marcada «sin pagar».
+const TAG_SIN_PAGAR = TAG_PLAN_SIN_PAGAR;
 const TAG_BOT_EN_PAUSA = "bot en pausa"; // ídem; «un humano lleva la conversación»
 const TAG_ESTUDIANTE = "estudiante"; // ya existe en el vocabulario de Sofi
 // Tramo de ingresos (paso 2), una etiqueta por respuesta, con el texto tal cual (Carlos,
@@ -308,16 +296,6 @@ function lineaOrigen(o: Origen, canal: Canal): string {
   return `Origen: ${partes.join(" · ")}`;
 }
 
-// ── Conversions API de Meta ───────────────────────────────────────────────────
-// Copia de 06-infraestructura/backend-webhook/setter/meta_capi.py (el de la masterclass),
-// con el evento del plan. POR QUÉ: el píxel del navegador solo carga si ella acepta las
-// cookies, y en la masterclass Meta vio la mitad de los registros. Si las campañas
-// optimizan a «Solicitud de plan» (SubmitApplication + content_name «plan
-// personalizado»), Meta aprende con la mitad de los datos.
-// REGLA DURA: esto NUNCA impide guardar la lead. Corre después de responder, en `after()`,
-// y cualquier fallo se queda en un console.error.
-const META_API = "v21.0";
-const EVENTO_META = "SubmitApplication";
 
 // ISO 3166-1 alfa-2 de cada país del selector de /plan (por su nombre).
 const PAIS_ISO: Record<string, string> = {
@@ -331,99 +309,11 @@ const PAIS_ISO: Record<string, string> = {
   Uruguay: "uy", Venezuela: "ve",
 };
 
-const sha256 = (v: string) => createHash("sha256").update(v, "utf8").digest("hex");
 
-// Meta exige minúsculas, sin acentos ni puntuación antes de hashear (igual que Sofi).
-const normTexto = (v: string) =>
-  v.normalize("NFKD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[^a-z0-9]/g, "");
 
-function leerCookie(req: Request, nombre: string): string {
-  const todas = req.headers.get("cookie") || "";
-  for (const trozo of todas.split(";")) {
-    const i = trozo.indexOf("=");
-    if (i > 0 && trozo.slice(0, i).trim() === nombre) {
-      try {
-        return decodeURIComponent(trozo.slice(i + 1).trim());
-      } catch {
-        return "";
-      }
-    }
-  }
-  return "";
-}
 
-type DatosMeta = {
-  contactId: string;
-  eventId: string;
-  email: string;
-  telefono: string; // E.164
-  nombre: string;
-  paisNombre: string;
-  ip: string;
-  ua: string;
-  fbp: string;
-  fbc: string;
-};
 
-function cuerpoMeta(d: DatosMeta) {
-  const [nom = "", ...resto] = d.nombre.split(/\s+/);
-  const fn = normTexto(nom);
-  const ln = normTexto(resto.join(" "));
-  const digitos = d.telefono.replace(/\D/g, "");
-  const iso = deTabla(PAIS_ISO, d.paisNombre);
-  const user_data: Record<string, string | string[]> = {};
-  // Todo lo personal va hasheado; nunca en claro.
-  if (d.email.includes("@")) user_data.em = [sha256(d.email.trim().toLowerCase())];
-  if (digitos.length >= 7) user_data.ph = [sha256(digitos)]; // con prefijo y sin «+»
-  if (fn) user_data.fn = [sha256(fn)];
-  if (ln) user_data.ln = [sha256(ln)];
-  if (iso) user_data.country = [sha256(iso)];
-  // El id de GHL: estable, nuestro, el mismo que usa el backend de Sofi.
-  user_data.external_id = [sha256(d.contactId)];
-  // Estos van en claro: así los pide Meta.
-  if (d.ip) user_data.client_ip_address = d.ip;
-  if (d.ua) user_data.client_user_agent = d.ua;
-  if (d.fbp) user_data.fbp = d.fbp;
-  if (d.fbc) user_data.fbc = d.fbc;
 
-  const evento: Record<string, unknown> = {
-    event_name: EVENTO_META,
-    event_time: Math.floor(Date.now() / 1000),
-    action_source: "website",
-    event_source_url: `${URL_BASE}/plan`,
-    user_data,
-    // Lo que mira la conversión personalizada «Solicitud de plan» (1582237946719790).
-    custom_data: { content_name: "plan personalizado" },
-  };
-  // El id compartido con el píxel de /plan/gracias. Es lo único que evita contarla dos veces.
-  if (d.eventId) evento.event_id = d.eventId;
-  const cuerpo: Record<string, unknown> = { data: [evento] };
-  // Sin test_event_code nunca: Meta no descarta los eventos de prueba (src/lib/meta.ts).
-  return cuerpo;
-}
-
-async function enviarMeta(d: DatosMeta): Promise<void> {
-  const pixel = process.env.META_PIXEL_ID;
-  const token = process.env.META_CAPI_TOKEN;
-  if (!pixel || !token) return; // sin configurar: el sistema va como iba
-  try {
-    const r = await fetch(
-      `https://graph.facebook.com/${META_API}/${encodeURIComponent(pixel)}/events?access_token=${encodeURIComponent(token)}`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(cuerpoMeta(d)),
-        signal: AbortSignal.timeout(6000),
-        cache: "no-store",
-      },
-    );
-    if (!r.ok) {
-      console.error("plan/lead: Meta CAPI respondió", r.status, (await r.text()).slice(0, 300));
-    }
-  } catch (e) {
-    console.error("plan/lead: Meta CAPI falló (la lead está guardada igual)", String(e).slice(0, 200));
-  }
-}
 
 // ── GHL ───────────────────────────────────────────────────────────────────────
 type Resp = { ok: boolean; status: number; datos: Record<string, unknown> };
@@ -457,18 +347,6 @@ async function ghl(metodo: string, ruta: string, cuerpo?: unknown): Promise<Resp
   }
 }
 
-type Oportunidad = { id: string; pipelineId: string; pipelineStageId: string };
-
-// ¿Tiene ya una tarjeta abierta en este pipeline?
-async function oportunidadAbierta(contactId: string, pipelineId: string) {
-  const r = await ghl(
-    "GET",
-    `/opportunities/search?location_id=${process.env.GHL_LOCATION_ID}` +
-      `&contact_id=${contactId}&pipeline_id=${pipelineId}&status=open`,
-  );
-  const lista = (r.datos as { opportunities?: Oportunidad[] }).opportunities;
-  return lista?.[0] || null;
-}
 
 const corto = (r: Resp) => JSON.stringify(r.datos).slice(0, 300);
 
@@ -522,28 +400,6 @@ async function revisarOtrasFichas(contactId: string) {
   }
 }
 
-// La tarjeta. Si ya tiene una abierta en Captación (la de Sofi) se mueve; si no, nueva.
-async function ponerTarjeta(contactId: string, nombre: string, etapa: string) {
-  const enCaptacion = await oportunidadAbierta(contactId, PIPELINE_CAPTACION);
-  if (enCaptacion) {
-    const mv = await ghl("PUT", `/opportunities/${enCaptacion.id}`, {
-      pipelineId: PIPELINE_PLAN,
-      pipelineStageId: etapa,
-    });
-    if (!mv.ok) console.error("plan/lead: mover tarjeta falló", mv.status, corto(mv));
-    return;
-  }
-  if (await oportunidadAbierta(contactId, PIPELINE_PLAN)) return; // ya existía
-  const opp = await ghl("POST", "/opportunities/", {
-    pipelineId: PIPELINE_PLAN,
-    locationId: process.env.GHL_LOCATION_ID,
-    pipelineStageId: etapa,
-    contactId,
-    name: nombre,
-    status: "open",
-  });
-  if (!opp.ok) console.error("plan/lead: oportunidad falló", opp.status, corto(opp));
-}
 
 export async function POST(req: Request) {
   if (!origenPermitido(req)) {
@@ -610,7 +466,8 @@ export async function POST(req: Request) {
   const canal = origen ? canalDe(origen) : null;
 
   // ── etiquetas: solo evidencia ──────────────────────────────────────────────
-  const tags = [TAG_INICIO_PLAN, TAG_REVISAR_HUMANO, TAG_BOT_EN_PAUSA];
+  // `plan · sin pagar` se añade más abajo, solo si no lo había pagado ya.
+  const tags = [TAG_INICIO_PLAN, TAG_BOT_EN_PAUSA];
   if (Number.isFinite(edad)) tags.push(edad >= 18 ? TAG_MAYOR_EDAD : TAG_MENOR_EDAD);
   const ocupacion = limpiar(b.ocupacion, 120);
   if (OCUPA_PAGO.includes(ocupacion)) tags.push(TAG_PUEDE_PAGAR);
@@ -618,7 +475,6 @@ export async function POST(req: Request) {
   const tramo = deTabla(TAG_INGRESOS, limpiar(b.ingresos_actuales, 60));
   if (tramo) tags.push(tramo);
   const menosDe750 = tramo === TAG_INGRESOS["Menos de 750 €"] || tramo === TAG_INGRESOS["Todavía nada"];
-  const etapa = menosDe750 ? ETAPA_COMUNIDAD : ETAPA_SOLICITA_PLAN;
   if (PAIS_HT_OK.includes(pais)) tags.push(TAG_HT_PAIS_OK);
   const tp = tagPais(pais, paisNombre);
   if (tp) tags.push(tp);
@@ -654,6 +510,7 @@ export async function POST(req: Request) {
   // El correo y el teléfono, solo si el hueco está vacío. Si GHL no deja (ese correo o
   // ese teléfono ya están en otra ficha), se sigue como siempre, por el upsert.
   let contactId = "";
+  let etiquetasPrevias: string[] = [];
   const deInstagram = await fichaDeInstagram(ig);
   if (deInstagram) {
     const cambios = {
@@ -667,6 +524,7 @@ export async function POST(req: Request) {
     const put = await ghl("PUT", `/contacts/${deInstagram.id}`, cambios);
     if (put.ok) {
       contactId = deInstagram.id;
+      etiquetasPrevias = deInstagram.tags ?? [];
       console.log("plan/lead: escrito en su ficha de Instagram", deInstagram.id);
     } else {
       console.warn("plan/lead: no se pudo escribir en su ficha de Instagram; upsert", put.status, corto(put));
@@ -685,7 +543,9 @@ export async function POST(req: Request) {
       console.error("plan/lead: upsert falló", up.status, corto(up));
       return NextResponse.json({ error: "crm" }, { status: 502 });
     }
-    contactId = (up.datos as { contact?: { id: string } }).contact?.id ?? "";
+    const c = (up.datos as { contact?: { id: string; tags?: string[] } }).contact;
+    contactId = c?.id ?? "";
+    etiquetasPrevias = c?.tags ?? [];
   }
 
   if (!contactId) {
@@ -693,26 +553,21 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: true });
   }
 
-  // Lo que hace falta de la petición se lee AHORA (después de responder ya no está).
-  const datosMeta: DatosMeta = {
-    contactId,
-    eventId: /^[A-Za-z0-9-]{8,80}$/.test(String(b.event_id ?? "")) ? String(b.event_id) : "",
-    email,
-    telefono,
-    nombre,
-    paisNombre,
-    ip: (req.headers.get("x-forwarded-for")?.split(",")[0] || req.headers.get("x-real-ip") || "").trim(),
-    ua: (req.headers.get("user-agent") || "").slice(0, 400),
-    fbp: leerCookie(req, "_fbp").slice(0, 200),
-    // `_fbc` si el píxel llegó a guardarlo; si no, se arma con el fbclid del anuncio,
-    // con la hora a la que la página lo vio (formato de Meta: fb.1.<ms>.<fbclid>).
-    fbc: leerCookie(req, "_fbc").slice(0, 600) || (origen?.fbclid ? `fb.1.${origen.ts}.${origen.fbclid}` : ""),
-  };
-  const conConsentimiento = leerCookie(req, "cookie_consent") === "accepted";
-  const mandarAMeta = process.env.META_CAPI_SOLO_CON_CONSENTIMIENTO !== "1" || conConsentimiento;
+
+  // ¿Ya había pagado su plan? (Vuelve a rellenarlo días después, por ejemplo.) Entonces no se la
+  // marca otra vez «sin pagar», no se le toca la tarjeta y la página la lleva directa al WhatsApp,
+  // sin volver a cobrarle.
+  const yaPagado = etiquetasPrevias.some((t) => (t || "").trim().toLowerCase() === TAG_PLAN_PAGADO);
+  if (!yaPagado) tags.push(TAG_SIN_PAGAR);
+  const ipCliente = (req.headers.get("x-forwarded-for")?.split(",")[0] || req.headers.get("x-real-ip") || "").trim();
 
   // 2 · lo demás, después de responder.
   after(async () => {
+    // Si pagó mientras esto esperaba a GHL (pago con Apple Pay en segundos), no se la vuelve a
+    // marcar «sin pagar» ni se le crea otra tarjeta en la 0.
+    const pagoEnMedio = !yaPagado && (await tienePlanPagado(contactId));
+    if (pagoEnMedio) tags.splice(tags.indexOf(TAG_SIN_PAGAR), 1);
+    const sinPagar = !yaPagado && !pagoEnMedio;
     // Las tres que tocan el contacto, en fila: etiquetas → plan_url → nota.
     const contacto = async () => {
       const et = await ghl("POST", `/contacts/${contactId}/tags`, { tags });
@@ -762,44 +617,35 @@ export async function POST(req: Request) {
       if (!nota.ok) console.error("plan/lead: nota falló", nota.status, corto(nota));
     };
 
-    // En MailerLite, en «Plan personalizado»: entrar en ese grupo arranca su secuencia. El
-    // enlace de su plan se guarda para los emails de después; no se le manda al llegar.
-    const altaLista = () => {
-      let planUrl = "";
-      try {
-        planUrl = urlDePlan(contactId, cierreRecomendado(menosDe750));
-      } catch {
-        // sin PLAN_TOKEN_SECRET: entra sin el enlace
-      }
-      return altaEnMailerLite({
-        email,
-        grupo: GRUPO.plan,
-        nombre,
-        origen: "plan",
-        etapa: "lead",
-        edad: Number.isFinite(edad) ? edad : null,
-        pais: paisNombre === "Otro país" ? "" : paisNombre,
-        region: regionDe(pais),
-        ocupacion,
-        dolorPlan: limpiar(b.dolor_principal, 900),
-        planUrl,
-        consentimiento: "formulario plan",
-        ghlId: contactId,
-        ip: datosMeta.ip,
-      });
-    };
-
     // Si el plan no quedó en su ficha de Instagram, después de la nota (lo nuevo se añade al
     // final de ella) se pide al backend que busque sus otras fichas por el nombre.
     const enSuInstagram = !!deInstagram && deInstagram.id === contactId;
+    // Desde el 7-11 (plan de pago): su tarjeta, en «0 · Sin pagar», y en MailerLite en «Plan · sin
+    // pagar», un grupo sin automatización: sigue en la lista, pero la secuencia con su plan
+    // («Plan personalizado») y el evento de Meta llegan al pagar, en /api/plan/pago.
     const r = await Promise.allSettled([
       contacto().then(() => (enSuInstagram ? undefined : revisarOtrasFichas(contactId))),
-      ponerTarjeta(contactId, nombre, etapa), // secundaria: si falla, la lead ya está guardada
-      mandarAMeta ? enviarMeta(datosMeta) : Promise.resolve(),
-      altaLista(),
+      sinPagar ? tarjetaSinPagar(contactId, nombre) : Promise.resolve(),
+      !sinPagar
+        ? Promise.resolve()
+        : altaEnMailerLite({
+            email,
+            grupo: GRUPO.planSinPagar,
+            nombre,
+            origen: "plan",
+            etapa: "lead",
+            edad: Number.isFinite(edad) ? edad : null,
+            pais: paisNombre === "Otro país" ? "" : paisNombre,
+            region: regionDe(pais),
+            ocupacion,
+            dolorPlan: limpiar(b.dolor_principal, 900),
+            consentimiento: "formulario plan",
+            ghlId: contactId,
+            ip: ipCliente,
+          }),
     ]);
     for (const x of r) if (x.status === "rejected") console.error("plan/lead: después de responder", String(x.reason).slice(0, 200));
   });
 
-  return NextResponse.json({ ok: true, id: contactId });
+  return NextResponse.json({ ok: true, id: contactId, ...(yaPagado ? { pagado: true } : {}) });
 }

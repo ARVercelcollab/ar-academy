@@ -207,3 +207,55 @@ export async function pruebaDeConexion(codigo: string): Promise<Envio> {
     test_event_code: codigo,
   });
 }
+
+/**
+ * La solicitud del plan, ya pagada (desde el 7-11 el plan cuesta 9 €). Es el mismo evento que
+ * cuenta la conversión «Solicitud de plan» (SubmitApplication + content_name «plan personalizado»),
+ * ahora con su importe, y con el MISMO event_id que el píxel de /plan/gracias para que Meta junte
+ * los dos. No es un Purchase a propósito: la campaña del workshop optimiza por compras y no se
+ * deben mezclar. Nunca lanza.
+ */
+export async function solicitudPlanEnMeta(d: {
+  eventId: string;
+  contactId: string;
+  email: string;
+  telefono: string;
+  nombre: string;
+  euros: number;
+  navegador: Navegador | null;
+}): Promise<boolean> {
+  if (!metaConfigurada()) return false;
+  const [nom = "", ...resto] = d.nombre.trim().split(/\s+/);
+  const fn = normTexto(nom);
+  const ln = normTexto(resto.join(" "));
+  const digitos = d.telefono.replace(/\D/g, "");
+  const email = d.email.trim().toLowerCase();
+  const user_data: Record<string, string | string[]> = {};
+  if (email.includes("@")) user_data.em = [sha256(email)];
+  if (digitos.length >= 7) user_data.ph = [sha256(digitos)];
+  if (fn) user_data.fn = [sha256(fn)];
+  if (ln) user_data.ln = [sha256(ln)];
+  // El id de GHL, el mismo external_id que mandaba el formulario del plan.
+  if (d.contactId) user_data.external_id = [sha256(d.contactId)];
+  const nav = d.navegador;
+  if (nav?.ip) user_data.client_ip_address = nav.ip;
+  if (nav?.ua) user_data.client_user_agent = nav.ua;
+  if (nav?.fbp) user_data.fbp = nav.fbp;
+  if (nav?.fbc) user_data.fbc = nav.fbc;
+  const evento: Record<string, unknown> = {
+    event_name: "SubmitApplication",
+    event_time: Math.floor(Date.now() / 1000),
+    action_source: nav?.ua ? "website" : "system_generated",
+    event_source_url: `${URL_BASE}/plan`,
+    user_data,
+    custom_data: { content_name: "plan personalizado", currency: "EUR", value: d.euros },
+  };
+  if (d.eventId) evento.event_id = d.eventId;
+  let r = await enviar({ data: [evento] });
+  if (!r.ok && r.reintentable) {
+    await new Promise((ok) => setTimeout(ok, 1500));
+    r = await enviar({ data: [evento] });
+  }
+  if (!r.ok) console.error("meta: la solicitud del plan no entró", r.status, r.texto);
+  return r.ok;
+}

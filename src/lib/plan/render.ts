@@ -264,7 +264,7 @@ export function renderPlan(p: PlanArmado): string {
 <meta name="theme-color" content="#831A36">
 <meta property="og:title" content="Tu plan personalizado · AR Academy">
 <meta property="og:description" content="Preparado con lo que me contaste. Léelo con calma.">
-<meta property="og:image" content="https://www.ariannyrivasacademy.com/plan/og-plan.jpg">
+<meta property="og:image" content="https://www.ariannyrivasacademy.com/plan/og-plan-9.jpg">
 <link rel="icon" href="/plan/icono-32.png" sizes="32x32">
 <link rel="apple-touch-icon" href="/plan/icono-180.png">
 <link rel="stylesheet" href="https://use.typekit.net/cbv1cvv.css">

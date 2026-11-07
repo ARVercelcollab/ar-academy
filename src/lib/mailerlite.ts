@@ -34,6 +34,9 @@ export const GRUPO = {
   masterclass: "201685595088487481", // «Masterclass sep 2026»
   alumnasComunidad: "201685612201248062", // «Alumnas Comunidad»
   workshop: "202226448988112797", // «Workshop 24-11 · compradoras» (el grupo de WhatsApp y los avisos del directo)
+  // «Plan · sin pagar» (7-11): las que rellenan /plan y no pagan los 9 €. Sin automatización:
+  // siguen en la lista (cartas y campañas) pero no reciben la secuencia con el enlace de su plan.
+  planSinPagar: "203477501003957487",
 } as const;
 
 // Las etapas, de menos a más. Una chica nunca baja de etapa por volver a entrar.
@@ -144,6 +147,22 @@ const corto = (r: Resp) => JSON.stringify(r.datos ?? "").slice(0, 300);
 
 // Fecha y hora en UTC con el formato que pide MailerLite (yyyy-MM-dd HH:mm:ss).
 const ahoraUTC = () => new Date().toISOString().slice(0, 19).replace("T", " ");
+
+/** La saca de un grupo (por ejemplo, de «Plan · sin pagar» cuando paga). Nunca lanza. */
+export async function quitarDeGrupo(emailCrudo: string, grupo: string): Promise<void> {
+  const token = process.env.MAILERLITE_TOKEN;
+  if (!token || !emailCrudo) return;
+  const email = corregirEmail(emailCrudo);
+  try {
+    const s = await ml(token, "GET", `/subscribers/${encodeURIComponent(email)}`);
+    const id = (s.datos as { data?: { id?: string } })?.data?.id;
+    if (!s.ok || !id) return; // no estaba: nada que quitar
+    const r = await ml(token, "DELETE", `/subscribers/${id}/groups/${grupo}`);
+    if (!r.ok && r.status !== 404) console.error("mailerlite: quitar del grupo falló", r.status, corto(r));
+  } catch (e) {
+    console.error("mailerlite: quitar del grupo, error inesperado", String(e).slice(0, 200));
+  }
+}
 
 export async function altaEnMailerLite(a: Alta): Promise<void> {
   const token = process.env.MAILERLITE_TOKEN;

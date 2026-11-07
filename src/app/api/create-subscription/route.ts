@@ -8,6 +8,7 @@ import {
 } from "@/lib/stripe";
 import { cobroComunidad, OFERTA, esDelWorkshop, type Fase } from "@/lib/comunidad";
 import { normalizaHandle } from "@/lib/plan/instagram";
+import { mensajeDeError } from "@/lib/stripe-errores";
 import { compraEnMeta, datosNavegador, puedeIrAMeta } from "@/lib/meta";
 
 // La Comunidad en un solo pago. En noviembre va con el workshop del 24-11 (99 € hasta el 16-11, 149 €
@@ -77,9 +78,14 @@ export async function POST(req: NextRequest) {
           : { price_data: { currency: "eur", product: PRODUCTO_COMUNIDAD, unit_amount: euros * 100 } }),
     });
     await stripe.invoices.finalizeInvoice(factura.id);
-    const pagada = await stripe.invoices.pay(factura.id, {
-      payment_method: paymentMethodId,
-    });
+    // Si la llamada de cobro se corta después de cobrar, se mira cómo quedó la factura.
+    const pagada = await stripe.invoices
+      .pay(factura.id, { payment_method: paymentMethodId })
+      .catch(async (e: unknown) => {
+        const f = await stripe.invoices.retrieve(factura.id).catch(() => null);
+        if (f && f.status === "paid") return f;
+        throw e;
+      });
 
     if (pagada.status === "paid") {
       // La compra, a Meta desde el servidor, con el mismo id que el píxel (src/lib/meta.ts).
@@ -118,9 +124,10 @@ export async function POST(req: NextRequest) {
   } catch (err: unknown) {
     // Una tarjeta rechazada deja la factura abierta: se anula para que no quede pendiente.
     await anular(facturaId);
-    const stripeErr = err as { message?: string };
+    const stripeErr = err as { code?: string; decline_code?: string; type?: string; message?: string };
+    console.warn("create-subscription: cobro rechazado", stripeErr.code || stripeErr.type, stripeErr.decline_code || "");
     return NextResponse.json(
-      { error: stripeErr.message || "Error desconocido" },
+      { error: mensajeDeError(stripeErr), reintentar: true },
       { status: 500 }
     );
   }

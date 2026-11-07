@@ -22,3 +22,11 @@ export const PAGO_COMUNIDAD = "comunidad_pago_unico";
 // siguen en Skool. También es una suscripción, pero no es la Comunidad ni trae el workshop
 // (Carlos, 2026-10-30, tras ver a una alumna de TPM en el pipeline «Workshop»).
 export const PRODUCTO_TPM_MENSUAL = "prod_TsIxqvDBicCoZt";
+
+// El plan personalizado, de pago desde el 7-11-2026: 9 € en un solo pago (Carlos, 2026-11-07).
+// Se cobra dentro de /plan, al final del formulario (/api/plan/pago), con una factura marcada
+// `producto: plan_personalizado`. /api/stripe-webhook la deja pasar sin avisar a Make: no da Skool.
+export const PRODUCTO_PLAN = "prod_VaI9Vd3VR6iKQ3";
+export const PRECIO_PLAN = "price_1UZ7YjCi8AFxi9rHGrW2vTOp"; // 9 €
+export const EUROS_PLAN = 9;
+export const PAGO_PLAN = "plan_personalizado";

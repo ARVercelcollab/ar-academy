@@ -1299,7 +1299,24 @@ pfEl.addEventListener('change',function(){ var p=PREFIJOS[+pfEl.value]; if(p) wp
    Dos pasos, como el formulario de la Comunidad: primero sus datos y después la tarjeta.
    La tarjeta se guarda con un SetupIntent (/api/create-setup) y el cobro lo hace el servidor
    con una factura (/api/create-subscription), que es la que avisa a Make y da Skool. */
-var DATOS={}, stripe=null, elements=null, pagando=false;
+var DATOS={}, stripe=null, elements=null, pagando=false, peW=null, peListo=false;
+
+/* Un SetupIntent ya usado no vale otra vez: si el banco rechaza el cobro (sin saldo, por ejemplo),
+   se pide otro y se vuelve a montar la tarjeta, para que pueda probar con otra sin recargar. */
+function remontarPago(){
+  peListo=false; btnPagar.disabled=true; estado('Preparando el pago…');
+  return fetch('/api/create-setup',{method:'POST'}).then(function(r){return r.json()}).then(function(d){
+    if(!d||!d.clientSecret) throw new Error('sin setup');
+    if(peW){ try{peW.destroy()}catch(e){} peW=null; }
+    elements=stripe.elements({clientSecret:d.clientSecret, locale:'es', appearance:{theme:'stripe',
+      variables:{colorPrimary:'#831A36',colorText:'#161616',colorDanger:'#D9436B',borderRadius:'0px',
+        fontFamily:'-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',fontSizeBase:'16px'}}});
+    peW=elements.create('payment',{layout:'tabs', terms:{card:'never'},
+      defaultValues:{billingDetails:{name:DATOS.nombre,email:DATOS.email,phone:DATOS.telefono}}});
+    peW.on('ready',function(){ peListo=true; btnPagar.disabled=false; estado(''); });
+    peW.mount('#pe');
+  });
+}
 var paso1=document.getElementById('paso1'), paso2=document.getElementById('paso2');
 var btnSeguir=document.getElementById('seguir'), btnPagar=document.getElementById('pagar');
 var err1=document.getElementById('err1'), err2=document.getElementById('err2'), estadoEl=document.getElementById('estado');
@@ -1355,7 +1372,7 @@ function abrirPago(){
   btnPagar.disabled=true; btnPagar.textContent=textoPagar(); estado('Preparando el pago…');
   document.getElementById('registro').scrollIntoView({block:'start'});
   pixel('InitiateCheckout',{content_name:'Workshop 24-11',currency:'EUR',value:OF.euros});
-  if(elements){ btnPagar.disabled=false; estado(''); return; }
+  if(elements){ if(peListo){ btnPagar.disabled=false; estado(''); } return; }
   Promise.all([cargarStripe(), OF.pk?OF:pedirOferta()]).then(function(){
     if(!OF.pk) throw new Error('sin clave');
     return fetch('/api/create-setup',{method:'POST'}).then(function(r){return r.json()});
@@ -1365,10 +1382,10 @@ function abrirPago(){
     elements=stripe.elements({clientSecret:d.clientSecret, locale:'es', appearance:{theme:'stripe',
       variables:{colorPrimary:'#831A36',colorText:'#161616',colorDanger:'#D9436B',borderRadius:'0px',
         fontFamily:'-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',fontSizeBase:'16px'}}});
-    var pe=elements.create('payment',{layout:'tabs',
+    peW=elements.create('payment',{layout:'tabs', terms:{card:'never'},
       defaultValues:{billingDetails:{name:DATOS.nombre,email:DATOS.email,phone:DATOS.telefono}}});
-    pe.on('ready',function(){ btnPagar.disabled=false; estado(''); });
-    pe.mount('#pe');
+    peW.on('ready',function(){ peListo=true; btnPagar.disabled=false; estado(''); });
+    peW.mount('#pe');
   }).catch(function(){
     estado(''); aviso(err2,'No hemos podido preparar el pago. Recarga la página e inténtalo de nuevo.');
   });
@@ -1382,24 +1399,31 @@ document.getElementById('volver').addEventListener('click',function(){
 btnPagar.addEventListener('click',function(){
   if(pagando||!stripe||!elements) return;
   pagando=true; btnPagar.disabled=true; btnPagar.textContent='Procesando…'; aviso(err2,'');
+  var validada=false;
   stripe.confirmSetup({elements:elements,
     confirmParams:{return_url:location.origin+'/comunidad#registro'}, redirect:'if_required'
   }).then(function(res){
     if(res.error) throw {msg:res.error.message||'No hemos podido validar tu tarjeta. Revisa los datos e inténtalo de nuevo.'};
     var pm=res.setupIntent&&res.setupIntent.payment_method;
     if(!pm) throw {msg:'No se pudo validar el método de pago. Inténtalo de nuevo.'};
+    validada=true;
     return fetch('/api/create-subscription',{method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({name:DATOS.nombre,email:DATOS.email,phone:DATOS.telefono,instagram:DATOS.instagram,
         origen:ORIGEN,paymentMethodId:typeof pm==='string'?pm:pm.id})})
       .then(function(r){return r.json()});
   }).then(function(d){
-    if(!d||!d.success) throw {msg:(d&&d.error)||'No hemos podido completar la compra. Inténtalo de nuevo.'};
+    if(!d||!d.success) throw {msg:(d&&d.error)||'No hemos podido completar la compra. Inténtalo de nuevo.', rechazo:!!(d&&d.reintentar)};
     try{sessionStorage.setItem('workshop_compra',JSON.stringify({nombre:DATOS.nombre,email:DATOS.email,telefono:DATOS.telefono,
       euros:d.euros,oferta:d.oferta,grupo:d.grupoWhatsApp||'',factura:d.invoiceId,ts:Date.now()}))}catch(e){}
     location.href='/workshop/gracias';
   }).catch(function(e){
-    pagando=false; btnPagar.disabled=false; btnPagar.textContent=textoPagar();
+    pagando=false; btnPagar.textContent=textoPagar();
     aviso(err2,(e&&e.msg)||'Error de conexión. Comprueba tu internet e inténtalo de nuevo.');
+    // Solo si el banco lo rechazó (el servidor lo dice) se prepara otra tarjeta. Si se cortó la
+    // conexión después de validar, puede que el cobro ya esté hecho: que lo mire antes de repetir.
+    if(validada && e && e.rechazo) remontarPago().catch(function(){ aviso(err2,'No hemos podido preparar otra vez el pago. Recarga la página e inténtalo de nuevo.'); });
+    else if(validada) aviso(err2,'Se ha cortado la conexión. Antes de volver a intentarlo, mira si te ha llegado el correo con tu acceso: si te ha llegado, ya está pagado.');
+    else btnPagar.disabled=false;
   });
 });
 
