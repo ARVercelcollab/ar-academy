@@ -146,7 +146,12 @@ function PaymentStep({
       const data = await res.json();
 
       if (data.success) {
-        trackEvent("Purchase", { content_name: "AR Academy", currency: "EUR", value: precioComunidad().euros });
+        // El mismo id que manda el servidor (la factura): Meta las une en una sola compra.
+        trackEvent(
+          "Purchase",
+          { content_name: "AR Academy", currency: "EUR", value: data.euros || precioComunidad().euros },
+          typeof data.invoiceId === "string" ? data.invoiceId : undefined,
+        );
         const params = new URLSearchParams({
           name: userData.name,
           email: userData.email,

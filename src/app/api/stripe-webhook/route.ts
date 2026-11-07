@@ -2,6 +2,7 @@ import { NextRequest, NextResponse, after } from "next/server";
 import { stripe, PAGO_COMUNIDAD, PRODUCTO_TPM_MENSUAL } from "@/lib/stripe";
 import { GRUPO, altaEnMailerLite } from "@/lib/mailerlite";
 import { compradoraEnGHL } from "@/lib/compradora";
+import { compraEnMeta, puedeIrAMeta } from "@/lib/meta";
 import { OFERTA, esDelWorkshop, faseComunidad } from "@/lib/comunidad";
 import Stripe from "stripe";
 
@@ -129,6 +130,25 @@ export async function POST(req: NextRequest) {
             edad,
             consentimiento: workshop ? "compra workshop" : "compra comunidad",
           })
+        );
+      }
+      // A Meta, solo si la compra vino de un enlace de pago de Stripe: las del formulario de la web
+      // (metadata «canal: web») ya salieron desde /api/create-subscription, con el navegador. Aquí no
+      // hay cookies que mirar, así que con la versión «solo con cookies» no se manda.
+      if (pagoUnico && invoice.metadata?.canal !== "web" && puedeIrAMeta(null)) {
+        after(() =>
+          compraEnMeta({
+            facturaId: invoice.id ?? "",
+            euros: invoice.amount_paid / 100,
+            contenido: workshop ? "Workshop 24-11" : "AR Academy",
+            email: emailCliente ?? "",
+            telefono: telCliente ?? "",
+            nombre: nombreCliente ?? "",
+            clienteId: customer.id,
+            navegador: null,
+            pagina: "/bienvenida",
+            cuando: invoice.status_transitions?.paid_at ?? event.created,
+          }),
         );
       }
       after(() =>

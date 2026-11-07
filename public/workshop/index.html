@@ -1029,6 +1029,7 @@ var ORIGEN=(function(){
   var nuevo={},hay=false;
   CL.forEach(function(k){var v=q&&q.get(k); if(v){nuevo[k]=String(v).slice(0,k==='fbclid'?500:100); hay=true}});
   if(!hay && viejo) return viejo;
+  if(nuevo.fbclid) nuevo.ts=Date.now();   /* cuándo llegó del anuncio: el _fbc que se manda a Meta */
   var ref=''; try{ if(document.referrer) ref=new URL(document.referrer).hostname.toLowerCase() }catch(e){}
   nuevo.referrer=ref;
   try{sessionStorage.setItem(K,JSON.stringify(nuevo))}catch(e){}

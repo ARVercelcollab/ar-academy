@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse, after } from "next/server";
 import {
   stripe,
   PRECIO_COMUNIDAD,
@@ -8,6 +8,7 @@ import {
 } from "@/lib/stripe";
 import { cobroComunidad, OFERTA, esDelWorkshop, type Fase } from "@/lib/comunidad";
 import { normalizaHandle } from "@/lib/plan/instagram";
+import { compraEnMeta, datosNavegador, puedeIrAMeta } from "@/lib/meta";
 
 // La Comunidad en un solo pago. En noviembre va con el workshop del 24-11 (99 € hasta el 16-11, 149 €
 // hasta el 30-11) y desde el 1-12 se vende sola a 199 € (src/lib/comunidad.ts). Antes era una
@@ -31,6 +32,11 @@ export async function POST(req: NextRequest) {
     const { euros, fase } = cobroComunidad();
     const oferta = OFERTA[fase];
     const ig = normalizaHandle(instagram).slice(0, 30);
+    // Para Meta, lo del navegador se lee ahora: después de responder ya no está.
+    const o = (origen && typeof origen === "object" ? origen : {}) as Record<string, unknown>;
+    const navegador = datosNavegador(req, o.fbclid, o.ts);
+    const aMeta = puedeIrAMeta(req);
+    const pagina = paginaDeCompra(req.headers.get("referer"));
 
     const customer = await stripe.customers.create({
       name,
@@ -54,7 +60,9 @@ export async function POST(req: NextRequest) {
       description: DESCRIPCION[fase],
       // «producto» es lo que manda el aviso a Make (el acceso a Skool); «oferta», lo que mete a la
       // compradora en el grupo del workshop.
-      metadata: { producto: PAGO_COMUNIDAD, oferta },
+      // «canal: web»: la compra ya va a Meta desde aquí; el webhook solo la manda si viene de un
+      // enlace de pago de Stripe, que no pasa por esta ruta.
+      metadata: { producto: PAGO_COMUNIDAD, oferta, canal: "web" },
     });
     facturaId = factura.id;
 
@@ -74,6 +82,22 @@ export async function POST(req: NextRequest) {
     });
 
     if (pagada.status === "paid") {
+      // La compra, a Meta desde el servidor, con el mismo id que el píxel (src/lib/meta.ts).
+      if (aMeta) {
+        after(() =>
+          compraEnMeta({
+            facturaId: pagada.id,
+            euros,
+            contenido: esDelWorkshop(oferta) ? "Workshop 24-11" : "AR Academy",
+            email,
+            telefono: String(phone),
+            nombre: String(name),
+            clienteId: customer.id,
+            navegador,
+            pagina,
+          }),
+        );
+      }
       return NextResponse.json({
         success: true,
         invoiceId: pagada.id,
@@ -112,6 +136,17 @@ function utms(origen: unknown): Record<string, string> {
     if (typeof v === "string" && v.trim()) fuera[k] = v.trim().slice(0, 100);
   }
   return fuera;
+}
+
+// La página en la que compró (/workshop o /comunidad), por la cabecera Referer. Sin ella, /comunidad.
+function paginaDeCompra(referer: string | null): string {
+  try {
+    const u = new URL(referer || "");
+    if (u.hostname.endsWith("ariannyrivasacademy.com")) return `${u.origin}${u.pathname}`;
+  } catch {
+    // sin Referer o mal formado
+  }
+  return "/comunidad";
 }
 
 const DESCRIPCION: Record<Fase, string> = {
