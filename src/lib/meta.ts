@@ -22,8 +22,10 @@ import { createHash } from "node:crypto";
  *   · META_CAPI_SOLO_CON_CONSENTIMIENTO=1 → solo se manda si aceptó las cookies (la misma variable
  *     que usa el formulario del plan, src/app/api/plan/lead/route.ts).
  *
- * Variables de entorno: META_PIXEL_ID (1613484133037939), META_CAPI_TOKEN, y opcionales
- * META_CAPI_TEST_CODE (código de «Probar eventos») y META_CAPI_SOLO_CON_CONSENTIMIENTO.
+ * Variables de entorno: META_PIXEL_ID (1613484133037939), META_CAPI_TOKEN y, opcional,
+ * META_CAPI_SOLO_CON_CONSENTIMIENTO. Las compras reales NUNCA llevan código de prueba: Meta no
+ * descarta los eventos con test_event_code (los usa para medir y segmentar), así que META_CAPI_TEST_CODE
+ * no se usa aquí. Para probar la conexión, pruebaDeConexion() con un evento que no es una compra.
  */
 
 const META_API = "v21.0";
@@ -99,11 +101,7 @@ export type Compra = {
   cuando?: number;
 };
 
-/**
- * `codigoPrueba`: el código de «Probar eventos» de Events Manager (TEST…). Con él, Meta enseña el
- * evento en esa pestaña y NO lo cuenta en los anuncios. Lo usa /api/meta/prueba.
- */
-export function cuerpoCompra(c: Compra, codigoPrueba?: string) {
+export function cuerpoCompra(c: Compra) {
   const [nom = "", ...resto] = c.nombre.trim().split(/\s+/);
   const fn = normTexto(nom);
   const ln = normTexto(resto.join(" "));
@@ -138,37 +136,74 @@ export function cuerpoCompra(c: Compra, codigoPrueba?: string) {
       order_id: c.facturaId,
     },
   };
-  const cuerpo: Record<string, unknown> = { data: [evento] };
-  const prueba = codigoPrueba || process.env.META_CAPI_TEST_CODE;
-  if (prueba) cuerpo.test_event_code = prueba;
-  return cuerpo;
+  return { data: [evento] };
 }
 
-/** Manda la compra. Nunca lanza: devuelve si Meta la aceptó. */
-export async function compraEnMeta(c: Compra, codigoPrueba?: string): Promise<boolean> {
+type Envio = { ok: boolean; status: number; texto: string; reintentable: boolean };
+
+async function enviar(cuerpo: unknown): Promise<Envio> {
   const pixel = process.env.META_PIXEL_ID;
   const token = process.env.META_CAPI_TOKEN;
-  if (!pixel || !token) return false; // sin configurar: todo sigue como estaba
-  if (!c.facturaId || !(c.euros > 0)) return false;
+  if (!pixel || !token) return { ok: false, status: 0, texto: "sin configurar", reintentable: false };
   try {
     const r = await fetch(
       `https://graph.facebook.com/${META_API}/${encodeURIComponent(pixel)}/events?access_token=${encodeURIComponent(token)}`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(cuerpoCompra(c, codigoPrueba)),
-        signal: AbortSignal.timeout(6000),
+        body: JSON.stringify(cuerpo),
+        signal: AbortSignal.timeout(10_000),
         cache: "no-store",
       },
     );
-    if (!r.ok) {
-      console.error("meta: la compra no entró", r.status, (await r.text()).slice(0, 300));
-      return false;
-    }
+    const texto = r.ok ? "" : (await r.text()).slice(0, 300);
+    return { ok: r.ok, status: r.status, texto, reintentable: r.status === 429 || r.status >= 500 };
+  } catch (e) {
+    // Si se agotó el tiempo, Meta pudo recibirla: no se repite (dos eventos de servidor con el mismo
+    // id no siempre se unen). Si falló la red antes de llegar, sí.
+    const agotado = e instanceof Error && (e.name === "TimeoutError" || e.name === "AbortError");
+    return { ok: false, status: 0, texto: String(e).slice(0, 200), reintentable: !agotado };
+  }
+}
+
+/** Manda la compra. Nunca lanza: devuelve si Meta la aceptó. Un reintento si Meta falla por su lado. */
+export async function compraEnMeta(c: Compra): Promise<boolean> {
+  if (!metaConfigurada()) return false; // sin configurar: todo sigue como estaba
+  if (!c.facturaId || !(c.euros > 0)) return false;
+  const cuerpo = cuerpoCompra(c);
+  let r = await enviar(cuerpo);
+  if (!r.ok && r.reintentable) {
+    await new Promise((ok) => setTimeout(ok, 1500));
+    r = await enviar(cuerpo);
+  }
+  if (r.ok) {
     console.log("meta: compra enviada", c.facturaId, c.euros);
     return true;
-  } catch (e) {
-    console.error("meta: la compra falló (el pago está hecho igual)", String(e).slice(0, 200));
-    return false;
   }
+  console.error("meta: la compra no entró (el pago está hecho igual)", c.facturaId, r.status, r.texto);
+  return false;
+}
+
+/**
+ * Prueba de la conexión con el código de «Probar eventos» (TEST…). Manda un evento personalizado,
+ * «PruebaConexionAR», que NO es una compra, sin importe y sin nada de quien la lanza (ni IP ni
+ * cookies): no puede contar como venta ni atribuirse a nadie. Lo usa /api/meta/prueba.
+ */
+export async function pruebaDeConexion(codigo: string): Promise<Envio> {
+  return enviar({
+    data: [
+      {
+        event_name: "PruebaConexionAR",
+        event_time: Math.floor(Date.now() / 1000),
+        event_id: `prueba_${Date.now()}`,
+        action_source: "website",
+        event_source_url: `${URL_BASE}/api/meta/prueba`,
+        user_data: {
+          external_id: [sha256("prueba-conexion-ar")],
+          client_user_agent: "Mozilla/5.0 (prueba-conexion-ar)",
+        },
+      },
+    ],
+    test_event_code: codigo,
+  });
 }

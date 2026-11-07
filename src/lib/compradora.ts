@@ -145,19 +145,42 @@ export async function compradoraEnGHL(c: Compra): Promise<void> {
 
     // Si ya tiene ficha de Instagram (la de su conversación con la setter), todo va a esa, como
     // en el plan. El correo y el teléfono, solo si el hueco está vacío.
+    //
+    // Si GHL rechaza el correo o el teléfono porque ya están en OTRA ficha (no admite duplicados),
+    // la ficha de Instagram se queda igual como la suya: se escribe sin ellos, y la otra ficha
+    // (la que tiene su correo o su teléfono) también se etiqueta y las dos se apuntan entre sí,
+    // para que una setter las fusione. Antes la compra se iba entera a la otra ficha y la de su
+    // conversación seguía como si no hubiera comprado (auditoría del 7-11).
     let id = "";
+    let otra = "";
     const deInstagram = await fichaDeInstagram(ig);
     if (deInstagram) {
-      const put = await ghl("PUT", `/contacts/${deInstagram.id}`, {
-        firstName: cuerpo.firstName,
-        lastName: cuerpo.lastName,
-        name: cuerpo.name,
-        customFields: campos,
-        ...(deInstagram.email ? {} : { email: cuerpo.email }),
-        ...(deInstagram.phone ? {} : { phone: cuerpo.phone }),
-      });
-      if (put.ok) id = deInstagram.id;
-      else console.warn("compradora: no se pudo escribir en su ficha de Instagram; upsert", put.status, corto(put));
+      id = deInstagram.id;
+      const base = { firstName: cuerpo.firstName, lastName: cuerpo.lastName, name: cuerpo.name, customFields: campos };
+      const datos = {
+        ...(deInstagram.email || !cuerpo.email ? {} : { email: cuerpo.email }),
+        ...(deInstagram.phone || !cuerpo.phone ? {} : { phone: cuerpo.phone }),
+      };
+      const pasajero = (r: Resp) => r.status === 0 || r.status === 429 || r.status >= 500;
+      let put = await ghl("PUT", `/contacts/${deInstagram.id}`, { ...base, ...datos });
+      if (!put.ok && pasajero(put)) {
+        await new Promise((ok) => setTimeout(ok, 700));
+        put = await ghl("PUT", `/contacts/${deInstagram.id}`, { ...base, ...datos });
+      }
+      // GHL responde 400 «does not allow duplicated contacts» y trae el id de la ficha que choca
+      // (en meta.contactId, o dentro del texto, como lo lee setter/masterclass.py). Solo entonces.
+      const texto = JSON.stringify(put.datos || {});
+      if (!put.ok && put.status === 400 && /duplicat/i.test(texto) && Object.keys(datos).length) {
+        const meta = (put.datos as { meta?: { contactId?: unknown } }).meta;
+        const choca =
+          (typeof meta?.contactId === "string" ? meta.contactId : "") ||
+          (texto.match(/[0-9a-zA-Z]{20,}/g) || []).filter((x) => x !== id).pop() ||
+          "";
+        if (choca && choca !== id) otra = choca;
+        console.warn("compradora: su correo o su teléfono ya están en otra ficha", otra || "(sin id)");
+        put = await ghl("PUT", `/contacts/${deInstagram.id}`, base);
+      }
+      if (!put.ok) console.warn("compradora: no se pudo escribir en su ficha de Instagram", put.status);
     }
     if (!id) {
       let up = await ghl("POST", "/contacts/upsert", cuerpo);
@@ -175,18 +198,22 @@ export async function compradoraEnGHL(c: Compra): Promise<void> {
     const tags = [TAG_COMPRA_COMUNIDAD];
     if (c.workshop) tags.push(TAG_COMPRA_WORKSHOP);
     if (c.edad !== null) tags.push(c.edad >= 18 ? TAG_MAYOR_EDAD : TAG_MENOR_EDAD);
-    const et = await ghl("POST", `/contacts/${id}/tags`, { tags });
-    if (!et.ok) console.error("compradora: las etiquetas fallaron", et.status, corto(et));
-
     const dia = new Date().toLocaleString("es-ES", { timeZone: "Europe/Madrid" });
-    const nota = await ghl("POST", `/contacts/${id}/notes`, {
-      body:
-        `Compró: ${c.descripcion} (${c.euros} €), el ${dia} (hora de Madrid).` +
-        (ig ? ` Instagram: @${ig}.` : "") +
-        (c.workshop ? " Va al grupo de WhatsApp del workshop." : "") +
-        (c.edad !== null && c.edad < 18 ? ` Es menor: ${c.edad} años.` : ""),
-    });
-    if (!nota.ok) console.error("compradora: la nota falló", nota.status, corto(nota));
+    const texto =
+      `Compró: ${c.descripcion} (${c.euros} €), el ${dia} (hora de Madrid).` +
+      (ig ? ` Instagram: @${ig}.` : "") +
+      (c.workshop ? " Va al grupo de WhatsApp del workshop." : "") +
+      (c.edad !== null && c.edad < 18 ? ` Es menor: ${c.edad} años.` : "");
+    const ficha = (x: string) => `https://app.gohighlevel.com/v2/location/${process.env.GHL_LOCATION_ID}/contacts/detail/${x}`;
+    for (const [cual, nota] of [
+      [id, otra ? `${texto}\n\nTiene otra ficha con su correo o su teléfono, por fusionar con esta: ${ficha(otra)}` : texto],
+      ...(otra ? [[otra, `${texto}\n\nSu ficha principal (la de Instagram) es esta, por fusionar: ${ficha(id)}`]] : []),
+    ] as [string, string][]) {
+      const et = await ghl("POST", `/contacts/${cual}/tags`, { tags });
+      if (!et.ok) console.error("compradora: las etiquetas fallaron", cual, et.status, corto(et));
+      const n = await ghl("POST", `/contacts/${cual}/notes`, { body: nota });
+      if (!n.ok) console.error("compradora: la nota falló", cual, n.status, corto(n));
+    }
 
     if (c.workshop) await tarjetaWorkshop(id, c.nombre, c.euros);
   } catch (e) {

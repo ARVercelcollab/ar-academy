@@ -55,7 +55,6 @@ import { GRUPO, altaEnMailerLite, regionDe } from "@/lib/mailerlite";
  *   META_PIXEL_ID    → 1613484133037939 (el píxel de la cuenta de la academia)
  *   META_CAPI_TOKEN  → token de la Conversions API de ese píxel. Sin él (o sin
  *                      META_PIXEL_ID) no se manda nada a Meta y no se rompe nada.
- *   META_CAPI_TEST_CODE                → opcional: código de «Probar eventos» de Meta.
  *   META_CAPI_SOLO_CON_CONSENTIMIENTO  → "1" para mandar a Meta solo si aceptó las
  *                      cookies (versión B de la decisión D6, pendiente de Carlos). Sin
  *                      ella se manda siempre, como hace la masterclass.
@@ -399,7 +398,7 @@ function cuerpoMeta(d: DatosMeta) {
   // El id compartido con el píxel de /plan/gracias. Es lo único que evita contarla dos veces.
   if (d.eventId) evento.event_id = d.eventId;
   const cuerpo: Record<string, unknown> = { data: [evento] };
-  if (process.env.META_CAPI_TEST_CODE) cuerpo.test_event_code = process.env.META_CAPI_TEST_CODE;
+  // Sin test_event_code nunca: Meta no descarta los eventos de prueba (src/lib/meta.ts).
   return cuerpo;
 }
 
@@ -441,6 +440,8 @@ async function ghl(metodo: string, ruta: string, cuerpo?: unknown): Promise<Resp
       },
       body: cuerpo ? JSON.stringify(cuerpo) : undefined,
       cache: "no-store",
+      // Sin límite, un GHL colgado dejaba la función esperando hasta que Vercel la mataba, sin error.
+      signal: AbortSignal.timeout(8000),
     });
     const texto = await r.text();
     let datos: Record<string, unknown> = {};
@@ -674,7 +675,8 @@ export async function POST(req: Request) {
 
   if (!contactId) {
     let up = await ghl("POST", "/contacts/upsert", cuerpoUpsert);
-    if (!up.ok && (up.status === 0 || up.status === 429 || up.status >= 500)) {
+    // También con 401: GHL ya ha dado alguno pasajero (decisiones.md, 21-08).
+    if (!up.ok && (up.status === 0 || up.status === 401 || up.status === 429 || up.status >= 500)) {
       await espera(700);
       up = await ghl("POST", "/contacts/upsert", cuerpoUpsert);
     }

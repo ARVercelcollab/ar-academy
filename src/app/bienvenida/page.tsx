@@ -1,6 +1,16 @@
 "use client";
 
-import { useEffect, useState, useRef, Suspense } from "react";
+import { useEffect, useState, useRef, useMemo, useSyncExternalStore, Suspense } from "react";
+
+// sessionStorage no avisa de cambios en la misma pestaña: basta con leerlo una vez.
+const sinCambios = () => () => {};
+function leerCompra(): string {
+  try {
+    return sessionStorage.getItem("workshop_compra") || "";
+  } catch {
+    return "";
+  }
+}
 import { useRouter, useSearchParams } from "next/navigation";
 import styles from "./page.module.scss";
 
@@ -10,8 +20,17 @@ function BienvenidaContent() {
   const [countdown, setCountdown] = useState(60);
   const hasRedirected = useRef(false);
 
-  const name = searchParams.get("name") || "";
-  const email = searchParams.get("email") || "";
+  // Desde el 7-11 llegan por sessionStorage, no por la URL (src/components/RegistrationForm.tsx).
+  const crudo = useSyncExternalStore(sinCambios, leerCompra, () => "");
+  const guardado = useMemo(() => {
+    try {
+      return (JSON.parse(crudo || "{}") || {}) as { nombre?: string; email?: string };
+    } catch {
+      return {};
+    }
+  }, [crudo]);
+  const name = searchParams.get("name") || guardado.nombre || "";
+  const email = searchParams.get("email") || guardado.email || "";
 
   useEffect(() => {
     const timer = setInterval(() => {

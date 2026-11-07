@@ -152,11 +152,28 @@ function PaymentStep({
           { content_name: "AR Academy", currency: "EUR", value: data.euros || precioComunidad().euros },
           typeof data.invoiceId === "string" ? data.invoiceId : undefined,
         );
-        const params = new URLSearchParams({
-          name: userData.name,
-          email: userData.email,
-        });
-        window.location.href = `/bienvenida?${params.toString()}`;
+        // Nada personal en la URL: el píxel manda la dirección de cada página a Meta. Lo que enseña
+        // la bienvenida va en sessionStorage, con la clave de la página de gracias del workshop
+        // (en noviembre /bienvenida es esa página). `px: 1`: la compra ya la contó el píxel aquí.
+        try {
+          sessionStorage.setItem(
+            "workshop_compra",
+            JSON.stringify({
+              nombre: userData.name,
+              email: userData.email,
+              telefono: userData.phone,
+              euros: data.euros,
+              oferta: data.oferta,
+              grupo: data.grupoWhatsApp || "",
+              factura: data.invoiceId,
+              px: 1,
+              ts: Date.now(),
+            }),
+          );
+        } catch {
+          // sin sessionStorage: la bienvenida sale sin nombre
+        }
+        window.location.href = "/bienvenida";
         return;
       } else if (data.requiresAction && data.clientSecret) {
         const { error: confirmError } = await stripe.confirmPayment({

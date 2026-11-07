@@ -116,6 +116,14 @@ if(Date.now()>=FIN_DIRECTO){
 
 /* Píxel de Meta, con el mismo consentimiento que el resto de la web. La compra se cuenta
    aquí, una sola vez aunque recargue. */
+/* Coincidencia avanzada: email, teléfono y nombre de ella en el init, para que Meta la reconozca
+   (el píxel los normaliza y los hashea; nunca salen en claro). Sin claves vacías. */
+function am(o){var r={};if(!o)return r;
+  var e=String(o.email||'').trim().toLowerCase(),t=String(o.telefono||'').replace(/\D/g,''),
+      n=String(o.nombre||'').trim().toLowerCase().split(/\s+/);
+  if(e.indexOf('@')>0)r.em=e; if(t.length>=7)r.ph=t;
+  if(n[0])r.fn=n[0]; if(n.length>1)r.ln=n.slice(1).join(' ');
+  return r}
 function leerConsent(){var m=document.cookie.match(/(?:^|; )cookie_consent=([^;]*)/);return m?decodeURIComponent(m[1]):null}
 if(leerConsent()==='accepted'){
   !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
@@ -123,7 +131,8 @@ if(leerConsent()==='accepted'){
   n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
   t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
   document,'script','https://connect.facebook.net/en_US/fbevents.js');
-  fbq('init','1613484133037939'); fbq('track','PageView');
+  fbq('init','1613484133037939',am(compra&&{email:compra.email,telefono:compra.telefono,nombre:compra.nombre}));
+  fbq('track','PageView');
   if(compra&&!compra.px){
     fbq('track','Purchase',{content_name:'Workshop 24-11',currency:'EUR',value:compra.euros||99},
       compra.factura?{eventID:compra.factura}:undefined);

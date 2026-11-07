@@ -11,6 +11,5 @@ export function GET() {
   return NextResponse.json({
     conversionsApi: metaConfigurada(),
     soloConCookies: process.env.META_CAPI_SOLO_CON_CONSENTIMIENTO === "1",
-    modoPrueba: !!process.env.META_CAPI_TEST_CODE,
   });
 }

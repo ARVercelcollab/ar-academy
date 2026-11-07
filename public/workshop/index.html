@@ -1394,7 +1394,7 @@ btnPagar.addEventListener('click',function(){
       .then(function(r){return r.json()});
   }).then(function(d){
     if(!d||!d.success) throw {msg:(d&&d.error)||'No hemos podido completar la compra. Inténtalo de nuevo.'};
-    try{sessionStorage.setItem('workshop_compra',JSON.stringify({nombre:DATOS.nombre,email:DATOS.email,
+    try{sessionStorage.setItem('workshop_compra',JSON.stringify({nombre:DATOS.nombre,email:DATOS.email,telefono:DATOS.telefono,
       euros:d.euros,oferta:d.oferta,grupo:d.grupoWhatsApp||'',factura:d.invoiceId,ts:Date.now()}))}catch(e){}
     location.href='/workshop/gracias';
   }).catch(function(e){

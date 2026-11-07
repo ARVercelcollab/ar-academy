@@ -59,6 +59,8 @@ export async function POST(req: NextRequest) {
       const subscriptionId =
         typeof rawSub === "string" ? rawSub : rawSub?.id ?? null;
 
+      // Sin límite de tiempo a propósito: si se cortara mientras Make aún procesa, Stripe reintentaría
+      // y la alumna recibiría dos accesos a Skool. Si Make cae (error de red), 500 y Stripe reintenta.
       const res = await fetch(process.env.MAKE_WEBHOOK_URL!, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -78,12 +80,15 @@ export async function POST(req: NextRequest) {
           invoiceId: invoice.id,
           timestamp: new Date().toISOString(),
         }),
+      }).catch((e: unknown) => {
+        console.error("stripe-webhook: Make no respondió", String(e).slice(0, 200));
+        return null;
       });
 
-      if (!res.ok) {
-        // Return 500 so Stripe retries automatically
+      if (!res || !res.ok) {
+        // 500 para que Stripe lo reintente: sin Make no hay acceso a Skool.
         return NextResponse.json(
-          { error: `Make webhook returned ${res.status}` },
+          { error: `Make webhook returned ${res ? res.status : "sin respuesta"}` },
           { status: 500 }
         );
       }
@@ -140,7 +145,8 @@ export async function POST(req: NextRequest) {
           compraEnMeta({
             facturaId: invoice.id ?? "",
             euros: invoice.amount_paid / 100,
-            contenido: workshop ? "Workshop 24-11" : "AR Academy",
+            // Las de enlace de pago (exalumnas, setters) se distinguen de las que vienen de un anuncio.
+            contenido: workshop ? "Workshop 24-11 · enlace de pago" : "AR Academy · enlace de pago",
             email: emailCliente ?? "",
             telefono: telCliente ?? "",
             nombre: nombreCliente ?? "",

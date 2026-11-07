@@ -19,8 +19,10 @@ export function proxy(req: NextRequest) {
       return NextResponse.redirect(url);
     }
   }
+  // Redirección y no reescritura: así la dirección que ve el píxel es /workshop/gracias, la que
+  // recoge el público «Compraron el workshop», y no viaja ninguna query (antes llevaba nombre y email).
   if (pathname === "/bienvenida" && noviembre) {
-    return NextResponse.rewrite(new URL("/workshop/gracias/index.html", req.url));
+    return NextResponse.redirect(new URL("/workshop/gracias", req.url));
   }
   return NextResponse.next();
 }
