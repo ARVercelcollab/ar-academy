@@ -9,7 +9,7 @@ import { GRUPO, altaEnMailerLite, regionDe } from "@/lib/mailerlite";
 /**
  * Formulario del plan personalizado (/plan) → GHL.
  *
- * DESDE EL 7-11-2026 EL PLAN ES DE PAGO (10 €, Carlos). Esta ruta guarda la ficha al rellenar el
+ * DESDE EL 7-11-2026 EL PLAN ES DE PAGO (10€, Carlos). Esta ruta guarda la ficha al rellenar el
  * formulario, marcada `plan · sin pagar` y con su tarjeta en «Plan personalizado · 0 · Sin pagar».
  * Al PAGAR, en /api/plan/pago (src/lib/plan/pagado.ts), la tarjeta pasa a la 1 (o a la 6), llegan
  * `revisar humano`, MailerLite y el evento de Meta. Una chica que no paga queda en la columna «Sin
@@ -124,7 +124,7 @@ const TAG_MAYOR_EDAD = "mayor de edad";
 const TAG_MENOR_EDAD = "menor de edad";
 const TAG_PUEDE_PAGAR = "puede pagar";
 const TAG_HT_PAIS_OK = "ht-pais-ok";
-// Desde el 7-11 el plan es de pago (10 €): `revisar humano` (el panel de las setters) y la tarjeta
+// Desde el 7-11 el plan es de pago (10€): `revisar humano` (el panel de las setters) y la tarjeta
 // llegan al pagar (src/lib/plan/pagado.ts). Hasta entonces la ficha queda marcada «sin pagar».
 const TAG_SIN_PAGAR = TAG_PLAN_SIN_PAGAR;
 const TAG_BOT_EN_PAUSA = "bot en pausa"; // ídem; «un humano lleva la conversación»

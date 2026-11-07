@@ -1,5 +1,5 @@
 /**
- * La chica ya ha pagado su plan (10 €): GHL lo sabe (Carlos, 2026-11-07: «en caso de que no hayan
+ * La chica ya ha pagado su plan (10€): GHL lo sabe (Carlos, 2026-11-07: «en caso de que no hayan
  * pagado, en GHL debe estar marcado»).
  *
  * Al rellenar /plan (src/app/api/plan/lead), su ficha queda con `plan · sin pagar` y su tarjeta en
@@ -153,7 +153,7 @@ export async function planPagadoEnGHL(p: {
 
     const dia = new Date().toLocaleString("es-ES", { timeZone: "Europe/Madrid" });
     const nota = await ghl("POST", `/contacts/${id}/notes`, {
-      body: `Pagó su plan personalizado: ${p.euros} € (factura ${p.facturaId}), el ${dia} (hora de Madrid).`,
+      body: `Pagó su plan personalizado: ${p.euros}€ (factura ${p.facturaId}), el ${dia} (hora de Madrid).`,
     });
     if (!nota.ok) console.error("plan/pagado: la nota falló", nota.status);
 

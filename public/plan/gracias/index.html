@@ -72,7 +72,7 @@ footer a:hover{text-decoration:underline}
 </main>
 
 <footer>
-  El plan cuesta 10 € en un solo pago, sin cuotas ni permanencia. Los resultados pueden variar según la dedicación y el esfuerzo de cada alumna.<br>
+  El plan cuesta 10€ en un solo pago, sin cuotas ni permanencia. Los resultados pueden variar según la dedicación y el esfuerzo de cada alumna.<br>
   © 2026 AR Academy — Arianny Rivas · <a href="/plan#legal">Privacidad</a> · <a href="/plan#legal">Aviso legal</a> · <a href="/plan#legal">Cookies</a>
 </footer>
 
@@ -122,7 +122,7 @@ if(leerConsent()==='accepted'){
   /* SubmitApplication se dispara aquí y no en /plan: así no lo corta la
      navegación y la conversión «Solicitud de plan» se puede comprobar por URL.
      Una sola vez aunque recargue. */
-  /* Desde el 7-11 solo cuenta si pagó (10 €): con su importe, y el mismo id que manda el servidor. */
+  /* Desde el 7-11 solo cuenta si pagó (10€): con su importe, y el mismo id que manda el servidor. */
   if(lead&&lead.pagado&&!lead.px){
     fbq('track','SubmitApplication',{content_name:'plan personalizado',currency:'EUR',value:lead.euros||10},lead.eid?{eventID:lead.eid}:undefined);
     lead.px=1; guardar();

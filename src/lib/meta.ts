@@ -209,7 +209,7 @@ export async function pruebaDeConexion(codigo: string): Promise<Envio> {
 }
 
 /**
- * La solicitud del plan, ya pagada (desde el 7-11 el plan cuesta 10 €). Es el mismo evento que
+ * La solicitud del plan, ya pagada (desde el 7-11 el plan cuesta 10€). Es el mismo evento que
  * cuenta la conversión «Solicitud de plan» (SubmitApplication + content_name «plan personalizado»),
  * ahora con su importe, y con el MISMO event_id que el píxel de /plan/gracias para que Meta junte
  * los dos. No es un Purchase a propósito: la campaña del workshop optimiza por compras y no se
