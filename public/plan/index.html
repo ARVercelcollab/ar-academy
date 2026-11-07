@@ -836,7 +836,8 @@ h1 .it{color:#831A36}
   <div class="legalpie" id="legal">
     <p><b>AR Academy — Arianny Rivas</b> · NIF: Y4869806F · Calle San Vicente Mártir 338, Valencia (España) · <a href="mailto:administracion@ariannyrivasacademy.com">administracion@ariannyrivasacademy.com</a></p>
     <p>Los datos personales recogidos a través de este formulario serán tratados por Arianny Rivas — AR Model Agency como responsable del tratamiento, con la finalidad de preparar y entregarte tu plan personalizado, gestionar su pago, contactarte por WhatsApp y por email para hacértelo llegar, y mantenerte informada sobre la formación de AR Academy. La base legal es la ejecución del contrato (Art. 6.1.b RGPD) y tu consentimiento explícito (Art. 6.1.a RGPD), que puedes retirar en cualquier momento. Tus datos se conservarán mientras no solicites su supresión. No se realizan transferencias internacionales fuera del EEE sin garantías adecuadas. Puedes ejercer tus derechos de acceso, rectificación, supresión, oposición, limitación y portabilidad escribiendo a administracion@ariannyrivasacademy.com con el asunto &laquo;Derechos RGPD&raquo;. Si consideras que tus derechos no han sido atendidos, puedes presentar una reclamación ante la Agencia Española de Protección de Datos (<a href="https://www.aepd.es" target="_blank" rel="noopener">www.aepd.es</a>).</p>
-    <p>El plan cuesta 9 € en un solo pago, sin cuotas ni permanencia. Los pagos se procesan de forma segura mediante Stripe, Inc.; los datos de tu tarjeta nunca pasan por nuestros servidores. <b>El contenido de esta página no constituye una garantía de resultados. Los resultados pueden variar según la dedicación y el esfuerzo de cada alumna.</b></p>
+    <p><b>Condiciones de compra.</b> El plan personalizado cuesta 9 € en un solo pago, sin cuotas ni permanencia, y te lo enviamos por WhatsApp. Tienes 14 días naturales desde la compra para desistir escribiendo a <a href="mailto:administracion@ariannyrivasacademy.com">administracion@ariannyrivasacademy.com</a>, salvo que ya hayas empezado a ver las clases de tu plan: al pagar nos pides recibirlo enseguida y aceptas que, desde que empiezas a verlo, pierdes el derecho de desistimiento (art. 103.m de la Ley General para la Defensa de los Consumidores y Usuarios).</p>
+    <p>Los pagos se procesan de forma segura mediante Stripe, Inc.; los datos de tu tarjeta nunca pasan por nuestros servidores. <b>El contenido de esta página no constituye una garantía de resultados. Los resultados pueden variar según la dedicación y el esfuerzo de cada alumna.</b></p>
   </div>
   <a href="#legal">Privacidad</a> · <a href="#legal">Aviso legal</a> · <a href="#legal">Cookies</a>
 </footer>
@@ -1491,7 +1492,9 @@ function mostrarPago(lead){
   qb.innerHTML='<h2 class="qt" data-kk>Último paso. <span class="it">Tu plan, por '+PAGO.euros+' €.</span></h2>'
     +'<p class="qh">Un solo pago, sin cuotas. En cuanto pagues te doy el enlace para recibirlo por WhatsApp.</p>'
     +'<div class="pagoplan"><div class="resumen"><span>Plan personalizado · pago único</span><b>'+PAGO.euros+' €</b></div>'
-    +'<div id="pe"></div><p class="estado" id="pest">Preparando el pago…</p><p class="perr" id="perr" role="alert" hidden></p>'
+    +'<div id="pe"></div><p class="estado" id="pest">Preparando el pago…</p>'
+    +'<label class="chk" style="justify-content:flex-start;text-align:left;margin-top:14px"><input type="checkbox" id="desistp"><span>Quiero recibir mi plan ya y acepto que, en cuanto empiece a ver sus clases, pierdo el derecho de desistimiento de 14 días. <a href="#legal">Condiciones</a></span></label>'
+    +'<p class="perr" id="perr" role="alert" hidden></p>'
     +'<div class="cta-wrap"><button class="pillbtn solid big full" id="pagarplan" disabled>Pagar '+PAGO.euros+' € y recibir mi plan</button></div>'
     +'<p class="note">Los pagos se procesan de forma segura con Stripe. Los datos de tu tarjeta nunca pasan por nuestros servidores.</p></div>';
   var t=qb.querySelector('[data-kk]'); if(t) kinetic(t);
@@ -1528,6 +1531,9 @@ function mostrarPago(lead){
   btn.addEventListener('click',function(){
     if(pagandoP||ido||!stripeP||!elementsP) return;
     if(lead.pagado){ irse(lead); return; }   // el CRM dijo que ya lo había pagado
+    var des=document.getElementById('desistp');
+    if(!des.checked){ des.parentNode.style.color='#831A36'; error('Marca la casilla para continuar con el pago.'); return; }
+    des.parentNode.style.color='';
     pagandoP=true; btn.disabled=true; btn.textContent='Procesando…'; error('');
     var validada=false;
     stripeP.confirmSetup({elements:elementsP, confirmParams:{return_url:location.origin+'/plan#quiz'}, redirect:'if_required'})
@@ -1540,7 +1546,7 @@ function mostrarPago(lead){
       var espera=(!lead.id&&crmP)?Promise.race([crmP,new Promise(function(ok){setTimeout(ok,3000)})]):Promise.resolve();
       return espera.then(function(){
         if(lead.pagado) return {success:true, yaPagado:true};   // ya pagado: no se cobra otra vez
-        var carga=cargaPago(); carga.contactId=lead.id||''; carga.eid=lead.eid||''; carga.paymentMethodId=typeof pm==='string'?pm:pm.id;
+        var carga=cargaPago(); carga.contactId=lead.id||''; carga.eid=lead.eid||''; carga.paymentMethodId=typeof pm==='string'?pm:pm.id; carga.renuncia=true;
         return fetch('/api/plan/pago',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(carga)})
           .then(function(r){return r.json()});
       });

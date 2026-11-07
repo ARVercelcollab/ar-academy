@@ -77,6 +77,10 @@ export async function POST(req: Request) {
   if (!nombre || !EMAIL_OK.test(email) || !TELEFONO_OK.test(telefono) || !/^pm_[A-Za-z0-9]+$/.test(paymentMethodId)) {
     return NextResponse.json({ error: "Faltan datos para el pago. Recarga la página e inténtalo de nuevo." }, { status: 400 });
   }
+  // La casilla del desistimiento (Carlos, 7-11: si ha empezado a ver las clases, ya no puede desistir).
+  if (b.renuncia !== true) {
+    return NextResponse.json({ error: "Marca la casilla para continuar con el pago." }, { status: 400 });
+  }
   const contactIdForm = ID_GHL.test(texto(b.contactId, 40)) ? texto(b.contactId, 40) : "";
   const eventId = EVENT_ID.test(texto(b.eid, 80)) ? texto(b.eid, 80) : "";
   const ingresos = texto(b.ingresos_actuales, 60);
@@ -117,7 +121,12 @@ export async function POST(req: Request) {
       auto_advance: false,
       default_payment_method: paymentMethodId,
       description: "Plan personalizado AR Academy · pago único",
-      metadata: { producto: PAGO_PLAN, canal: "web", ...(contactIdForm ? { ghl: contactIdForm } : {}) },
+      metadata: {
+        producto: PAGO_PLAN,
+        canal: "web",
+        desistimiento: `aceptó perderlo al empezar a ver las clases · ${new Date().toISOString()}`,
+        ...(contactIdForm ? { ghl: contactIdForm } : {}),
+      },
     });
     facturaId = factura.id;
     await stripe.invoiceItems.create({ customer: customer.id, invoice: factura.id, pricing: { price: PRECIO_PLAN } });

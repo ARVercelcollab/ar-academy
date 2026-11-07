@@ -20,7 +20,7 @@ import { compraEnMeta, datosNavegador, puedeIrAMeta } from "@/lib/meta";
 export async function POST(req: NextRequest) {
   let facturaId: string | null = null;
   try {
-    const { name, email, phone, paymentMethodId, instagram, origen } = await req.json();
+    const { name, email, phone, paymentMethodId, instagram, origen, renuncia } = await req.json();
 
     if (!name || !email || !phone || !paymentMethodId) {
       return NextResponse.json(
@@ -63,7 +63,13 @@ export async function POST(req: NextRequest) {
       // compradora en el grupo del workshop.
       // «canal: web»: la compra ya va a Meta desde aquí; el webhook solo la manda si viene de un
       // enlace de pago de Stripe, que no pasa por esta ruta.
-      metadata: { producto: PAGO_COMUNIDAD, oferta, canal: "web" },
+      metadata: {
+        producto: PAGO_COMUNIDAD,
+        oferta,
+        canal: "web",
+        // La casilla del desistimiento (Carlos, 7-11): si entra en la Comunidad o ve el workshop, ya no.
+        desistimiento: renuncia === true ? `aceptó perderlo al acceder · ${new Date().toISOString()}` : "sin casilla",
+      },
     });
     facturaId = factura.id;
 

@@ -98,6 +98,8 @@ function PaymentStep({
   const stripe = useStripe();
   const elements = useElements();
   const [loading, setLoading] = useState(false);
+  // La casilla del desistimiento (Carlos, 7-11): si entra en la Comunidad, ya no puede desistir.
+  const [renuncia, setRenuncia] = useState(false);
   const [error, setError] = useState("");
 
   const fail = (msg: string) => {
@@ -108,6 +110,10 @@ function PaymentStep({
 
   const handleSubmit = async () => {
     if (!stripe || !elements) return;
+    if (!renuncia) {
+      fail("Marca la casilla para continuar con el pago.");
+      return;
+    }
 
     setLoading(true);
     setError("");
@@ -136,6 +142,7 @@ function PaymentStep({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...userData,
+          renuncia: true,
           paymentMethodId:
             typeof setupIntent.payment_method === "string"
               ? setupIntent.payment_method
@@ -206,6 +213,13 @@ function PaymentStep({
           terms: { card: "never" },
         }}
       />
+      <label className={styles.checkboxLabel} style={{ marginTop: 14 }}>
+        <input type="checkbox" checked={renuncia} onChange={(e) => setRenuncia(e.target.checked)} />
+        <span>
+          Quiero acceder ya y acepto que, en cuanto entre en la Comunidad, pierdo el derecho de
+          desistimiento de 14 días.
+        </span>
+      </label>
       {error && <p className={styles.errorMsg}>{error}</p>}
       <div className={styles.paymentActions}>
         <button

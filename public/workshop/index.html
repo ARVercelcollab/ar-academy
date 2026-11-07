@@ -853,6 +853,7 @@ h1 .it{color:#831A36}
           <div class="resumen"><span>Una sola vez</span><b><span data-euros>99</span> €</b></div>
           <div id="pe"></div>
           <p class="estado" id="estado">Preparando el pago…</p>
+          <label class="chk" style="margin-top:14px"><input type="checkbox" id="desist"><span>Quiero acceder ya y acepto que, en cuanto entre en la Comunidad o vea el workshop (en directo o grabado), pierdo el derecho de desistimiento de 14 días. <a href="#legal">Condiciones</a></span></label>
           <div class="cta-wrap"><button class="pillbtn solid big full" id="pagar" type="button" disabled>Pagar <span data-euros>99</span> € y entrar</button></div>
           <p class="err" id="err2" role="alert" hidden></p>
           <button class="volver" id="volver" type="button">Cambiar mis datos</button>
@@ -999,6 +1000,7 @@ h1 .it{color:#831A36}
   <div class="legalpie" id="legal">
     <p><b>Arianny Rivas — AR Model Agency</b> · NIF: Y4869806F · Calle San Vicente Mártir 338, Valencia (España) · admin@ariannyrivasagency.com · +34 661 855 612</p>
     <p>Los datos personales recogidos a través de este formulario serán tratados por Arianny Rivas — AR Model Agency como responsable del tratamiento, con la finalidad de gestionar tu compra del workshop y tu acceso a la Comunidad de AR Academy, procesar el pago, darte acceso a la plataforma y al grupo de WhatsApp del workshop, contactarte por WhatsApp y por email, y mantenerte informada sobre la formación de AR Academy. La base legal es la ejecución del contrato (Art. 6.1.b RGPD) y tu consentimiento explícito (Art. 6.1.a RGPD), que puedes retirar en cualquier momento. Tus datos se conservarán mientras no solicites su supresión y, después, durante los plazos legales exigidos. No se realizan transferencias internacionales fuera del EEE sin garantías adecuadas. Puedes ejercer tus derechos de acceso, rectificación, supresión, oposición, limitación y portabilidad escribiendo a admin@ariannyrivasagency.com con el asunto &laquo;Derechos RGPD&raquo;. Si consideras que tus derechos no han sido atendidos, puedes presentar una reclamación ante la Agencia Española de Protección de Datos (<a href="https://www.aepd.es" target="_blank" rel="noopener">www.aepd.es</a>).</p>
+    <p><b>Condiciones de compra.</b> Tienes 14 días naturales desde la compra para desistir escribiendo a <a href="mailto:admin@ariannyrivasagency.com">admin@ariannyrivasagency.com</a>, salvo que ya hayas entrado en la Comunidad de AR Academy o visto el workshop, en directo o grabado: al pagar nos pides acceder enseguida y aceptas que, desde ese momento, pierdes el derecho de desistimiento (art. 103.m de la Ley General para la Defensa de los Consumidores y Usuarios).</p>
     <p>Los pagos se procesan de forma segura mediante Stripe, Inc. Los datos de tu tarjeta nunca pasan por nuestros servidores. Al comprar haces un pago único de <span data-euros>99</span> € que incluye el workshop del 24 de noviembre de 2026 (en directo y grabado) y el acceso a la Comunidad de AR Academy para siempre, sin cuotas ni permanencia. AR Xperience París 2027 no está incluido en el precio: tienes la oportunidad de participar, y el viaje, el alojamiento y la experiencia se pagan aparte. En el grupo de WhatsApp del workshop las demás participantes pueden ver tu número. <b>El contenido de esta página no constituye una garantía de resultados. Los resultados pueden variar según la dedicación y el esfuerzo de cada alumna.</b></p>
   </div>
   <a href="#legal">Privacidad</a> · <a href="#legal">Aviso legal</a> · <a href="#legal">Cookies</a>
@@ -1398,6 +1400,9 @@ document.getElementById('volver').addEventListener('click',function(){
 
 btnPagar.addEventListener('click',function(){
   if(pagando||!stripe||!elements) return;
+  var des=document.getElementById('desist');
+  if(!des.checked){ des.parentNode.style.color='#831A36'; aviso(err2,'Marca la casilla para continuar con el pago.'); return; }
+  des.parentNode.style.color='';
   pagando=true; btnPagar.disabled=true; btnPagar.textContent='Procesando…'; aviso(err2,'');
   var validada=false;
   stripe.confirmSetup({elements:elements,
@@ -1408,7 +1413,7 @@ btnPagar.addEventListener('click',function(){
     if(!pm) throw {msg:'No se pudo validar el método de pago. Inténtalo de nuevo.'};
     validada=true;
     return fetch('/api/create-subscription',{method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({name:DATOS.nombre,email:DATOS.email,phone:DATOS.telefono,instagram:DATOS.instagram,
+      body:JSON.stringify({renuncia:true,name:DATOS.nombre,email:DATOS.email,phone:DATOS.telefono,instagram:DATOS.instagram,
         origen:ORIGEN,paymentMethodId:typeof pm==='string'?pm:pm.id})})
       .then(function(r){return r.json()});
   }).then(function(d){
