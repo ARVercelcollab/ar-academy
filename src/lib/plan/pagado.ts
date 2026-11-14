@@ -2,13 +2,17 @@
  * La chica ya ha pagado su plan (10€): GHL lo sabe (Carlos, 2026-11-07: «en caso de que no hayan
  * pagado, en GHL debe estar marcado»).
  *
- * Al rellenar /plan (src/app/api/plan/lead), su ficha queda con `plan · sin pagar` y su tarjeta en
- * «Plan personalizado · 0 · Sin pagar» (la columna se creó el 7-11, a propuesta de Carlos): así las
- * setters ven a las que se quedaron a un paso. Al pagar, desde /api/plan/pago:
- *   · fuera `plan · sin pagar`; dentro `plan · pagado` y `revisar humano` (el panel de las setters);
- *   · una nota con el pago;
+ * Al rellenar /plan (src/app/api/plan/lead), su ficha queda con `inicio-plan-personalizado` y
+ * `plan · sin pagar`, y su tarjeta en «Plan personalizado · 0 · Sin pagar» (la columna se creó el
+ * 7-11, a propuesta de Carlos): así las setters ven a las que se quedaron a un paso. Al pagar,
+ * desde /api/plan/pago:
+ *   · una sola etiqueta del plan, `pagó plan personalizado 10€` (Carlos, 14-11: «a las que pagaron,
+ *     se deja solo uno»): fuera `inicio-plan-personalizado`, `plan · sin pagar` y la de antes,
+ *     `plan · pagado`; dentro también `revisar humano` (el panel de las setters);
+ *   · el pago, justo debajo del título de su nota «Formulario del plan personalizado» (si la nota
+ *     todavía no está, una nota aparte, como antes);
  *   · su tarjeta pasa de «0 · Sin pagar» a la 1 · Solicita plan, o a la 6 · Comunidad si marcó menos
- *     de 750 €. Si ya estaba más adelante en el Plan, no se toca.
+ *     de 750 €, con el valor del plan. Si ya estaba más adelante en el Plan, no se mueve.
  *
  * REGLA DURA: nunca impide el pago ni la página de gracias. Corre en `after()` y los fallos se
  * quedan en console.error.
@@ -22,8 +26,21 @@ const ETAPA_COMUNIDAD = "4984b37b-2c14-40da-8502-72199e22a6f4";
 export const ETAPA_SIN_PAGAR = "79a8fa0e-4765-4ebb-b8dd-71dbb0cf9080"; // «⚫ 0 · Sin pagar»
 
 export const TAG_PLAN_SIN_PAGAR = "plan · sin pagar";
-export const TAG_PLAN_PAGADO = "plan · pagado";
+export const TAG_INICIO_PLAN = "inicio-plan-personalizado"; // rellenó el formulario (pague o no)
+// GHL guarda las etiquetas en minúsculas. Lleva el precio porque Carlos lo quiere a la vista: si
+// cambia EUROS_PLAN (src/lib/stripe.ts), cambia también aquí. esPagado reconoce cualquier precio.
+export const TAG_PLAN_PAGADO = "pagó plan personalizado 10€";
+const TAG_PLAN_PAGADO_ANTES = "plan · pagado"; // la del 7 al 14-11: se sigue reconociendo
 const TAG_REVISAR_HUMANO = "revisar humano";
+const NOTA_FORMULARIO = "Formulario del plan personalizado";
+
+/** ¿Ya pagó su plan? Vale la etiqueta de ahora, la de antes y la de cualquier otro precio. */
+export function esPagado(tags: string[] | undefined): boolean {
+  return (tags ?? []).some((t) => {
+    const x = (t || "").trim().toLowerCase();
+    return x === TAG_PLAN_PAGADO_ANTES || x.startsWith("pagó plan personalizado");
+  });
+}
 
 type Resp = { ok: boolean; status: number; datos: Record<string, unknown> };
 
@@ -54,7 +71,7 @@ async function ghl(metodo: string, ruta: string, cuerpo?: unknown): Promise<Resp
   }
 }
 
-type Tarjeta = { id: string; pipelineStageId?: string };
+type Tarjeta = { id: string; pipelineStageId?: string; monetaryValue?: number };
 
 async function tarjetaAbierta(contactId: string, pipelineId: string): Promise<Tarjeta | null> {
   const r = await ghl(
@@ -69,7 +86,9 @@ async function tarjetaAbierta(contactId: string, pipelineId: string): Promise<Ta
 async function ponerEn(id: string, nombre: string, etapa: string, euros?: number) {
   const enCaptacion = await tarjetaAbierta(id, PIPELINE_CAPTACION);
   if (enCaptacion) {
-    const mv = await ghl("PUT", `/opportunities/${enCaptacion.id}`, { pipelineId: PIPELINE_PLAN, pipelineStageId: etapa });
+    // Con su valor: hasta el 14-11 la tarjeta que venía de Captación se quedaba a 0 €.
+    const valor = euros && !(Number(enCaptacion.monetaryValue) > 0) ? { monetaryValue: euros } : {};
+    const mv = await ghl("PUT", `/opportunities/${enCaptacion.id}`, { pipelineId: PIPELINE_PLAN, pipelineStageId: etapa, ...valor });
     if (mv.ok) return;
     console.error("plan/pagado: mover la tarjeta de Captación falló; se crea otra", mv.status);
   }
@@ -102,12 +121,47 @@ export async function tarjetaSinPagar(contactId: string, nombre: string): Promis
   }
 }
 
-/** ¿Su ficha ya lleva `plan · pagado`? Por si el pago llegó antes que lo que hace el formulario. */
+/** ¿Su ficha ya dice que pagó? Por si el pago llegó antes que lo que hace el formulario. */
 export async function tienePlanPagado(contactId: string): Promise<boolean> {
   if (!process.env.GHL_TOKEN || !contactId) return false;
   const r = await ghl("GET", `/contacts/${contactId}`);
-  const tags = ((r.datos as { contact?: { tags?: string[] } }).contact?.tags ?? []).map((t) => (t || "").trim().toLowerCase());
-  return tags.includes(TAG_PLAN_PAGADO);
+  return esPagado((r.datos as { contact?: { tags?: string[] } }).contact?.tags);
+}
+
+type Nota = { id: string; body?: string; dateAdded?: string };
+
+/**
+ * El pago, justo debajo del título de su nota del formulario («Formulario del plan personalizado ·
+ * fecha»), para que la setter lo vea nada más abrirla (Carlos, 14-11). Si la nota aún no está (el
+ * formulario tarda), se espera un poco; si sigue sin estar, va en una nota aparte.
+ */
+async function pagoEnLaNota(id: string, euros: number, facturaId: string): Promise<void> {
+  const cuando = new Date().toLocaleString("es-ES", {
+    timeZone: "Europe/Madrid", day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit",
+  });
+  const linea = `✅ PAGÓ EL PLAN PERSONALIZADO · ${euros}€ · ${cuando} (hora de Madrid)`;
+  for (let intento = 0; intento < 3; intento++) {
+    const r = await ghl("GET", `/contacts/${id}/notes`);
+    const notas = ((r.datos as { notes?: Nota[] }).notes ?? [])
+      .filter((n) => (n.body || "").startsWith(NOTA_FORMULARIO))
+      .sort((a, b) => String(b.dateAdded || "").localeCompare(String(a.dateAdded || "")));
+    const nota = notas[0];
+    if (nota) {
+      const cuerpo = nota.body || "";
+      if (cuerpo.includes("PAGÓ EL PLAN PERSONALIZADO")) return; // ya estaba (un reintento)
+      const salto = cuerpo.indexOf("\n");
+      const nuevo = salto < 0
+        ? `${cuerpo}\n${linea}\n\nFactura de Stripe: ${facturaId}`
+        : `${cuerpo.slice(0, salto)}\n${linea}${cuerpo.slice(salto)}\n\nFactura de Stripe: ${facturaId}`;
+      const put = await ghl("PUT", `/contacts/${id}/notes/${nota.id}`, { body: nuevo });
+      if (put.ok) return;
+      console.error("plan/pagado: no pude escribir el pago en su nota; va aparte", put.status);
+      break;
+    }
+    await new Promise((ok) => setTimeout(ok, 4000));
+  }
+  const aparte = await ghl("POST", `/contacts/${id}/notes`, { body: `${linea}\nFactura de Stripe: ${facturaId}` });
+  if (!aparte.ok) console.error("plan/pagado: la nota falló", aparte.status);
 }
 
 /** Su ficha por correo y teléfono, si el formulario no devolvió el id (GHL tardó). */
@@ -148,22 +202,23 @@ export async function planPagadoEnGHL(p: {
     const id = p.contactId;
     const mas = await ghl("POST", `/contacts/${id}/tags`, { tags: [TAG_PLAN_PAGADO, TAG_REVISAR_HUMANO] });
     if (!mas.ok) console.error("plan/pagado: etiquetas fallaron", mas.status);
-    const menos = await ghl("DELETE", `/contacts/${id}/tags`, { tags: [TAG_PLAN_SIN_PAGAR] });
-    if (!menos.ok) console.error("plan/pagado: quitar «sin pagar» falló", menos.status);
+    const menos = await ghl("DELETE", `/contacts/${id}/tags`, { tags: [TAG_PLAN_SIN_PAGAR, TAG_INICIO_PLAN, TAG_PLAN_PAGADO_ANTES] });
+    if (!menos.ok) console.error("plan/pagado: quitar las etiquetas del formulario falló", menos.status);
 
-    const dia = new Date().toLocaleString("es-ES", { timeZone: "Europe/Madrid" });
-    const nota = await ghl("POST", `/contacts/${id}/notes`, {
-      body: `Pagó su plan personalizado: ${p.euros}€ (factura ${p.facturaId}), el ${dia} (hora de Madrid).`,
-    });
-    if (!nota.ok) console.error("plan/pagado: la nota falló", nota.status);
+    await pagoEnLaNota(id, p.euros, p.facturaId);
 
-    // La tarjeta: de «0 · Sin pagar» a la 1 (o a la 6 si marcó menos de 750 €). Si ya estaba más
-    // adelante, se queda donde está. Si no tenía (la del formulario falló), se pone ahora.
+    // La tarjeta: de «0 · Sin pagar» a la 1 (o a la 6 si marcó menos de 750 €), con el valor del
+    // plan. Si ya estaba más adelante, no se mueve, pero se le pone el valor si no tenía. Si no
+    // tenía tarjeta (la del formulario falló), se pone ahora.
     const etapa = p.menosDe750 ? ETAPA_COMUNIDAD : ETAPA_SOLICITA_PLAN;
     const enPlan = await tarjetaAbierta(id, PIPELINE_PLAN);
     if (enPlan) {
-      if (enPlan.pipelineStageId !== ETAPA_SIN_PAGAR) return;
-      const mv = await ghl("PUT", `/opportunities/${enPlan.id}`, { pipelineStageId: etapa, monetaryValue: p.euros });
+      const sinValor = !(Number(enPlan.monetaryValue) > 0);
+      if (enPlan.pipelineStageId !== ETAPA_SIN_PAGAR && !sinValor) return;
+      const cambios = enPlan.pipelineStageId === ETAPA_SIN_PAGAR
+        ? { pipelineStageId: etapa, monetaryValue: p.euros }
+        : { monetaryValue: p.euros };
+      const mv = await ghl("PUT", `/opportunities/${enPlan.id}`, cambios);
       if (!mv.ok) console.error("plan/pagado: pasar la tarjeta a pagada falló", mv.status);
       return;
     }

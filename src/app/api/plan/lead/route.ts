@@ -3,7 +3,7 @@ import { urlDePlan } from "@/lib/plan/token";
 import { cierreRecomendado } from "@/lib/plan/contenido";
 import { faseComunidad } from "@/lib/comunidad";
 import { type Candidata, elegirFicha, normalizaHandle } from "@/lib/plan/instagram";
-import { TAG_PLAN_PAGADO, TAG_PLAN_SIN_PAGAR, tarjetaSinPagar, tienePlanPagado } from "@/lib/plan/pagado";
+import { TAG_INICIO_PLAN, TAG_PLAN_SIN_PAGAR, esPagado, tarjetaSinPagar, tienePlanPagado } from "@/lib/plan/pagado";
 import { GRUPO, altaEnMailerLite, regionDe } from "@/lib/mailerlite";
 
 /**
@@ -119,7 +119,8 @@ const CAMPO: Record<string, string> = {
 };
 
 // ── Etiquetas, con los nombres del 2026-08-19 ─────────────────────────────────
-const TAG_INICIO_PLAN = "inicio-plan-personalizado"; // «ha iniciado», no «se le envió»
+// TAG_INICIO_PLAN («inicio-plan-personalizado», src/lib/plan/pagado.ts): «ha iniciado», no «se le
+// envió». Desde el 14-11 solo la llevan las que no han pagado: al pagar se cambia por la del pago.
 const TAG_MAYOR_EDAD = "mayor de edad";
 const TAG_MENOR_EDAD = "menor de edad";
 const TAG_PUEDE_PAGAR = "puede pagar";
@@ -557,8 +558,11 @@ export async function POST(req: Request) {
   // ¿Ya había pagado su plan? (Vuelve a rellenarlo días después, por ejemplo.) Entonces no se la
   // marca otra vez «sin pagar», no se le toca la tarjeta y la página la lleva directa al WhatsApp,
   // sin volver a cobrarle.
-  const yaPagado = etiquetasPrevias.some((t) => (t || "").trim().toLowerCase() === TAG_PLAN_PAGADO);
-  if (!yaPagado) tags.push(TAG_SIN_PAGAR);
+  // Las que ya pagaron se quedan con una sola etiqueta del plan, la del pago (Carlos, 14-11): no
+  // se les vuelve a poner `inicio-plan-personalizado`.
+  const yaPagado = esPagado(etiquetasPrevias);
+  if (yaPagado) tags.splice(tags.indexOf(TAG_INICIO_PLAN), 1);
+  else tags.push(TAG_SIN_PAGAR);
   const ipCliente = (req.headers.get("x-forwarded-for")?.split(",")[0] || req.headers.get("x-real-ip") || "").trim();
 
   // 2 · lo demás, después de responder.
@@ -566,7 +570,10 @@ export async function POST(req: Request) {
     // Si pagó mientras esto esperaba a GHL (pago con Apple Pay en segundos), no se la vuelve a
     // marcar «sin pagar» ni se le crea otra tarjeta en la 0.
     const pagoEnMedio = !yaPagado && (await tienePlanPagado(contactId));
-    if (pagoEnMedio) tags.splice(tags.indexOf(TAG_SIN_PAGAR), 1);
+    if (pagoEnMedio) {
+      tags.splice(tags.indexOf(TAG_SIN_PAGAR), 1);
+      tags.splice(tags.indexOf(TAG_INICIO_PLAN), 1);
+    }
     const sinPagar = !yaPagado && !pagoEnMedio;
     // Las tres que tocan el contacto, en fila: etiquetas → plan_url → nota.
     const contacto = async () => {

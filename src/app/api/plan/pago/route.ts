@@ -15,7 +15,7 @@ import { mensajeDeError } from "@/lib/stripe-errores";
  * SetupIntent (/api/create-setup) y el cobro lo hace el servidor con una factura, como el workshop.
  *
  * Al cobrar, después de responder (`after()`), lo que antes pasaba al enviar el formulario:
- *   · GHL: `plan · pagado` en lugar de `plan · sin pagar`, `revisar humano` y su tarjeta en
+ *   · GHL: `pagó plan personalizado 10€` en lugar de `inicio-plan-personalizado` y `plan · sin pagar`, `revisar humano`, el pago en su nota del formulario y su tarjeta en
  *     «Plan personalizado» (src/lib/plan/pagado.ts);
  *   · MailerLite: el grupo «Plan personalizado», que arranca su secuencia (las que no pagan no
  *     reciben los emails con su plan);
