@@ -21,7 +21,9 @@ const CAMPO_IG = "HZp3lXGMOGol5cU7RvvW";
 // El pipeline «Workshop» (Carlos, 2026-10-24: «ahí deberían entrar todas las chicas que compren»).
 // Creado con 06-infraestructura/ghl/crear-pipeline-workshop.py; los IDs, en 05-mapa-pipeline-workshop.md.
 const PIPELINE_WORKSHOP = "Scx1hDRzG4NPBhog0kgY";
-const ETAPA_COMPRO_WORKSHOP = "e0033f7c-cf94-4d50-a3cb-dddda310af36";
+// Dos entradas (Carlos, 14-11): la que antes pidió el plan y la que compra directa, sin plan.
+const ETAPA_VIENE_DEL_PLAN = "e0033f7c-cf94-4d50-a3cb-dddda310af36"; // «1 · Compró · viene del plan»
+const ETAPA_COMPRA_DIRECTA = "e9a42a9b-6f69-4de3-95e8-3a744d20caa7"; // «1 · Compró · directa»
 // Si ya tenía tarjeta abierta en uno de estos, esa se mueve al «Workshop»: una tarjeta por chica.
 const PIPELINE_CAPTACION = "lPD7Qhnb1Ak8Vlexzml8";
 const PIPELINE_PLAN = "fBlrzlgSgTbZ5mlA9lh8";
@@ -98,13 +100,22 @@ async function tarjetaAbierta(contactId: string, pipelineId: string) {
   return (r.datos as { opportunities?: { id: string }[] }).opportunities?.[0] || null;
 }
 
-// Su tarjeta en «Workshop · 1 · Compró el workshop». Si ya está en el «Workshop», no se toca; si
-// tiene una abierta en Captación o en Plan personalizado, se mueve; si no, una nueva.
+// ¿Pidió antes el plan? Su tarjeta del Plan (abierta) o sus etiquetas del plan, pagado o gratis.
+async function vieneDelPlan(contactId: string): Promise<boolean> {
+  if (await tarjetaAbierta(contactId, PIPELINE_PLAN)) return true;
+  const r = await ghl("GET", `/contacts/${contactId}`);
+  const tags = ((r.datos as { contact?: { tags?: string[] } }).contact?.tags ?? []).map((t) => (t || "").trim().toLowerCase());
+  return tags.some((t) => t === "inicio-plan-personalizado" || t === "plan · pagado" || t.startsWith("pagó plan personalizado"));
+}
+
+// Su tarjeta en «Workshop · 1 · Compró · viene del plan» o «1 · Compró · directa». Si ya está en el
+// «Workshop», no se toca; si tiene una abierta en Captación o en Plan personalizado, se mueve; si
+// no, una nueva.
 async function tarjetaWorkshop(contactId: string, nombre: string, euros: number) {
   if (await tarjetaAbierta(contactId, PIPELINE_WORKSHOP)) return;
   const destino = {
     pipelineId: PIPELINE_WORKSHOP,
-    pipelineStageId: ETAPA_COMPRO_WORKSHOP,
+    pipelineStageId: (await vieneDelPlan(contactId)) ? ETAPA_VIENE_DEL_PLAN : ETAPA_COMPRA_DIRECTA,
     monetaryValue: euros,
   };
   for (const pipeline of [PIPELINE_PLAN, PIPELINE_CAPTACION]) {
