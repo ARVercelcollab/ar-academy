@@ -11,6 +11,14 @@ import { SUBIDA_COMUNIDAD } from "@/lib/comunidad";
 export function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
   const noviembre = Date.now() < SUBIDA_COMUNIDAD;
+  // El enlace de las setters (Carlos, 14-11): la misma página, con el precio de la llamada si trae su
+  // código (?c=). No se indexa. Desde el 1-12, como /workshop, lleva a /comunidad.
+  if (pathname === "/workshop/llamada") {
+    if (!noviembre) return NextResponse.redirect(new URL("/comunidad", req.url));
+    const res = NextResponse.rewrite(new URL("/workshop/index.html", req.url));
+    res.headers.set("X-Robots-Tag", "noindex, nofollow");
+    return res;
+  }
   if (pathname === "/comunidad" || pathname === "/workshop") {
     if (noviembre) return NextResponse.rewrite(new URL("/workshop/index.html", req.url));
     if (pathname === "/workshop") {
@@ -28,5 +36,5 @@ export function proxy(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/comunidad", "/workshop", "/bienvenida"],
+  matcher: ["/comunidad", "/workshop", "/workshop/llamada", "/bienvenida"],
 };

@@ -38,6 +38,21 @@ export function cobroComunidad(ahora: number = Date.now()) {
   return precioComunidad(ahora - MARGEN_COBRO_MS);
 }
 
+// La oferta de la llamada (Carlos, 2026-11-14): las setters ofrecen el workshop a 99 € en la llamada,
+// también desde el 17-11, cuando la web pública ya está a 149 €. Es la misma compra (el workshop o su
+// grabación, con la Comunidad); solo cambia el precio. Desde el 1-12, el de la web.
+export const EUROS_LLAMADA = 99;
+
+export function precioLlamada(ahora: number = Date.now()) {
+  const web = precioComunidad(ahora);
+  if (web.fase === "comunidad") return { ...web, web: web.euros };
+  return { ...web, euros: EUROS_LLAMADA, web: web.euros };
+}
+
+export function cobroLlamada(ahora: number = Date.now()) {
+  return precioLlamada(ahora - MARGEN_COBRO_MS);
+}
+
 // La marca de la oferta en la factura de Stripe (metadata.oferta). La que mira /api/stripe-webhook
 // para meterla en el grupo del workshop. La de «producto» no cambia: es la que da Skool.
 export const OFERTA: Record<Fase, string> = {

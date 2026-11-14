@@ -1082,18 +1082,31 @@ if(!RM){
    El precio y la fase los dice el servidor (/api/comunidad/oferta, desde src/lib/comunidad.ts):
    la misma fecha con la que se cobra. Hasta que contesta se ve lo del HTML (99 €, el directo). */
 var OF={fase:'workshop',euros:99,directo:Date.UTC(2026,10,24,19,0,0),pk:''};
+/* El enlace de las setters (/workshop/llamada?c=…&s=…): el código y quién la ofrece se guardan para
+   esta visita y van con la oferta y con el cobro. El servidor decide si el código vale. */
+var LLAMADA=(function(){
+  if(location.pathname.replace(/\/$/,'')!=='/workshop/llamada') return null;
+  var q=new URLSearchParams(location.search), d={c:q.get('c')||'',s:q.get('s')||''};
+  try{ if(d.c) sessionStorage.setItem('workshop_llamada',JSON.stringify(d)); else d=JSON.parse(sessionStorage.getItem('workshop_llamada')||'null')||d; }catch(e){}
+  return d.c?d:null;
+})();
 var DIA_SUBIDA='16 de noviembre';
 function pintarOferta(){
   document.querySelectorAll('[data-euros]').forEach(function(el){el.textContent=OF.euros});
   var sb=document.getElementById('subida'), sb2=document.getElementById('subida2');
-  var subeTxt = OF.euros===99 ? 'Sube a 149 € el 17 de noviembre'
+  var deLlamada = OF.llamada && OF.web && OF.web!==OF.euros;
+  var subeTxt = deLlamada ? 'Precio de la llamada · en la web, '+OF.web+' €'
+    : OF.euros===99 ? 'Sube a 149 € el 17 de noviembre'
     : OF.fase==='workshop' ? 'Hasta el directo del martes 24 de noviembre' : 'Hasta el 30 de noviembre';
   if(sb) sb.textContent = subeTxt;
   if(sb2) sb2.textContent = subeTxt + '.';
   document.querySelectorAll('[data-fase]').forEach(function(el){el.hidden=el.getAttribute('data-fase')!==OF.fase});
   var tick=document.getElementById('tick');
   if(tick && OF.fase==='grabacion') tick.innerHTML='<span><i class="dot" aria-hidden="true"></i>La grabación del workshop · hasta el 30 de noviembre</span>';
-  var filas = OF.fase==='workshop'
+  var lo = OF.fase==='workshop' ? 'Workshop + Comunidad' : 'Grabación del workshop + Comunidad';
+  var filas = deLlamada
+    ? [['Hoy, en la llamada:',lo,OF.euros],['En la web, hasta el 30 de noviembre:',lo,OF.web],['Desde el 1 de diciembre:','Solo la Comunidad',199]]
+    : OF.fase==='workshop'
     ? [['Hasta el '+DIA_SUBIDA+':','Workshop + Comunidad',99],['Desde el 17 de noviembre:','Workshop + Comunidad',149],['Desde el 1 de diciembre:','Solo la Comunidad',199]]
     : [['Hasta el 30 de noviembre:','Grabación del workshop + Comunidad',149],['Desde el 1 de diciembre:','Solo la Comunidad',199]];
   var esc=document.getElementById('escalera'), ya=false;
@@ -1106,7 +1119,7 @@ function pintarOferta(){
 }
 pintarOferta();
 function pedirOferta(){
-  return fetch('/api/comunidad/oferta',{cache:'no-store'}).then(function(r){return r.json()}).then(function(d){
+  return fetch('/api/comunidad/oferta'+(LLAMADA?'?c='+encodeURIComponent(LLAMADA.c):''),{cache:'no-store'}).then(function(r){return r.json()}).then(function(d){
     if(d && d.euros){ OF=d; pintarOferta(); }
     return OF;
   });
@@ -1414,7 +1427,8 @@ btnPagar.addEventListener('click',function(){
     validada=true;
     return fetch('/api/create-subscription',{method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({renuncia:true,name:DATOS.nombre,email:DATOS.email,phone:DATOS.telefono,instagram:DATOS.instagram,
-        origen:ORIGEN,paymentMethodId:typeof pm==='string'?pm:pm.id})})
+        origen:ORIGEN,paymentMethodId:typeof pm==='string'?pm:pm.id,
+        codigo:LLAMADA?LLAMADA.c:undefined,setter:LLAMADA?LLAMADA.s:undefined})})
       .then(function(r){return r.json()});
   }).then(function(d){
     if(!d||!d.success) throw {msg:(d&&d.error)||'No hemos podido completar la compra. Inténtalo de nuevo.', rechazo:!!(d&&d.reintentar)};

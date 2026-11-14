@@ -6,7 +6,8 @@ import {
   PRODUCTO_COMUNIDAD,
   PAGO_COMUNIDAD,
 } from "@/lib/stripe";
-import { cobroComunidad, OFERTA, esDelWorkshop, type Fase } from "@/lib/comunidad";
+import { cobroComunidad, cobroLlamada, OFERTA, esDelWorkshop, type Fase } from "@/lib/comunidad";
+import { esCodigoLlamada, nombreSetter } from "@/lib/llamada";
 import { normalizaHandle } from "@/lib/plan/instagram";
 import { mensajeDeError } from "@/lib/stripe-errores";
 import { compraEnMeta, datosNavegador, puedeIrAMeta } from "@/lib/meta";
@@ -20,7 +21,7 @@ import { compraEnMeta, datosNavegador, puedeIrAMeta } from "@/lib/meta";
 export async function POST(req: NextRequest) {
   let facturaId: string | null = null;
   try {
-    const { name, email, phone, paymentMethodId, instagram, origen, renuncia } = await req.json();
+    const { name, email, phone, paymentMethodId, instagram, origen, renuncia, codigo, setter } = await req.json();
 
     if (!name || !email || !phone || !paymentMethodId) {
       return NextResponse.json(
@@ -29,8 +30,11 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // El precio y la oferta, con la fecha de ahora (y media hora de margen).
-    const { euros, fase } = cobroComunidad();
+    // El precio y la oferta, con la fecha de ahora (y media hora de margen). Si viene del enlace de
+    // las setters con su código, el precio de la llamada (src/lib/llamada.ts).
+    const llamada = await esCodigoLlamada(codigo);
+    const { euros, fase } = llamada ? cobroLlamada() : cobroComunidad();
+    const quien = llamada ? nombreSetter(setter) : "";
     const oferta = OFERTA[fase];
     const ig = normalizaHandle(instagram).slice(0, 30);
     // Para Meta, lo del navegador se lee ahora: después de responder ya no está.
@@ -67,6 +71,8 @@ export async function POST(req: NextRequest) {
         producto: PAGO_COMUNIDAD,
         oferta,
         canal: "web",
+        // Comprada desde el enlace de las setters, y con quién (para contar las ventas del equipo).
+        ...(llamada ? { via: "llamada", ...(quien ? { setter: quien } : {}) } : {}),
         // La casilla del desistimiento (Carlos, 7-11): si entra en la Comunidad o ve el workshop, ya no.
         desistimiento: renuncia === true ? `aceptó perderlo al acceder · ${new Date().toISOString()}` : "sin casilla",
       },
