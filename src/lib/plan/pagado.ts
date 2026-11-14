@@ -11,8 +11,9 @@
  *     `plan · pagado`; dentro también `revisar humano` (el panel de las setters);
  *   · el pago, justo debajo del título de su nota «Formulario del plan personalizado» (si la nota
  *     todavía no está, una nota aparte, como antes);
- *   · su tarjeta pasa de «0 · Sin pagar» a la 1 · Solicita plan, o a la 6 · Comunidad si marcó menos
- *     de 750 €, con el valor del plan. Si ya estaba más adelante en el Plan, no se mueve.
+ *   · su tarjeta pasa de «0 · Sin pagar» a la 1 · Solicita plan, con el valor del plan, gane lo que
+ *     gane: a todas las que pagan se las llama (Carlos, 14-11). La 6 («Menos de 750 € (ofrecer
+ *     Comunidad)») queda para las del plan gratis. Si ya estaba más adelante en el Plan, no se mueve.
  *
  * REGLA DURA: nunca impide el pago ni la página de gracias. Corre en `after()` y los fallos se
  * quedan en console.error.
@@ -22,7 +23,6 @@ const API = "https://services.leadconnectorhq.com";
 const PIPELINE_PLAN = "fBlrzlgSgTbZ5mlA9lh8";
 const PIPELINE_CAPTACION = "lPD7Qhnb1Ak8Vlexzml8";
 const ETAPA_SOLICITA_PLAN = "e8d262bf-006e-4e59-93b9-3457d406b8d3";
-const ETAPA_COMUNIDAD = "4984b37b-2c14-40da-8502-72199e22a6f4";
 export const ETAPA_SIN_PAGAR = "79a8fa0e-4765-4ebb-b8dd-71dbb0cf9080"; // «⚫ 0 · Sin pagar»
 
 export const TAG_PLAN_SIN_PAGAR = "plan · sin pagar";
@@ -193,7 +193,7 @@ export async function fichaPorDatos(nombre: string, email: string, telefono: str
 export async function planPagadoEnGHL(p: {
   contactId: string;
   nombre: string;
-  menosDe750: boolean;
+  menosDe750: boolean; // ya no decide la etapa (14-11); se queda por si vuelve a hacer falta
   facturaId: string;
   euros: number;
 }): Promise<void> {
@@ -207,10 +207,11 @@ export async function planPagadoEnGHL(p: {
 
     await pagoEnLaNota(id, p.euros, p.facturaId);
 
-    // La tarjeta: de «0 · Sin pagar» a la 1 (o a la 6 si marcó menos de 750 €), con el valor del
-    // plan. Si ya estaba más adelante, no se mueve, pero se le pone el valor si no tenía. Si no
-    // tenía tarjeta (la del formulario falló), se pone ahora.
-    const etapa = p.menosDe750 ? ETAPA_COMUNIDAD : ETAPA_SOLICITA_PLAN;
+    // La tarjeta: de «0 · Sin pagar» a la 1, con el valor del plan, aunque haya marcado menos de
+    // 750 €: a todas las que pagan se las llama (Carlos, 14-11). Si ya estaba más adelante, no se
+    // mueve, pero se le pone el valor si no tenía. Si no tenía tarjeta (la del formulario falló),
+    // se pone ahora.
+    const etapa = ETAPA_SOLICITA_PLAN;
     const enPlan = await tarjetaAbierta(id, PIPELINE_PLAN);
     if (enPlan) {
       const sinValor = !(Number(enPlan.monetaryValue) > 0);
